@@ -1,7 +1,7 @@
 import 'package:admin/constants.dart';
-import 'package:admin/screens/taluk.dart';
+import 'package:admin/models/talluk.dart';
+import 'package:admin/widget/data_table.dart';
 import 'package:admin/widget/home_screen.dart';
-import 'package:admin/widget/second_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -82,7 +82,7 @@ class NavigationDrawer extends StatelessWidget {
       case 0:
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => Taluk(),
+            builder: (context) => DataTableDB(),
           ),
         );
         break;
