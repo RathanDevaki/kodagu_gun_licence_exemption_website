@@ -5,10 +5,11 @@ import 'package:admin/models/talluk.dart';
 import 'package:http/http.dart' as http;
 
 class Services {
-  static const ROOT = "http://localhost/EXEMPTION_KODAGU/exemption.php";
+  static const ROOT =
+      "http://localhost/kodagu_gun_licence_exemption_website/exemption.php";
 
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
-  static const _GET_ALL_ACTION = 'GET_ALL';
+  static const _GET_ALL_ACTION = 'GET_TALUK';
   static const _ADD_TALUK_ACTION = 'ADD_TALUK';
 
   static Future<String> createTable() async {
@@ -25,7 +26,7 @@ class Services {
       map['action'] = _GET_ALL_ACTION;
       log('in getTaluk');
       final response = await http.post(Uri.parse(ROOT), body: map);
-      log('in getTaluk 1');
+      //log('in getTaluk 1');
       print('Get details : ${response.body}');
       if (200 == response.statusCode) {
         List<Taluk> list = parseResponse(response.body);

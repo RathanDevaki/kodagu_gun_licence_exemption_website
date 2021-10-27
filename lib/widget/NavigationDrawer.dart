@@ -1,5 +1,4 @@
 import 'package:admin/constants.dart';
-import 'package:admin/models/talluk.dart';
 import 'package:admin/widget/data_table.dart';
 import 'package:admin/widget/home_screen.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,10 @@
 import 'dart:developer';
 
+import 'package:admin/constants.dart';
 import 'package:admin/models/talluk.dart';
+import 'package:admin/screens/taluk_data_table.dart';
 import 'package:admin/services/services.dart';
+import 'package:admin/widget/NavigationDrawer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/foundation.dart';
@@ -25,15 +28,17 @@ class DataTableDBState extends State<DataTableDB> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
     _taluk = [];
     _isUpdating = false;
     _titleProgres = widget.title;
     _scaffoldKey = GlobalKey();
     _talukCodeController = TextEditingController();
     _talukNameController = TextEditingController();
-    _getTaluk();
+
+    // _createTable();
+    // _getTaluk();
   }
 
   _showProgress(String message) {
@@ -51,15 +56,15 @@ class DataTableDBState extends State<DataTableDB> {
     //currentState.showSnackBar(SnackBar(content: Text(message),),);
   }
 
-  _createTable() {
-    _showProgress('Creating table');
-    Services.createTable().then((result) {
-      if ('success' == result) {
-        _showSnackBar(context, result);
-        _showProgress(widget.title);
-      }
-    });
-  }
+  // _createTable() {
+  //   _showProgress('Creating table');
+  //   Services.createTable().then((result) {
+  //     if ('success' == result) {
+  //       _showSnackBar(context, result);
+  //       _showProgress(widget.title);
+  //     }
+  //   });
+  // }
 
   _clearValues() {
     _talukCodeController.text = "";
@@ -101,28 +106,7 @@ class DataTableDBState extends State<DataTableDB> {
       scrollDirection: Axis.vertical,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columns: [
-            DataColumn(
-              label: Text('Taluk ID'),
-            ),
-            DataColumn(
-              label: Text('Taluk Name'),
-            )
-          ],
-          rows: _taluk
-              .map(
-                (talukShow) => DataRow(cells: [
-                  DataCell(
-                    Text(talukShow.talukCode),
-                  ),
-                  DataCell(
-                    Text(talukShow.talukName),
-                  )
-                ]),
-              )
-              .toList(),
-        ),
+        child: TalukTable(),
       ),
     );
   }
@@ -131,21 +115,26 @@ class DataTableDBState extends State<DataTableDB> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      drawer: NavigationDrawer(),
       appBar: AppBar(
-        title: Text(_titleProgres),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                _createTable();
-              }),
-          IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                _getTaluk();
-              })
-        ],
+        backgroundColor: secondaryColor,
+        title: Text('Kodagu'),
       ),
+      // appBar: AppBar(
+      //   title: Text(_titleProgres),
+      //   actions: <Widget>[
+      //     IconButton(
+      //         icon: Icon(Icons.add),
+      //         onPressed: () {
+      //           _createTable();
+      //         }),
+      //     IconButton(
+      //         icon: Icon(Icons.smart_display_rounded),
+      //         onPressed: () {
+      //           _getTaluk();
+      //         })
+      //   ],
+      // ),
       body: Container(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -154,7 +143,7 @@ class DataTableDBState extends State<DataTableDB> {
             padding: EdgeInsets.all(20.0),
             child: TextField(
               controller: _talukCodeController,
-              decoration: InputDecoration.collapsed(hintText: 'Taluk ID'),
+              decoration: InputDecoration.collapsed(hintText: 'Taluk Code'),
             ),
           ),
           Padding(
