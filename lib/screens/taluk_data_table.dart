@@ -15,6 +15,16 @@ class TalukTable extends StatefulWidget {
 
 class _TalukTableState extends State<TalukTable> {
   late List<Taluk> taluk_ = [];
+
+  late TextEditingController _talukCodeController;
+  late TextEditingController _talukNameController;
+  @override
+  void initState() {
+    super.initState();
+    _talukCodeController = TextEditingController();
+    _talukNameController = TextEditingController();
+  }
+
   _getTaluk() {
     // _showProgress("Loading Taluk names");
     Services.getTaluk().then((taluk) {
@@ -101,20 +111,64 @@ class _TalukTableState extends State<TalukTable> {
     );
   }
 
+  _clearValues() {
+    _talukCodeController.text = "";
+    _talukNameController.text = "";
+  }
+
+  _addTaluk() {
+    if (_talukCodeController.text.isEmpty ||
+        _talukNameController.text.isEmpty) {
+      print('Empty Field');
+    } else {
+      // _showProgress('Adding Taluk');
+      Services.addTaluk(_talukCodeController.text, _talukNameController.text)
+          .then((result) {
+        debugPrint('Debug report: $result');
+
+        log('HTTP result: $result');
+        if ('Success' == result) {
+          _getTaluk();
+          // _showSnackBar(context, result);
+        }
+        _clearValues();
+      });
+    }
+    Navigator.pop(context, 'Add');
+  }
+
   void showAddTalukDialog() {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text('AlertDialog Title'),
-        content: const Text('AlertDialog description'),
+        title: const Text('Add New Taluk'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: defaultPadding,
+              child: TextField(
+                controller: _talukCodeController,
+                decoration: InputDecoration.collapsed(hintText: 'Taluk Code'),
+              ),
+            ),
+            Padding(
+              padding: defaultPadding,
+              child: TextField(
+                controller: _talukNameController,
+                decoration: InputDecoration.collapsed(hintText: 'Taluk Name'),
+              ),
+            ),
+          ],
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'Cancel'),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, 'OK'),
-            child: const Text('OK'),
+            onPressed: () => _addTaluk(),
+            child: const Text('Add'),
           ),
         ],
       ),

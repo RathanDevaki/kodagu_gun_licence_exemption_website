@@ -34,8 +34,8 @@ class DataTableDBState extends State<DataTableDB> {
     _isUpdating = false;
     _titleProgres = widget.title;
     _scaffoldKey = GlobalKey();
-    _talukCodeController = TextEditingController();
-    _talukNameController = TextEditingController();
+    // _talukCodeController = TextEditingController();
+    // _talukNameController = TextEditingController();
 
     // _createTable();
     // _getTaluk();
@@ -66,30 +66,30 @@ class DataTableDBState extends State<DataTableDB> {
   //   });
   // }
 
-  _clearValues() {
-    _talukCodeController.text = "";
-    _talukNameController.text = "";
-  }
+  // _clearValues() {
+  //   _talukCodeController.text = "";
+  //   _talukNameController.text = "";
+  // }
 
-  _addTaluk() {
-    if (_talukCodeController.text.isEmpty ||
-        _talukNameController.text.isEmpty) {
-      print('Empty Field');
-    } else {
-      _showProgress('Adding Taluk');
-      Services.addTaluk(_talukCodeController.text, _talukNameController.text)
-          .then((result) {
-        debugPrint('Debug report: $result');
+  // _addTaluk() {
+  //   if (_talukCodeController.text.isEmpty ||
+  //       _talukNameController.text.isEmpty) {
+  //     print('Empty Field');
+  //   } else {
+  //     _showProgress('Adding Taluk');
+  //     Services.addTaluk(_talukCodeController.text, _talukNameController.text)
+  //         .then((result) {
+  //       debugPrint('Debug report: $result');
 
-        log('HTTP result: $result');
-        if ('Success' == result) {
-          _getTaluk();
-          _showSnackBar(context, result);
-        }
-        _clearValues();
-      });
-    }
-  }
+  //       log('HTTP result: $result');
+  //       if ('Success' == result) {
+  //         _getTaluk();
+  //         _showSnackBar(context, result);
+  //       }
+  //       _clearValues();
+  //     });
+  //   }
+  // }
 
   _getTaluk() {
     _showProgress("Loading Taluk names");
@@ -136,34 +136,38 @@ class DataTableDBState extends State<DataTableDB> {
       //   ],
       // ),
       body: Container(
+        padding: EdgeInsets.only(top: 16.0),
+        child: Center(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: TextField(
-              controller: _talukCodeController,
-              decoration: InputDecoration.collapsed(hintText: 'Taluk Code'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: TextField(
-              controller: _talukNameController,
-              decoration: InputDecoration.collapsed(hintText: 'Taluk Name'),
-            ),
-          ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Padding(
+              //   padding: EdgeInsets.all(20.0),
+              //   child: TextField(
+              //     controller: _talukCodeController,
+              //     decoration: InputDecoration.collapsed(hintText: 'Taluk Code'),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(20.0),
+              //   child: TextField(
+              //     controller: _talukNameController,
+              //     decoration: InputDecoration.collapsed(hintText: 'Taluk Name'),
+              //   ),
+              // ),
 
 //here to add update n cancel button _isUpdateing = true
-          Expanded(child: _dataBody()),
-        ],
-      )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _addTaluk();
-        },
-        child: Icon(Icons.add),
+              Expanded(child: _dataBody()),
+            ],
+          ),
+        ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     _addTaluk();
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }
