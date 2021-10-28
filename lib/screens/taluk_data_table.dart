@@ -23,6 +23,7 @@ class _TalukTableState extends State<TalukTable> {
     super.initState();
     _talukCodeController = TextEditingController();
     _talukNameController = TextEditingController();
+    _getTaluk();
   }
 
   _getTaluk() {
@@ -30,6 +31,7 @@ class _TalukTableState extends State<TalukTable> {
     Services.getTaluk().then((taluk) {
       setState(() {
         taluk_ = taluk;
+        return;
       });
       // _showProgress(widget.title);
     });
@@ -37,8 +39,6 @@ class _TalukTableState extends State<TalukTable> {
 
   @override
   Widget build(BuildContext context) {
-    _getTaluk();
-
     return DataTable(
       columns: [
         DataColumn(
@@ -65,12 +65,6 @@ class _TalukTableState extends State<TalukTable> {
             child: Text('Update'),
           ),
         ),
-        // DataColumn(
-        //   label: Visibility(
-        //     visible: false,
-        //     child: Text('Delete'),
-        //   ),
-        // ),
         DataColumn(
           label: Visibility(
             visible: true,
