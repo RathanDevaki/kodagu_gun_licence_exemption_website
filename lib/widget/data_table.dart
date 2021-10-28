@@ -20,10 +20,6 @@ class DataTableDBState extends State<DataTableDB> {
   late Taluk talukShow;
   late List<Taluk> _taluk;
   late GlobalKey<ScaffoldState> _scaffoldKey;
-  late TextEditingController _talukCodeController;
-  late TextEditingController _talukNameController;
-  late Taluk _selectedTaluk;
-  late bool _isUpdating;
   late String _titleProgres;
 
   @override
@@ -31,8 +27,8 @@ class DataTableDBState extends State<DataTableDB> {
     super.initState();
 
     _taluk = [];
-    _isUpdating = false;
-    _titleProgres = widget.title;
+    // _isUpdating = false;
+    // _titleProgres = widget.title;
     _scaffoldKey = GlobalKey();
   }
 
