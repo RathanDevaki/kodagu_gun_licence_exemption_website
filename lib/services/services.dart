@@ -100,13 +100,13 @@ class Services {
     }
   }
 
-  static Future<String> deleteTaluk(int sl_no, String taluk_code) async {
+  static Future<String> deleteTaluk(Taluk taluk_obj) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _DELETE_TALUK_ACTION;
-      map['taluk_code'] = taluk_code;
-      map['sl_no'] = sl_no;
-      log('Taluk code :${taluk_code} , SL No ${sl_no} ');
+      map['taluk_code'] = taluk_obj.talukCode;
+      map['sl_no'] = taluk_obj.slNo;
+      //  log('Taluk code :${taluk_code} , SL No ${sl_no} ');
 
       final response = await http.post(Uri.parse(ROOT), body: map);
       // print('addTaluk response: ${response.body}');

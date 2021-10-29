@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:admin/models/talluk.dart';
+import 'package:admin/responsive.dart';
 import 'package:admin/services/services.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class _TalukTableState extends State<TalukTable> {
   late Taluk _selectedTaluk;
   late bool _isUpdating;
   //late String _titleProgres;
+  late dynamic _desktopView;
   late String transactionType;
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _TalukTableState extends State<TalukTable> {
     _talukNameController = TextEditingController();
     _isUpdating = false;
     transactionType = "";
+
     //_scaffoldKey = GlobalKey();
     _getTaluk();
   }
@@ -104,18 +107,56 @@ class _TalukTableState extends State<TalukTable> {
                 Text(talukShow.talukName),
               ),
               DataCell(
-                  Icon(
-                    Icons.edit,
-                    color: primaryColor,
-                  ), onTap: () {
-                transactionType = "UPDATE";
-                _selectedTaluk = talukShow;
-                _showValues(talukShow);
-              }),
+                Responsive.isMobile(context)
+                    ? IconButton(
+                        onPressed: () {
+                          transactionType = "UPDATE";
+                          _selectedTaluk = talukShow;
+                          _showValues(talukShow);
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: primaryColor,
+                        ),
+                      )
+                    : Responsive.isTablet(context)
+                        ? ElevatedButton(
+                            onPressed: () {
+                              transactionType = "UPDATE";
+                              _selectedTaluk = talukShow;
+                              _showValues(talukShow);
+                            },
+                            child: Text(
+                              'EDIT',
+                              style: TextStyle(
+                                  backgroundColor: primaryColor,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              transactionType = "UPDATE";
+                              _selectedTaluk = talukShow;
+                              _showValues(talukShow);
+                            },
+                            child: Text(
+                              'EDIT',
+                              style: TextStyle(
+                                  backgroundColor: primaryColor,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+              ),
               DataCell(
-                Icon(
-                  Icons.delete,
-                  color: Colors.red,
+                IconButton(
+                  onPressed: () {
+                    //_selectedTaluk = talukShow;
+                    _showDeleteDialog(talukShow);
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
                 ),
               ),
             ]),
@@ -219,7 +260,43 @@ class _TalukTableState extends State<TalukTable> {
           // _showSnackBar(context, result);
         }
         _clearValues();
+        Navigator.pop(context);
       });
     }
+  }
+
+  void _deleteTaluk(Taluk selected) {
+    Services.deleteTaluk(selected).then((result) {
+      debugPrint('Debug report: $result');
+
+      log('HTTP result: $result');
+      if ('Success' == result) {
+        _getTaluk();
+        // _showSnackBar(context, result);
+      }
+      Navigator.pop(context);
+    });
+  }
+
+  void _showDeleteDialog(Taluk taluk_obj) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+            "Are you sure want to delete the Taluk ${taluk_obj.talukName} ?"),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, 'Cancel');
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => _deleteTaluk(taluk_obj),
+            child: const Text('Delete'),
+          )
+        ],
+      ),
+    );
   }
 }
