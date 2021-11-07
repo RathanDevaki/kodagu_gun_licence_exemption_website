@@ -62,8 +62,14 @@ class DataTableDBState extends State<DataTableDB> {
       key: _scaffoldKey,
       drawer: NavigationDrawer(),
       appBar: AppBar(
-        backgroundColor: secondaryColor,
-        title: Text('Kodagu'),
+        backgroundColor: secondaryColor1,
+        title: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            'Gun Licence Exemption Certificate - Kodagu ',
+            style: TextStyle(color: textColor),
+          ),
+        ),
       ),
       body: Container(
         padding: EdgeInsets.only(top: 16.0),
@@ -72,6 +78,14 @@ class DataTableDBState extends State<DataTableDB> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
 //here to add update n cancel button _isUpdateing = true
+              Text(
+                'Taluk details'.toUpperCase(),
+                style: headingTextStyle,
+              ),
+              SizedBox(
+                width: double.maxFinite,
+                height: 8.0,
+              ),
               Expanded(child: _dataBody()),
             ],
           ),

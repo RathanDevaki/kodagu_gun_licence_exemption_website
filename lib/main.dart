@@ -20,12 +20,12 @@ class MyApp extends StatelessWidget {
     _createTable();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Kodagu Gun Licence Exemption',
-      theme: ThemeData.dark().copyWith(
+      title: 'Kodagu Gun License Exemption',
+      theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: bgColor,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-            .apply(bodyColor: Colors.white),
-        canvasColor: secondaryColor,
+            .apply(bodyColor: Colors.black),
+        canvasColor: bgColor,
       ),
 
       home: HomeScreen(),

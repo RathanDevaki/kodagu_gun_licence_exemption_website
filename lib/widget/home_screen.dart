@@ -9,14 +9,20 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: secondaryColor,
-        title: Text('Kodagu'),
+        backgroundColor: secondaryColor1,
+        title: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            'Gun Licence Exemption Certificate - Kodagu ',
+            style: TextStyle(color: textColor),
+          ),
+        ),
       ),
       drawer: NavigationDrawer(),
       body: SafeArea(
         child: Center(
           child: Container(
-            child: Text('homeScreen'),
+            child: Text('HomeScreen'),
           ),
         ),
       ),

@@ -1,10 +1,11 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:admin/models/talluk.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/services/services.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import '../constants.dart';
 
 class TalukTable extends StatefulWidget {
@@ -56,112 +57,156 @@ class _TalukTableState extends State<TalukTable> {
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-      columns: [
-        DataColumn(
-          label: Text(
-            'SL. NO',
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-          ),
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: tableBackground,
+          borderRadius: BorderRadius.circular(12),
         ),
-        DataColumn(
-          label: Text(
-            'Taluk Code',
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Taluk Name',
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-          ),
-        ),
-        DataColumn(
-          label: Visibility(
-            visible: false,
-            child: Text('Update'),
-          ),
-        ),
-        DataColumn(
-          label: Visibility(
-            visible: true,
-            child: ElevatedButton(
-                child: Icon(Icons.add),
-                onPressed: () {
-                  transactionType = "ADD";
-                  showAddTalukDialog(transactionType);
-                }),
-          ),
-        ),
-      ],
-      rows: taluk_
-          .map(
-            (talukShow) => DataRow(cells: [
-              DataCell(
-                Text(talukShow.slNo),
+        child: DataTable(
+          sortColumnIndex: 1,
+          sortAscending: true,
+          columns: [
+            DataColumn(
+              label: Text(
+                'SL. NO',
+                style: tableHeadingTextStyle,
               ),
-              DataCell(
-                Text(talukShow.talukCode),
+            ),
+            DataColumn(
+              label: Text(
+                'Taluk Code',
+                style: tableHeadingTextStyle,
               ),
-              DataCell(
-                Text(talukShow.talukName),
+            ),
+            DataColumn(
+              label: Text(
+                'Taluk Name',
+                style: tableHeadingTextStyle,
               ),
-              DataCell(
-                Responsive.isMobile(context)
-                    ? IconButton(
+            ),
+            DataColumn(
+              label: Visibility(
+                visible: false,
+                child: Text('Update'),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                //flex: 8,
+                child: Responsive.isMobile(context)
+                    ? ElevatedButton(
+                        style: outlinedButtonStyle,
+                        child: Icon(Icons.add),
                         onPressed: () {
-                          transactionType = "UPDATE";
-                          _selectedTaluk = talukShow;
-                          _showValues(talukShow);
+                          transactionType = "ADD";
+                          showAddTalukDialog(transactionType);
                         },
-                        icon: Icon(
-                          Icons.edit,
-                          color: primaryColor,
-                        ),
                       )
-                    : Responsive.isTablet(context)
-                        ? ElevatedButton(
+                    : TextButton(
+                        child: Text(
+                          "Add".toUpperCase(),
+                          style: tableHeadingTextStyle,
+                        ),
+                        style: outlinedButtonStyle,
+                        onPressed: () {
+                          transactionType = "ADD";
+                          showAddTalukDialog(transactionType);
+                        }),
+              ),
+            ),
+          ],
+          rows: taluk_
+              .map(
+                (talukShow) => DataRow(cells: [
+                  DataCell(
+                    Text(talukShow.slNo),
+                  ),
+                  DataCell(
+                    Text(talukShow.talukCode),
+                  ),
+                  DataCell(
+                    Text(talukShow.talukName),
+                  ),
+                  DataCell(
+                    Responsive.isMobile(context)
+                        ? IconButton(
                             onPressed: () {
                               transactionType = "UPDATE";
                               _selectedTaluk = talukShow;
                               _showValues(talukShow);
                             },
+                            icon: Icon(
+                              Icons.edit,
+                              color: secondaryColorDark,
+                            ),
+                          )
+                        :
+                        //  Responsive.isTablet(context)
+                        //     ? ElevatedButton(
+                        //         onPressed: () {
+                        //           transactionType = "UPDATE";
+                        //           _selectedTaluk = talukShow;
+                        //           _showValues(talukShow);
+                        //         },
+                        //         child: Text(
+                        //           'EDIT',
+                        //           style: TextStyle(
+                        //               backgroundColor: primaryColor,
+                        //               fontWeight: FontWeight.w400),
+                        //         ),
+                        //       )
+                        //     :
+                        ElevatedButton(
+                            onPressed: () {
+                              transactionType = "UPDATE";
+                              _selectedTaluk = talukShow;
+                              _showValues(talukShow);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: secondaryColorDark,
+                              elevation: 16.0,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              // textStyle: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             child: Text(
                               'EDIT',
-                              style: TextStyle(
-                                  backgroundColor: primaryColor,
-                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                  ),
+                  DataCell(
+                    Responsive.isMobile(context)
+                        ? IconButton(
+                            onPressed: () {
+                              //_selectedTaluk = talukShow;
+                              _showDeleteDialog(talukShow);
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: deleteColor,
                             ),
                           )
                         : ElevatedButton(
                             onPressed: () {
-                              transactionType = "UPDATE";
-                              _selectedTaluk = talukShow;
-                              _showValues(talukShow);
+                              _showDeleteDialog(talukShow);
                             },
+                            style: ElevatedButton.styleFrom(
+                              primary: deleteColor,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              // textStyle: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             child: Text(
-                              'EDIT',
-                              style: TextStyle(
-                                  backgroundColor: primaryColor,
-                                  fontWeight: FontWeight.w400),
+                              'Delete'.toUpperCase(),
                             ),
                           ),
-              ),
-              DataCell(
-                IconButton(
-                  onPressed: () {
-                    //_selectedTaluk = talukShow;
-                    _showDeleteDialog(talukShow);
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    color: Colors.red,
                   ),
-                ),
-              ),
-            ]),
-          )
-          .toList(),
+                ]),
+              )
+              .toList(),
+        ),
+      ),
     );
   }
 
@@ -177,65 +222,117 @@ class _TalukTableState extends State<TalukTable> {
     } else {
       // _showProgress('Adding Taluk');
       Services.addTaluk(_talukCodeController.text, _talukNameController.text)
-          .then((result) {
-        debugPrint('Debug report: $result');
+          .then(
+        (result) {
+          debugPrint('Debug report: $result');
 
-        log('HTTP result: $result');
-        if ('Success' == result) {
-          _getTaluk();
-          // _showSnackBar(context, result);
-        }
-        _clearValues();
-      });
+          log('HTTP result: $result');
+          if ('Success' == result) {
+            _getTaluk();
+            // _showSnackBar(context, result);
+          }
+          _clearValues();
+        },
+      );
     }
     Navigator.pop(context, 'Add');
   }
 
   void showAddTalukDialog(String transactionType) {
-    bool update = false;
-    String _taluk_code_hint = 'Taluk Code';
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: transactionType == 'ADD'
-            ? const Text('Add New Taluk')
-            : const Text('Update Taluk'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: defaultPadding,
-              child: TextField(
-                controller: _talukCodeController,
-                decoration:
-                    InputDecoration.collapsed(hintText: _taluk_code_hint),
+            ? const Text(
+                'Add New Taluk',
+                style: tableHeadingTextStyle,
+              )
+            : const Text(
+                'Update Taluk',
+                style: tableHeadingTextStyle,
               ),
-            ),
-            Padding(
-              padding: defaultPadding,
-              child: TextField(
-                controller: _talukNameController,
-                decoration: InputDecoration.collapsed(hintText: 'Taluk Name'),
+        content: SizedBox(
+          width: 300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Padding(
+                padding: leftRightPadding,
+                child: new TextFormField(
+                  controller: _talukCodeController,
+
+                  decoration: new InputDecoration(
+                    labelText: "Taluk Code ",
+                    labelStyle: TextStyle(fontSize: 14),
+                    fillColor: Colors.amber,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(16.0),
+                      borderSide: new BorderSide(),
+                    ),
+                    //fillColor: Colors.green
+                  ),
+                  validator: (val) {
+                    if (val!.length == 0) {
+                      return "Taluk Code cannot be empty";
+                    } else {
+                      return null;
+                    }
+                  },
+                  //keyboardType: TextInputType.multiline,
+                  style: new TextStyle(),
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+              ),
+              Padding(
+                padding: leftRightPadding,
+                child: new TextFormField(
+                  controller: _talukNameController,
+                  decoration: textFormDecoration,
+                  validator: (val) {
+                    if (val!.length == 0) {
+                      return "Taluk Name cannot be empty";
+                    } else {
+                      return null;
+                    }
+                  },
+                  //keyboardType: TextInputType.multiline,
+                  style: new TextStyle(),
+                ),
+              ),
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton(
+            style: negetiveButton,
             onPressed: () {
               Navigator.pop(context, 'Cancel');
               _clearValues();
             },
-            child: const Text('Cancel'),
+            child: const Text(
+              'Cancel',
+              style: tableHeadingTextStyle,
+            ),
           ),
           transactionType == "ADD"
               ? TextButton(
+                  style: outlinedButtonStyle,
                   onPressed: () => _addTaluk(),
-                  child: const Text('Add'),
+                  child: const Text(
+                    'Add',
+                    style: tableHeadingTextStyle,
+                  ),
                 )
               : TextButton(
+                  style: outlinedButtonStyle,
                   onPressed: () => _updateTaluk(_selectedTaluk),
-                  child: const Text('Update'),
+                  child: const Text(
+                    'Update',
+                    style: tableHeadingTextStyle,
+                  ),
                 ),
         ],
       ),
@@ -271,30 +368,45 @@ class _TalukTableState extends State<TalukTable> {
 
       log('HTTP result: $result');
       if ('Success' == result) {
+        Fluttertoast.showToast(
+            msg: "Deleted",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
         _getTaluk();
         // _showSnackBar(context, result);
       }
+
       Navigator.pop(context);
     });
   }
 
-  void _showDeleteDialog(Taluk taluk_obj) {
+  void _showDeleteDialog(Taluk talukObj) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(
-            "Are you sure want to delete the Taluk ${taluk_obj.talukName} ?"),
+            "Are you sure want to delete the Taluk ${talukObj.talukName} ?"),
         actions: <Widget>[
           TextButton(
-            onPressed: () {
-              Navigator.pop(context, 'Cancel');
-            },
-            child: const Text('Cancel'),
+            child: Text(
+              "Cancel".toUpperCase(),
+              style: const TextStyle(fontSize: 14),
+            ),
+            style: negetiveButton,
+            onPressed: () => Navigator.pop(context, 'Cancel'),
           ),
           TextButton(
-            onPressed: () => _deleteTaluk(taluk_obj),
-            child: const Text('Delete'),
-          )
+            child: Text(
+              "Delete".toUpperCase(),
+              style: const TextStyle(fontSize: 14),
+            ),
+            style: redCircularButton,
+            onPressed: () => _deleteTaluk(talukObj),
+          ),
         ],
       ),
     );

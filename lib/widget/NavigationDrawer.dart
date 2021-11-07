@@ -1,4 +1,5 @@
 import 'package:admin/constants.dart';
+import 'package:admin/screens/custom_textbox.dart';
 import 'package:admin/widget/data_table.dart';
 import 'package:admin/widget/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class NavigationDrawer extends StatelessWidget {
     double sizedBoxHeight = MediaQuery.of(context).size.height * 0.020;
     return Drawer(
       child: Material(
-        color: secondaryColor,
+        color: bgColor,
         child: ListView(
           padding: horizontalPadding,
           children: <Widget>[
@@ -54,7 +55,7 @@ class NavigationDrawer extends StatelessWidget {
             ),
             SizedBox(height: sizedBoxHeight),
             Divider(
-              color: Colors.white70,
+              color: secondaryColorDark,
             ),
           ],
         ),
@@ -88,6 +89,11 @@ class NavigationDrawer extends StatelessWidget {
       case 1:
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        break;
+      case 3:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => NewTextBox()),
         );
     }
   }
