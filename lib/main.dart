@@ -1,17 +1,18 @@
 import 'dart:js';
 
 import 'package:admin/services/services.dart';
-import 'package:admin/widget/home_screen.dart';
-import './widget/second_screen.dart';
+import 'package:admin/screens/home_screen.dart';
+import 'screens/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'constants.dart';
+import 'utilities/constants.dart';
 
 void main() {
   runApp(MyApp());
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   int value = 0;
   // This widget is the root of your application.
@@ -27,9 +28,7 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: bgColor,
       ),
-
       home: HomeScreen(),
-
       //showScreen(dynamic),
     );
   }

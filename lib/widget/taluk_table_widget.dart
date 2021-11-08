@@ -2,11 +2,11 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:admin/models/talluk.dart';
-import 'package:admin/responsive.dart';
+import 'package:admin/utilities/responsive.dart';
 import 'package:admin/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../constants.dart';
+import '../utilities/constants.dart';
 
 class TalukTable extends StatefulWidget {
   const TalukTable({Key? key}) : super(key: key);
@@ -20,18 +20,14 @@ class _TalukTableState extends State<TalukTable> {
 
   late TextEditingController _talukCodeController;
   late TextEditingController _talukNameController;
-  //late GlobalKey<ScaffoldState> _scaffoldKey;
   late Taluk _selectedTaluk;
-  late bool _isUpdating;
-  //late String _titleProgres;
-  late dynamic _desktopView;
+
   late String transactionType;
   @override
   void initState() {
     super.initState();
     _talukCodeController = TextEditingController();
     _talukNameController = TextEditingController();
-    _isUpdating = false;
     transactionType = "";
 
     //_scaffoldKey = GlobalKey();
@@ -141,23 +137,7 @@ class _TalukTableState extends State<TalukTable> {
                               color: secondaryColorDark,
                             ),
                           )
-                        :
-                        //  Responsive.isTablet(context)
-                        //     ? ElevatedButton(
-                        //         onPressed: () {
-                        //           transactionType = "UPDATE";
-                        //           _selectedTaluk = talukShow;
-                        //           _showValues(talukShow);
-                        //         },
-                        //         child: Text(
-                        //           'EDIT',
-                        //           style: TextStyle(
-                        //               backgroundColor: primaryColor,
-                        //               fontWeight: FontWeight.w400),
-                        //         ),
-                        //       )
-                        //     :
-                        ElevatedButton(
+                        : ElevatedButton(
                             onPressed: () {
                               transactionType = "UPDATE";
                               _selectedTaluk = talukShow;

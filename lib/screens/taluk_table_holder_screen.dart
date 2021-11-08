@@ -1,10 +1,11 @@
 import 'dart:developer';
 
-import 'package:admin/constants.dart';
+import 'package:admin/utilities/constants.dart';
 import 'package:admin/models/talluk.dart';
-import 'package:admin/screens/taluk_data_table.dart';
+import 'package:admin/widget/taluk_table_widget.dart';
 import 'package:admin/services/services.dart';
 import 'package:admin/widget/NavigationDrawer.dart';
+import 'package:admin/widget/appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/foundation.dart';
@@ -61,16 +62,7 @@ class DataTableDBState extends State<DataTableDB> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: NavigationDrawer(),
-      appBar: AppBar(
-        backgroundColor: secondaryColor1,
-        title: Align(
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Gun Licence Exemption Certificate - Kodagu ',
-            style: TextStyle(color: textColor),
-          ),
-        ),
-      ),
+      appBar: CommonAppBar(),
       body: Container(
         padding: EdgeInsets.only(top: 16.0),
         child: Center(

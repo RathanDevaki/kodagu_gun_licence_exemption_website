@@ -1,7 +1,7 @@
-import 'package:admin/constants.dart';
+import 'package:admin/utilities/constants.dart';
 import 'package:admin/screens/custom_textbox.dart';
-import 'package:admin/widget/data_table.dart';
-import 'package:admin/widget/home_screen.dart';
+import 'package:admin/screens/taluk_table_holder_screen.dart';
+import 'package:admin/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatelessWidget {

@@ -5,7 +5,8 @@ import 'package:admin/models/talluk.dart';
 import 'package:http/http.dart' as http;
 
 class Services {
-  static const ROOT = "http://localhost/exemption.php";
+  static const ROOT =
+      "http://localhost/kodagu_gun_licence_exemption_website/exemption.php";
 
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_TALUK';
