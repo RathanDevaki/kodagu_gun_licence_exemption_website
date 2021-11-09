@@ -8,8 +8,8 @@ PreferredSizeWidget CommonAppBar() {
     title: Align(
       alignment: Alignment.topLeft,
       child: Text(
-        'Gun License Exemption Certificate - Kodagu ',
-        style: TextStyle(color: textColor),
+        'Gun License Exemption Certificate Kodagu ',
+        style: headingTextStyle,
       ),
     ),
     actions: [

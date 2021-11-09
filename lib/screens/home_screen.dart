@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(),
-      drawer: NavigationDrawer(),
+      drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       body: SafeArea(
         child: Row(
           children: [

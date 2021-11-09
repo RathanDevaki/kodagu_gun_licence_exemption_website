@@ -27,11 +27,12 @@ const leftRightPadding = EdgeInsets.only(left: 8.0, right: 8.0);
 
 //text size
 const headingTextStyle = TextStyle(
+  color: textColor,
   fontSize: 20.0,
   fontWeight: FontWeight.bold,
   shadows: [
     Shadow(
-      color: Colors.black38,
+      color: Colors.black45,
       blurRadius: 2.0,
       offset: Offset(0.0, 4.0),
     ),
@@ -40,10 +41,10 @@ const headingTextStyle = TextStyle(
 
 const tableHeadingTextStyle = TextStyle(
   fontSize: 14.0,
-  fontWeight: FontWeight.w600,
+  fontWeight: FontWeight.bold,
   shadows: [
     Shadow(
-      color: Colors.black12,
+      color: Colors.black45,
       blurRadius: 2.0,
       offset: Offset(0.0, 4.0),
     ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/models/talluk.dart';
+import 'package:admin/utilities/responsive.dart';
 import 'package:admin/widget/taluk_table_widget.dart';
 import 'package:admin/services/services.dart';
 import 'package:admin/widget/NavigationDrawer.dart';
@@ -61,26 +62,38 @@ class DataTableDBState extends State<DataTableDB> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: NavigationDrawer(),
+      drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       appBar: CommonAppBar(),
       body: Container(
-        padding: EdgeInsets.only(top: 16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+        child: Row(
+          children: [
+            Responsive.isDesktop(context)
+                ? Expanded(
+                    child: NavigationDrawer(),
+                  )
+                : Container(),
+            Expanded(
+              flex: 5,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
 //here to add update n cancel button _isUpdateing = true
-              Text(
-                'Taluk details'.toUpperCase(),
-                style: headingTextStyle,
+
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Taluk details'.toUpperCase(),
+                        style: headingTextStyle,
+                      ),
+                    ),
+
+                    Expanded(child: _dataBody()),
+                  ],
+                ),
               ),
-              SizedBox(
-                width: double.maxFinite,
-                height: 8.0,
-              ),
-              Expanded(child: _dataBody()),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

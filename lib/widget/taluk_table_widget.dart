@@ -21,7 +21,7 @@ class _TalukTableState extends State<TalukTable> {
   late TextEditingController _talukCodeController;
   late TextEditingController _talukNameController;
   late Taluk _selectedTaluk;
-
+  final _formKey = GlobalKey<FormState>();
   late String transactionType;
   @override
   void initState() {
@@ -60,6 +60,7 @@ class _TalukTableState extends State<TalukTable> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: DataTable(
+          columnSpacing: MediaQuery.of(context).size.width * 0.02,
           sortColumnIndex: 1,
           sortAscending: true,
           columns: [
@@ -126,15 +127,17 @@ class _TalukTableState extends State<TalukTable> {
                   ),
                   DataCell(
                     Responsive.isMobile(context)
-                        ? IconButton(
-                            onPressed: () {
-                              transactionType = "UPDATE";
-                              _selectedTaluk = talukShow;
-                              _showValues(talukShow);
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: secondaryColorDark,
+                        ? Center(
+                            child: IconButton(
+                              onPressed: () {
+                                transactionType = "UPDATE";
+                                _selectedTaluk = talukShow;
+                                _showValues(talukShow);
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                color: secondaryColorDark,
+                              ),
                             ),
                           )
                         : ElevatedButton(
@@ -157,14 +160,16 @@ class _TalukTableState extends State<TalukTable> {
                   ),
                   DataCell(
                     Responsive.isMobile(context)
-                        ? IconButton(
-                            onPressed: () {
-                              //_selectedTaluk = talukShow;
-                              _showDeleteDialog(talukShow);
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              color: deleteColor,
+                        ? Center(
+                            child: IconButton(
+                              onPressed: () {
+                                //_selectedTaluk = talukShow;
+                                _showDeleteDialog(talukShow);
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                                color: deleteColor,
+                              ),
                             ),
                           )
                         : ElevatedButton(
@@ -198,7 +203,7 @@ class _TalukTableState extends State<TalukTable> {
   _addTaluk() {
     if (_talukCodeController.text.isEmpty ||
         _talukNameController.text.isEmpty) {
-      print('Empty Field');
+      //print('Empty Field');
     } else {
       // _showProgress('Adding Taluk');
       Services.addTaluk(_talukCodeController.text, _talukNameController.text)
@@ -215,7 +220,7 @@ class _TalukTableState extends State<TalukTable> {
         },
       );
     }
-    Navigator.pop(context, 'Add');
+    //Navigator.pop(context, 'Add');
   }
 
   void showAddTalukDialog(String transactionType) {
@@ -232,57 +237,59 @@ class _TalukTableState extends State<TalukTable> {
                 style: tableHeadingTextStyle,
               ),
         content: SizedBox(
-          width: 300,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Padding(
-                padding: leftRightPadding,
-                child: new TextFormField(
-                  controller: _talukCodeController,
+          width: MediaQuery.of(context).size.width * 0.24,
+          height: 180,
+          child: Scaffold(
+            body: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new TextFormField(
+                      controller: _talukCodeController,
 
-                  decoration: new InputDecoration(
-                    labelText: "Taluk Code ",
-                    labelStyle: TextStyle(fontSize: 14),
-                    fillColor: Colors.amber,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(16.0),
-                      borderSide: new BorderSide(),
+                      decoration: new InputDecoration(
+                        labelText: "Taluk Code ",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "Taluk Code cannot be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      //keyboardType: TextInputType.multiline,
+                      style: new TextStyle(),
                     ),
-                    //fillColor: Colors.green
-                  ),
-                  validator: (val) {
-                    if (val!.length == 0) {
-                      return "Taluk Code cannot be empty";
-                    } else {
-                      return null;
-                    }
-                  },
-                  //keyboardType: TextInputType.multiline,
-                  style: new TextStyle(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ),
+                    new TextFormField(
+                      controller: _talukNameController,
+                      decoration: textFormDecoration,
+                      validator: (val) {
+                        if (val!.length == 0) {
+                          return "Taluk Name cannot be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      //keyboardType: TextInputType.multiline,
+                      style: new TextStyle(),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-              ),
-              Padding(
-                padding: leftRightPadding,
-                child: new TextFormField(
-                  controller: _talukNameController,
-                  decoration: textFormDecoration,
-                  validator: (val) {
-                    if (val!.length == 0) {
-                      return "Taluk Name cannot be empty";
-                    } else {
-                      return null;
-                    }
-                  },
-                  //keyboardType: TextInputType.multiline,
-                  style: new TextStyle(),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
         actions: <Widget>[
@@ -300,7 +307,20 @@ class _TalukTableState extends State<TalukTable> {
           transactionType == "ADD"
               ? TextButton(
                   style: outlinedButtonStyle,
-                  onPressed: () => _addTaluk(),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _addTaluk();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("New Taluk Added Succesfully"),
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    } else {
+                      log("Error Adding");
+                      return;
+                    }
+                  },
                   child: const Text(
                     'Add',
                     style: tableHeadingTextStyle,
@@ -308,7 +328,20 @@ class _TalukTableState extends State<TalukTable> {
                 )
               : TextButton(
                   style: outlinedButtonStyle,
-                  onPressed: () => _updateTaluk(_selectedTaluk),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _updateTaluk(_selectedTaluk);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Taluk Updated Succesfully"),
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    } else {
+                      log("Error Updating");
+                      return;
+                    }
+                  },
                   child: const Text(
                     'Update',
                     style: tableHeadingTextStyle,
@@ -323,7 +356,7 @@ class _TalukTableState extends State<TalukTable> {
     String sl_no_ = selected.slNo;
     if (_talukCodeController.text.isEmpty ||
         _talukNameController.text.isEmpty) {
-      print('Empty Field');
+      // print('Empty Field');
     } else {
       // _showProgress('Adding Taluk');
       Services.updateTaluk(
@@ -337,7 +370,7 @@ class _TalukTableState extends State<TalukTable> {
           // _showSnackBar(context, result);
         }
         _clearValues();
-        Navigator.pop(context);
+        //  Navigator.pop(context);
       });
     }
   }
@@ -374,7 +407,7 @@ class _TalukTableState extends State<TalukTable> {
           TextButton(
             child: Text(
               "Cancel".toUpperCase(),
-              style: const TextStyle(fontSize: 14),
+              style: tableHeadingTextStyle,
             ),
             style: negetiveButton,
             onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -382,7 +415,7 @@ class _TalukTableState extends State<TalukTable> {
           TextButton(
             child: Text(
               "Delete".toUpperCase(),
-              style: const TextStyle(fontSize: 14),
+              style: tableHeadingTextStyle,
             ),
             style: redCircularButton,
             onPressed: () => _deleteTaluk(talukObj),
