@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:admin/models/hobli.dart';
 import 'package:admin/models/talluk.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,6 +14,8 @@ class Services {
   static const _ADD_TALUK_ACTION = 'ADD_TALUK';
   static const _UPDATE_TALUK_ACTION = 'UPDATE_TALUK';
   static const _DELETE_TALUK_ACTION = 'DELETE_TALUK';
+
+  static const _GET_HOBLI = 'GET_HOBLI';
 
   static Future<String> createTable() async {
     var map = Map<String, dynamic>();
@@ -41,6 +44,34 @@ class Services {
       return <Taluk>[];
       // print(e);
     }
+  }
+
+  static Future<List<Hobli>> getHobli() async {
+    try {
+      var map = Map<String, dynamic>();
+      map['action'] = _GET_HOBLI;
+      log('in Hobli');
+      final response = await http.post(Uri.parse(ROOT), body: map);
+      //log('in getTaluk 1');
+      print('Get details : ${response.body}');
+
+      if (200 == response.statusCode) {
+        print('Response Code: ${response.statusCode}');
+        List<Hobli> hobli_list = parseResponseHobli(response.body);
+        log('Returns getHobli:$hobli_list');
+        return hobli_list;
+      } else {
+        return <Hobli>[];
+      }
+    } catch (e) {
+      return <Hobli>[];
+      // print(e);
+    }
+  }
+
+  static List<Hobli> parseResponseHobli(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Hobli>((json) => Hobli.fromJson(json)).toList();
   }
 
   static List<Taluk> parseResponse(String responseBody) {

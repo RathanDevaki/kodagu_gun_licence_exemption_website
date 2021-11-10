@@ -66,7 +66,7 @@ class DataTableDBState extends State<DataTableDB> {
       appBar: CommonAppBar(),
       body: Container(
         child: Row(
-          children: [
+          children: <Widget>[
             Responsive.isDesktop(context)
                 ? Expanded(
                     child: NavigationDrawer(),
@@ -81,14 +81,16 @@ class DataTableDBState extends State<DataTableDB> {
 //here to add update n cancel button _isUpdateing = true
 
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: defaultPadding,
                       child: Text(
                         'Taluk details'.toUpperCase(),
                         style: headingTextStyle,
                       ),
                     ),
 
-                    Expanded(child: _dataBody()),
+                    Expanded(
+                      child: _dataBody(),
+                    ),
                   ],
                 ),
               ),

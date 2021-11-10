@@ -1,3 +1,4 @@
+import 'package:admin/screens/hobli_screen_holder.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/screens/custom_textbox.dart';
 import 'package:admin/screens/taluk_table_holder_screen.dart';
@@ -88,12 +89,16 @@ class NavigationDrawer extends StatelessWidget {
         break;
       case 1:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(
+            builder: (context) => HobliScreen(),
+          ),
         );
         break;
       case 3:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => NewTextBox()),
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
         );
     }
   }

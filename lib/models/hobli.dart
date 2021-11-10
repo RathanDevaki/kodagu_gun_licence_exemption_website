@@ -1,11 +1,14 @@
-// class Hobli {
-//   late String hobli_name;
-//   late String hobli_code;
-//   late String sl_no;
+class Hobli {
+  String hobliCode;
+  String hobliName;
+  String slNo;
+  Hobli({required this.hobliCode, required this.hobliName, required this.slNo});
 
-//   Hobli({required this.hobli_code,required this.hobli_name,required this.sl_no});
-// factory Hobli.fromJson(Map<String,dynamic>){
-//   return  Hobli(hobli_code:json['hobli_code'] as String, hobli_name:json['hobli_name']as String, sl_no:['sl_no']as String);
-// }
-
-// }
+  factory Hobli.fromJson(Map<String, dynamic> json) {
+    return Hobli(
+      hobliCode: json['hobli_code'] as String,
+      hobliName: json['hobli_name'] as String,
+      slNo: json['sl_no'] as String,
+    );
+  }
+}
