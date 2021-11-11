@@ -7,7 +7,7 @@ import 'package:admin/utilities/constants.dart';
 import 'package:admin/models/talluk.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:admin/widget/taluk_table_widget.dart';
-import 'package:admin/services/services.dart';
+import 'package:admin/services/taluk_service.dart';
 import 'package:admin/widget/NavigationDrawer.dart';
 import 'package:admin/widget/appbar.dart';
 

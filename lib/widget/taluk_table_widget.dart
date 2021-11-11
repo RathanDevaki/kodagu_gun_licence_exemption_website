@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:admin/models/talluk.dart';
 import 'package:admin/utilities/responsive.dart';
-import 'package:admin/services/services.dart';
+import 'package:admin/services/taluk_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../utilities/constants.dart';
@@ -42,7 +42,7 @@ class _TalukTableState extends State<TalukTable> {
 
   _getTaluk() {
     // _showProgress("Loading Taluk names");
-    Services.getTaluk().then((taluk) {
+    TalukServices.getTaluk().then((taluk) {
       setState(() {
         taluk_ = taluk;
         return;
@@ -206,7 +206,8 @@ class _TalukTableState extends State<TalukTable> {
       //print('Empty Field');
     } else {
       // _showProgress('Adding Taluk');
-      Services.addTaluk(_talukCodeController.text, _talukNameController.text)
+      TalukServices.addTaluk(
+              _talukCodeController.text, _talukNameController.text)
           .then(
         (result) {
           debugPrint('Debug report: $result');
@@ -359,7 +360,7 @@ class _TalukTableState extends State<TalukTable> {
       // print('Empty Field');
     } else {
       // _showProgress('Adding Taluk');
-      Services.updateTaluk(
+      TalukServices.updateTaluk(
               _talukCodeController.text, _talukNameController.text, sl_no_)
           .then((result) {
         debugPrint('Debug report: $result');
@@ -376,7 +377,7 @@ class _TalukTableState extends State<TalukTable> {
   }
 
   void _deleteTaluk(Taluk selected) {
-    Services.deleteTaluk(selected).then((result) {
+    TalukServices.deleteTaluk(selected).then((result) {
       debugPrint('Debug report: $result');
 
       log('HTTP result: $result');

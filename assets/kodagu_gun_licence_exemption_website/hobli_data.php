@@ -7,8 +7,7 @@ $servername="localhost";
 $username="root";
 $password="";
 $dbname="EXEMPTION_KODAGU";
-$table="Taluk";
-
+$table="Hobli";
 $action=$_POST["action"];
 $conn=new mysqli($servername,$username,$password,$dbname);
 
@@ -17,8 +16,8 @@ if($conn->connect_error)
     die("Connection Error".$conn->connect_error);
     return;
 }
-if("CREATE_TABLE"==$action){
-    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, taluk_code VARCHAR(10)PRIMARY KEY,taluk_name CHAR(30))";
+if("CREATE_TABLE_HOBLI"==$action){
+    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, hobli_code VARCHAR(10)PRIMARY KEY,hobli_name CHAR(30))";
 
     if($conn->query($sql)===TRUE)
     {
@@ -32,9 +31,9 @@ if("CREATE_TABLE"==$action){
     return;
 }
 
-if("GET_TALUK" == $action){
+if("GET_HOBLI" == $action){
     $db_data = array();
-    $sql = "SELECT sl_no,taluk_code, taluk_name from $table ORDER BY sl_no";
+    $sql = "SELECT * from $table ";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
@@ -48,31 +47,31 @@ if("GET_TALUK" == $action){
     $conn->close();
     return;
 }
-if("ADD_TALUK"==$action)
+if("ADD_HOBLI"==$action)
 {
-    $taluk_code=$_POST["taluk_code"];
-    $taluk_name=$_POST["taluk_name"];
-    $sql="INSERT INTO $table(taluk_code,taluk_name)VALUES('$taluk_code','$taluk_name')";
+    $hobli_code=$_POST["hobli_code"];
+    $hobli_name=$_POST["hobli_name"];
+    $sql="INSERT INTO $table(hobli_code,hobli_name)VALUES('$hobli_code','$hobli_name')";
     $result=$conn->query($sql);
     echo "Success";
     $conn->close();
     return;
 }
-if("UPDATE_TALUK"==$action)
+if("UPDATE_HOBLI"==$action)
 {
- $taluk_code = $_POST["taluk_code"];
- $taluk_name = $_POST["taluk_name"];
+ $hobli_code = $_POST["hobli_code"];
+ $hobli_name = $_POST["hobli_name"];
  $sl_no = $_POST["sl_no"];
- $sql="UPDATE $table SET taluk_code = '$taluk_code', taluk_name='$taluk_name' where sl_no = $sl_no ";
+ $sql="UPDATE $table SET hobli_code = '$hobli_code', hobli_name='$hobli_name' where sl_no = $sl_no ";
  $result=$conn->query($sql);
     echo "Success";
     $conn->close();
     return;
 }
 
-if("DELETE_TALUK" == $action)
+if("DELETE_HOBLI" == $action)
 {
- $taluk_code = $_POST["taluk_code"];
+ $hobli_code = $_POST["hobli_code"];
  $sl_no = $_POST["sl_no"];
  $sql ="DELETE FROM $table WHERE sl_no = $sl_no ";
   $result=$conn->query($sql);
@@ -80,4 +79,7 @@ if("DELETE_TALUK" == $action)
     $conn->close();
     return;
 } 
+
+
+
 ?>

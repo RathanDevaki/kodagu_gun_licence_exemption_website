@@ -1,11 +1,12 @@
 import 'dart:js';
 
-import 'package:admin/services/services.dart';
+import 'package:admin/services/taluk_service.dart';
 import 'package:admin/screens/home_screen.dart';
 import 'screens/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'services/hobli_service.dart';
 import 'utilities/constants.dart';
 
 void main() {
@@ -35,7 +36,13 @@ class MyApp extends StatelessWidget {
 
   _createTable() {
     //  _showProgress('Creating table');
-    Services.createTable().then((result) {
+    TalukServices.createTable().then((result) {
+      if ('success' == result) {
+        //  _showSnackBar(context, result);
+        //_showProgress(widget.title);
+      }
+    });
+    HobliServices.createTable().then((result) {
       if ('success' == result) {
         //  _showSnackBar(context, result);
         //_showProgress(widget.title);
