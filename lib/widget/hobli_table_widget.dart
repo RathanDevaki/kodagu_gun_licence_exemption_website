@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:admin/models/hobli.dart';
-import 'package:admin/services/services.dart';
+import 'package:admin/services/hobli_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HobliTable extends StatefulWidget {
   const HobliTable({Key? key}) : super(key: key);
@@ -20,12 +21,18 @@ class _HobliTableState extends State<HobliTable> {
   late TextEditingController _hobliCodeController;
   final _formKey = GlobalKey<FormState>();
   late Hobli _selectedHobli;
+  // late List taluk_names;
+  List<String> taluk_names = ['Madikeri', 'Virajpet', 'Somwarpet'];
+
+  String? selectedTaluk;
+
   @override
   void initState() {
     super.initState();
     _hobliNameController = TextEditingController();
     _hobliCodeController = TextEditingController();
     transactionType = '';
+
     _getHobli();
     // TODO: implement initState
   }
@@ -37,7 +44,7 @@ class _HobliTableState extends State<HobliTable> {
   }
 
   _getHobli() {
-    Services.getHobli().then((hobli) {
+    HobliServices.getHobli().then((hobli) {
       setState(() {
         hobli_ = hobli;
         return;
@@ -49,11 +56,18 @@ class _HobliTableState extends State<HobliTable> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        decoration: BoxDecoration(
+          color: tableBackground,
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: DataTable(
+          columnSpacing: MediaQuery.of(context).size.width * 0.02,
+          sortColumnIndex: 1,
+          sortAscending: true,
           columns: [
             DataColumn(
               label: Text(
-                'SL.NO',
+                'SL. NO',
                 style: tableHeadingTextStyle,
               ),
             ),
@@ -69,19 +83,10 @@ class _HobliTableState extends State<HobliTable> {
                 style: tableHeadingTextStyle,
               ),
             ),
-            // DataColumn(
-            //   label: Text(
-            //     'Taluk Name',
-            //     style: tableHeadingTextStyle,
-            //   ),
-            // ),
             DataColumn(
               label: Visibility(
                 visible: false,
-                child: Text(
-                  'Edit',
-                  style: tableHeadingTextStyle,
-                ),
+                child: Text('Update'),
               ),
             ),
             DataColumn(
@@ -92,8 +97,8 @@ class _HobliTableState extends State<HobliTable> {
                         style: outlinedButtonStyle,
                         child: Icon(Icons.add),
                         onPressed: () {
-                          // transactionType = "ADD";
-                          //  showAddTalukDialog(transactionType);
+                          transactionType = "ADD";
+                          showAddHobliDialog(transactionType);
                         },
                       )
                     : TextButton(
@@ -103,89 +108,86 @@ class _HobliTableState extends State<HobliTable> {
                         ),
                         style: outlinedButtonStyle,
                         onPressed: () {
-                          // transactionType = "ADD";
-                          //  showAddTalukDialog(transactionType);
+                          transactionType = "ADD";
+                          showAddHobliDialog(transactionType);
                         }),
               ),
             ),
           ],
           rows: hobli_
               .map(
-                (hobli_data) => DataRow(
-                  cells: [
-                    DataCell(
-                      Text(hobli_data.slNo),
-                    ),
-                    DataCell(
-                      Text(hobli_data.hobliCode),
-                    ),
-                    DataCell(
-                      Text(hobli_data.hobliName),
-                    ),
-                    DataCell(
-                      Responsive.isMobile(context)
-                          ? Center(
-                              child: IconButton(
-                                onPressed: () {
-                                  transactionType = "UPDATE";
-                                  _selectedHobli = hobli_data;
-                                  _showHobli(hobli_data);
-                                },
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: secondaryColorDark,
-                                ),
-                              ),
-                            )
-                          : ElevatedButton(
+                (hobliShow) => DataRow(cells: [
+                  DataCell(
+                    Text(hobliShow.slNo),
+                  ),
+                  DataCell(
+                    Text(hobliShow.hobliCode),
+                  ),
+                  DataCell(
+                    Text(hobliShow.hobliName),
+                  ),
+                  DataCell(
+                    Responsive.isMobile(context)
+                        ? Center(
+                            child: IconButton(
                               onPressed: () {
                                 transactionType = "UPDATE";
-                                _selectedHobli = hobli_data;
-                                _showHobli(hobli_data);
+                                _selectedHobli = hobliShow;
+                                _showHobli(hobliShow);
                               },
-                              style: ElevatedButton.styleFrom(
-                                primary: secondaryColorDark,
-                                elevation: 16.0,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                // textStyle: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              child: Text(
-                                'EDIT',
+                              icon: Icon(
+                                Icons.edit,
+                                color: secondaryColorDark,
                               ),
                             ),
-                    ),
-                    DataCell(
-                      Responsive.isMobile(context)
-                          ? Center(
-                              child: IconButton(
-                                onPressed: () {
-                                  //_selectedTaluk = talukShow;
-                                  _showDeleteDialog(hobli_data);
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: deleteColor,
-                                ),
-                              ),
-                            )
-                          : ElevatedButton(
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              transactionType = "UPDATE";
+                              _selectedHobli = hobliShow;
+                              _showHobli(hobliShow);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: secondaryColorDark,
+                              elevation: 16.0,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              // textStyle: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            child: Text(
+                              'EDIT',
+                            ),
+                          ),
+                  ),
+                  DataCell(
+                    Responsive.isMobile(context)
+                        ? Center(
+                            child: IconButton(
                               onPressed: () {
-                                _showDeleteDialog(hobli_data);
+                                _showDeleteDialog(hobliShow);
                               },
-                              style: ElevatedButton.styleFrom(
-                                primary: deleteColor,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                // textStyle: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              child: Text(
-                                'Delete'.toUpperCase(),
+                              icon: Icon(
+                                Icons.delete,
+                                color: deleteColor,
                               ),
                             ),
-                    ),
-                  ],
-                ),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              _showDeleteDialog(hobliShow);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: deleteColor,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              // textStyle: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            child: Text(
+                              'Delete'.toUpperCase(),
+                            ),
+                          ),
+                  ),
+                ]),
               )
               .toList(),
         ),
@@ -193,17 +195,40 @@ class _HobliTableState extends State<HobliTable> {
     );
   }
 
+  _addHobli() {
+    if (_hobliCodeController.text.isEmpty ||
+        _hobliNameController.text.isEmpty) {
+    } else {
+      HobliServices.addHobli(
+              _hobliCodeController.text, _hobliNameController.text)
+          .then(
+        (result) {
+          debugPrint('Debug report: $result');
+
+          log('HTTP result: $result');
+          if ('Success' == result) {
+            _getHobli();
+            // _showSnackBar(context, result);
+          }
+          _clearValues();
+        },
+      );
+    }
+    //Navigator.pop(context, 'Add');
+  }
+
   void showAddHobliDialog(String transactionType) {
-    showDialog(
+    //  String? value;
+    showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: transactionType == 'ADD'
             ? const Text(
-                'Add New Taluk',
+                'Add New Hobli',
                 style: tableHeadingTextStyle,
               )
             : const Text(
-                'Update Taluk',
+                'Update Hobli',
                 style: tableHeadingTextStyle,
               ),
         content: SizedBox(
@@ -217,6 +242,26 @@ class _HobliTableState extends State<HobliTable> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          border: Border.all(
+                            color: Colors.black45,
+                          ),
+                        ),
+                        child: StatefulBuilder(
+                          builder: (BuildContext context,
+                              StateSetter dropDownState) {
+                            return DropdownButton<String>(
+                              hint: Text('Select Taluk'),
+                              items: taluk_names.map(buildMenuItem).toList(),
+                              onChanged: (String? value_) => dropDownState(() {
+                                this.selectedTaluk = value_;
+                              }),
+                              value: selectedTaluk,
+                            );
+                          },
+                        )),
                     new TextFormField(
                       controller: _hobliCodeController,
 
@@ -279,7 +324,7 @@ class _HobliTableState extends State<HobliTable> {
                   style: outlinedButtonStyle,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      //  _addTaluk();
+                      _addHobli();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("New Hobli Added Succesfully"),
@@ -300,7 +345,7 @@ class _HobliTableState extends State<HobliTable> {
                   style: outlinedButtonStyle,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // _updateTaluk(_selectedTaluk);
+                      _updateHobli(_selectedHobli);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Hobli Updated Succesfully"),
@@ -322,32 +367,60 @@ class _HobliTableState extends State<HobliTable> {
     );
   }
 
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: tableHeadingTextStyle,
+        ),
+      );
   _clearValues() {
     _hobliCodeController.text = "";
     _hobliNameController.text = "";
   }
 
+  _updateHobli(Hobli selected) {
+    String sl_no_ = selected.slNo;
+    if (_hobliCodeController.text.isEmpty ||
+        _hobliNameController.text.isEmpty) {
+      // print('Empty Field');
+    } else {
+      HobliServices.updateHobli(
+              _hobliCodeController.text, _hobliNameController.text, sl_no_)
+          .then((result) {
+        debugPrint('Debug report: $result');
+
+        log('HTTP result: $result');
+        if ('Success' == result) {
+          _getHobli();
+          // _showSnackBar(context, result);
+        }
+        _clearValues();
+        //  Navigator.pop(context);
+      });
+    }
+  }
+
   void _deleteHobli(Hobli selected) {
-    log('delete hobli');
-    //   Services.deleteTaluk(selected).then((result) {
-    //     debugPrint('Debug report: $result');
+    HobliServices.deleteHobli(selected).then((result) {
+      debugPrint('Debug report: $result');
 
-    //     log('HTTP result: $result');
-    //     if ('Success' == result) {
-    //       Fluttertoast.showToast(
-    //           msg: "Deleted",
-    //           toastLength: Toast.LENGTH_SHORT,
-    //           gravity: ToastGravity.TOP,
-    //           timeInSecForIosWeb: 1,
-    //           backgroundColor: Colors.red,
-    //           textColor: Colors.white,
-    //           fontSize: 16.0);
-    //       _getTaluk();
-    //       // _showSnackBar(context, result);
-    //     }
+      log('HTTP result: $result');
+      if ('Success' == result) {
+        Fluttertoast.showToast(
+            msg: "Deleted",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        _getHobli();
+        // _showSnackBar(context, result);
+      }
 
-    //     Navigator.pop(context);
-    //   });
+      Navigator.pop(context);
+    });
   }
 
   void _showDeleteDialog(Hobli hobliObject) {
@@ -355,7 +428,7 @@ class _HobliTableState extends State<HobliTable> {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(
-            "Are you sure want to delete the Taluk ${hobliObject.hobliName} ?"),
+            "Are you sure want to delete the Hobli ${hobliObject.hobliName} ?"),
         actions: <Widget>[
           TextButton(
             child: Text(
