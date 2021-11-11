@@ -233,7 +233,7 @@ class _HobliTableState extends State<HobliTable> {
               ),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 0.24,
-          height: 180,
+          height: 220,
           child: Scaffold(
             body: Form(
               key: _formKey,
@@ -243,25 +243,36 @@ class _HobliTableState extends State<HobliTable> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(
-                            color: Colors.black45,
-                          ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0),
+                        border: Border.all(
+                          color: Colors.black45,
                         ),
-                        child: StatefulBuilder(
-                          builder: (BuildContext context,
-                              StateSetter dropDownState) {
-                            return DropdownButton<String>(
-                              hint: Text('Select Taluk'),
-                              items: taluk_names.map(buildMenuItem).toList(),
-                              onChanged: (String? value_) => dropDownState(() {
-                                this.selectedTaluk = value_;
-                              }),
-                              value: selectedTaluk,
-                            );
-                          },
-                        )),
+                      ),
+                      child: StatefulBuilder(
+                        builder:
+                            (BuildContext context, StateSetter dropDownState) {
+                          return DropdownButtonFormField<String>(
+                            hint: Padding(
+                              padding: leftRightPadding,
+                              child: Text('Select Taluk'),
+                            ),
+                            items: taluk_names.map(buildMenuItem).toList(),
+                            validator: (_selectedTaluk) =>
+                                _selectedTaluk == null
+                                    ? '  Please Select Taluk  '
+                                    : null,
+                            onChanged: (String? value_) => dropDownState(() {
+                              this.selectedTaluk = value_;
+                            }),
+                            value: selectedTaluk,
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ),
                     new TextFormField(
                       controller: _hobliCodeController,
 
@@ -369,9 +380,12 @@ class _HobliTableState extends State<HobliTable> {
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
         value: item,
-        child: Text(
-          item,
-          style: tableHeadingTextStyle,
+        child: Padding(
+          padding: leftRightPadding,
+          child: Text(
+            item,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
         ),
       );
   _clearValues() {
