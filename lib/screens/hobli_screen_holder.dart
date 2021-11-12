@@ -73,7 +73,7 @@ class _HobliScreenState extends State<HobliScreen> {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

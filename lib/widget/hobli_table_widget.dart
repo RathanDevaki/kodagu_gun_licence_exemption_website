@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:admin/models/hobli.dart';
+import 'package:admin/models/talluk.dart';
 import 'package:admin/services/hobli_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
@@ -16,25 +17,29 @@ class HobliTable extends StatefulWidget {
 
 class _HobliTableState extends State<HobliTable> {
   late List<Hobli> hobli_ = [];
+  late List<Taluk> taluk_ = [];
   late String transactionType;
   late TextEditingController _hobliNameController;
   late TextEditingController _hobliCodeController;
   final _formKey = GlobalKey<FormState>();
   late Hobli _selectedHobli;
   // late List taluk_names;
-  List<String> taluk_names = ['Madikeri', 'Virajpet', 'Somwarpet'];
+
+  late List<String> taluk_names =
+      []; // = ['Madikeri', 'Virajpet', 'Somwarpet'];
 
   String? selectedTaluk;
+  late String _selectedTalluk_;
 
   @override
   void initState() {
     super.initState();
+    _getTaluk();
+    _getHobli();
     _hobliNameController = TextEditingController();
     _hobliCodeController = TextEditingController();
-    transactionType = '';
 
-    _getHobli();
-    // TODO: implement initState
+    transactionType = '';
   }
 
   _showHobli(Hobli hobli_ref) {
@@ -43,10 +48,21 @@ class _HobliTableState extends State<HobliTable> {
     _hobliNameController.text = hobli_ref.hobliName;
   }
 
+  _getTaluk() {
+    HobliServices.getTaluk().then((talukNames) {
+      setState(() {
+        taluk_ = talukNames;
+
+        return;
+      });
+    });
+  }
+
   _getHobli() {
     HobliServices.getHobli().then((hobli) {
       setState(() {
         hobli_ = hobli;
+
         return;
       });
     });
@@ -80,6 +96,12 @@ class _HobliTableState extends State<HobliTable> {
             DataColumn(
               label: Text(
                 'Hobli Name',
+                style: tableHeadingTextStyle,
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'Taluk Name',
                 style: tableHeadingTextStyle,
               ),
             ),
@@ -125,6 +147,9 @@ class _HobliTableState extends State<HobliTable> {
                   ),
                   DataCell(
                     Text(hobliShow.hobliName),
+                  ),
+                  DataCell(
+                    Text(hobliShow.taluk_name),
                   ),
                   DataCell(
                     Responsive.isMobile(context)
@@ -196,24 +221,20 @@ class _HobliTableState extends State<HobliTable> {
   }
 
   _addHobli() {
-    if (_hobliCodeController.text.isEmpty ||
-        _hobliNameController.text.isEmpty) {
-    } else {
-      HobliServices.addHobli(
-              _hobliCodeController.text, _hobliNameController.text)
-          .then(
-        (result) {
-          debugPrint('Debug report: $result');
+    HobliServices.addHobli(_selectedTalluk_, _hobliCodeController.text,
+            _hobliNameController.text)
+        .then(
+      (result) {
+        debugPrint('Debug report: $result');
 
-          log('HTTP result: $result');
-          if ('Success' == result) {
-            _getHobli();
-            // _showSnackBar(context, result);
-          }
-          _clearValues();
-        },
-      );
-    }
+        log('HTTP result: $result');
+        if ('Success' == result) {
+          _getHobli();
+          // _showSnackBar(context, result);
+        }
+        _clearValues();
+      },
+    );
     //Navigator.pop(context, 'Add');
   }
 
@@ -253,17 +274,20 @@ class _HobliTableState extends State<HobliTable> {
                         builder:
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
+                            elevation: 16,
                             hint: Padding(
                               padding: leftRightPadding,
                               child: Text('Select Taluk'),
                             ),
-                            items: taluk_names.map(buildMenuItem).toList(),
+                            // taluk_names.map(buildMenuItem).toList()
+                            items: taluk_.map(buildMenuItem).toList(),
                             validator: (_selectedTaluk) =>
                                 _selectedTaluk == null
                                     ? '  Please Select Taluk  '
                                     : null,
                             onChanged: (String? value_) => dropDownState(() {
                               this.selectedTaluk = value_;
+                              _selectedTalluk_ = value_.toString();
                             }),
                             value: selectedTaluk,
                           );
@@ -303,7 +327,7 @@ class _HobliTableState extends State<HobliTable> {
                       controller: _hobliNameController,
                       decoration: textFormDecoration,
                       validator: (val) {
-                        if (val!.length == 0) {
+                        if (val == null || val.isEmpty) {
                           return "Hobli Name cannot be empty";
                         } else {
                           return null;
@@ -378,12 +402,12 @@ class _HobliTableState extends State<HobliTable> {
     );
   }
 
-  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
-        value: item,
+  DropdownMenuItem<String> buildMenuItem(Taluk item) => DropdownMenuItem(
+        value: item.talukName,
         child: Padding(
           padding: leftRightPadding,
           child: Text(
-            item,
+            item.talukName,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ),
@@ -394,13 +418,12 @@ class _HobliTableState extends State<HobliTable> {
   }
 
   _updateHobli(Hobli selected) {
-    String sl_no_ = selected.slNo;
     if (_hobliCodeController.text.isEmpty ||
         _hobliNameController.text.isEmpty) {
       // print('Empty Field');
     } else {
-      HobliServices.updateHobli(
-              _hobliCodeController.text, _hobliNameController.text, sl_no_)
+      HobliServices.updateHobli(selected.taluk_name, _hobliCodeController.text,
+              _hobliNameController.text, selected.slNo)
           .then((result) {
         debugPrint('Debug report: $result');
 
