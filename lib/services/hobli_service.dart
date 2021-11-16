@@ -27,13 +27,13 @@ class HobliServices {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _GET_TALUK;
-      log('in Taluk');
+      //log('in Taluk');
       final response = await http.post(Uri.parse(ROOT), body: map);
       log(response.statusCode.toString());
-      print('Get details : ${response.body}');
+      //   print('Get details : ${response.body}');
 
       if (200 == response.statusCode) {
-        print('Response Code: ${response.statusCode}');
+        //    print('Response Code: ${response.statusCode}');
         List<Taluk> taluk_names = parseResponseHobliTaluk(response.body);
         print('Returns getTaluk:$taluk_names');
         return taluk_names;
@@ -58,12 +58,12 @@ class HobliServices {
       log('in Hobli');
       final response = await http.post(Uri.parse(ROOT), body: map);
 
-      print('Get details : ${response.body}');
+      log('Get details hobli: ${response.body}');
 
       if (200 == response.statusCode) {
-        print('Response Code: ${response.statusCode}');
+        log('Response Code: ${response.statusCode}');
         List<Hobli> hobli_list = parseResponseHobli(response.body);
-        print('Returns getHobli:$hobli_list');
+        log('Returns getHobli:$hobli_list');
         return hobli_list;
       } else {
         return <Hobli>[];
@@ -84,17 +84,19 @@ class HobliServices {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_HOBLI_ACTION;
+
       map['hobli_code'] = hobli_code;
       map['hobli_name'] = hobli_name;
-      map['taluk_name'] = selectedTaluk;
-      log(hobli_code);
+      map['taluk_code'] = selectedTaluk;
+      log('Selected $selectedTaluk');
 
       final response = await http.post(Uri.parse(ROOT), body: map);
 
       String v = response.statusCode.toString();
-      log('Response string :$v');
+
       if (200 == response.statusCode) {
-        getHobli();
+        log('Response string Adding:$v');
+        // getHobli();
         return response.body;
       } else {
         return "Error Adding Hobli";
@@ -106,15 +108,15 @@ class HobliServices {
     }
   }
 
-  static Future<String> updateHobli(String selectedTaluk, String hobli_code,
-      String hobli_name, String sl_no) async {
+  static Future<String> updateHobli(
+      Hobli selected, String hobli_code, String hobli_name) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_HOBLI_ACTION;
       map['hobli_code'] = hobli_code;
       map['hobli_name'] = hobli_name;
-      map['sl_no'] = sl_no;
-      map['taluk_name'] = selectedTaluk;
+      map['sl_no'] = selected.slNo;
+      map['taluk_code'] = selected.taluk_code;
       // map['taluk_code']
       log(hobli_code);
 

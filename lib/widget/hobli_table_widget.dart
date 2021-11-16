@@ -30,6 +30,7 @@ class _HobliTableState extends State<HobliTable> {
 
   String? selectedTaluk;
   late String _selectedTalluk_;
+  late String _selectedTallukCode_;
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _HobliTableState extends State<HobliTable> {
     HobliServices.getHobli().then((hobli) {
       setState(() {
         hobli_ = hobli;
-
+        print('Log in hobli $hobli_');
         return;
       });
     });
@@ -149,7 +150,7 @@ class _HobliTableState extends State<HobliTable> {
                     Text(hobliShow.hobliName),
                   ),
                   DataCell(
-                    Text(hobliShow.taluk_name),
+                    Text(hobliShow.taluk_code),
                   ),
                   DataCell(
                     Responsive.isMobile(context)
@@ -288,6 +289,7 @@ class _HobliTableState extends State<HobliTable> {
                             onChanged: (String? value_) => dropDownState(() {
                               this.selectedTaluk = value_;
                               _selectedTalluk_ = value_.toString();
+                              log(_selectedTalluk_);
                             }),
                             value: selectedTaluk,
                           );
@@ -403,7 +405,7 @@ class _HobliTableState extends State<HobliTable> {
   }
 
   DropdownMenuItem<String> buildMenuItem(Taluk item) => DropdownMenuItem(
-        value: item.talukName,
+        value: item.talukCode,
         child: Padding(
           padding: leftRightPadding,
           child: Text(
@@ -422,9 +424,11 @@ class _HobliTableState extends State<HobliTable> {
         _hobliNameController.text.isEmpty) {
       // print('Empty Field');
     } else {
-      HobliServices.updateHobli(selected.taluk_name, _hobliCodeController.text,
-              _hobliNameController.text, selected.slNo)
-          .then((result) {
+      HobliServices.updateHobli(
+        selected,
+        _hobliCodeController.text,
+        _hobliNameController.text,
+      ).then((result) {
         debugPrint('Debug report: $result');
 
         log('HTTP result: $result');
