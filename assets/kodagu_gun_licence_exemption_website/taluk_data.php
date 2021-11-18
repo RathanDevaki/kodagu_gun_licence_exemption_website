@@ -17,7 +17,7 @@ if($conn->connect_error)
     return;
 }
 if("CREATE_TABLE"==$action){
-    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, taluk_code VARCHAR(10)PRIMARY KEY,taluk_name CHAR(30))";
+    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, taluk_code VARCHAR(10)PRIMARY KEY,taluk_name CHAR(30))ENGINE=InnoDB";
 
     if($conn->query($sql)===TRUE)
     {

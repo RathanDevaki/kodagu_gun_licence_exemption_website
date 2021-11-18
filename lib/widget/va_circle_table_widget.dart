@@ -36,6 +36,10 @@ class _VACircleTableState extends State<VACircleTable> {
   late String _selectedTalluk_;
   late String _selectedTallukCode_;
 
+  String? selectedHobli;
+  String? tempselectedHobli;
+  late String _selectedHobli_;
+  late String _selectedHobliCode_;
   @override
   void initState() {
     super.initState();
@@ -44,20 +48,20 @@ class _VACircleTableState extends State<VACircleTable> {
     _getVACircle();
     _vaCircleNameController = TextEditingController();
     _vaCircleCodeController = TextEditingController();
-
+    tempselectedHobli = 'Bhaguuu';
     transactionType = '';
   }
 
   _addVACircle() {
-    HobliServices.addHobli(_selectedTalluk_, _vaCircleCodeController.text,
-            _vaCircleNameController.text)
+    VACircleServices.addVACircle(_selectedTalluk_, _selectedHobli_,
+            _vaCircleCodeController.text, _vaCircleNameController.text)
         .then(
       (result) {
         debugPrint('Debug report: $result');
 
         log('HTTP result: $result');
         if ('Success' == result) {
-          _getHobli();
+          _getVACircle();
           // _showSnackBar(context, result);
         }
         _clearValues();
@@ -67,7 +71,7 @@ class _VACircleTableState extends State<VACircleTable> {
   }
 
   _showVACircle(VACircle vaCircle_ref) {
-    showAddHobliDialog(transactionType);
+    showAddVACircleDialog(transactionType);
     _vaCircleCodeController.text = vaCircle_ref.VACircleCode;
     _vaCircleNameController.text = vaCircle_ref.VACircleName;
   }
@@ -100,6 +104,29 @@ class _VACircleTableState extends State<VACircleTable> {
         return;
       });
     });
+  }
+
+  _updateVACircle(VACircle selected) {
+    if (_vaCircleCodeController.text.isEmpty ||
+        _vaCircleNameController.text.isEmpty) {
+      // print('Empty Field');
+    } else {
+      VACircleServices.updateVACircle(
+        selected,
+        _vaCircleCodeController.text,
+        _vaCircleNameController.text,
+      ).then((result) {
+        debugPrint('Debug report: $result');
+
+        log('HTTP result: $result');
+        if ('Success' == result) {
+          _getVACircle();
+          // _showSnackBar(context, result);
+        }
+        _clearValues();
+        //  Navigator.pop(context);
+      });
+    }
   }
 
   @override
@@ -160,7 +187,7 @@ class _VACircleTableState extends State<VACircleTable> {
                         child: Icon(Icons.add),
                         onPressed: () {
                           transactionType = "ADD";
-                          showAddHobliDialog(transactionType);
+                          showAddVACircleDialog(transactionType);
                         },
                       )
                     : TextButton(
@@ -171,7 +198,7 @@ class _VACircleTableState extends State<VACircleTable> {
                         style: outlinedButtonStyle,
                         onPressed: () {
                           transactionType = "ADD";
-                          showAddHobliDialog(transactionType);
+                          showAddVACircleDialog(transactionType);
                         }),
               ),
             ),
@@ -263,7 +290,7 @@ class _VACircleTableState extends State<VACircleTable> {
     );
   }
 
-  void showAddHobliDialog(String transactionType) {
+  void showAddVACircleDialog(String transactionType) {
     //  String? value;
     showDialog<String>(
       context: context,
@@ -316,6 +343,41 @@ class _VACircleTableState extends State<VACircleTable> {
                               log(_selectedTalluk_);
                             }),
                             value: selectedTaluk,
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0),
+                        border: Border.all(
+                          color: Colors.black45,
+                        ),
+                      ),
+                      child: StatefulBuilder(
+                        builder:
+                            (BuildContext context, StateSetter dropDownState) {
+                          return DropdownButtonFormField<String>(
+                            elevation: 16,
+                            hint: Padding(
+                              padding: leftRightPadding,
+                              child: Text('Select Hobli'),
+                            ),
+                            // taluk_names.map(buildMenuItem).toList()
+                            items: hobli_.map(buildMenuItemHobli).toList(),
+                            validator: (_selectedHobli) =>
+                                _selectedHobli == null
+                                    ? '  Please Select Hobli  '
+                                    : null,
+                            onChanged: (String? value_) => dropDownState(() {
+                              this.selectedHobli = value_;
+                              _selectedHobli_ = value_.toString();
+                              log('hobli $_selectedHobli_');
+                            }),
+                            value: selectedHobli,
                           );
                         },
                       ),
@@ -406,7 +468,7 @@ class _VACircleTableState extends State<VACircleTable> {
                   style: outlinedButtonStyle,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _updateV(_selectedVA);
+                      _updateVACircle(_selectedVA);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Hobli Updated Succesfully"),
@@ -438,13 +500,24 @@ class _VACircleTableState extends State<VACircleTable> {
           ),
         ),
       );
+  DropdownMenuItem<String> buildMenuItemHobli(Hobli item) => DropdownMenuItem(
+        value: item.hobliCode,
+        child: Padding(
+          padding: leftRightPadding,
+          child: Text(
+            item.hobliName,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+
   _clearValues() {
-    _hobliCodeController.text = "";
-    _hobliNameController.text = "";
+    _vaCircleCodeController.text = "";
+    _vaCircleNameController.text = "";
   }
 
-  void _deleteHobli(Hobli selected) {
-    HobliServices.deleteHobli(selected).then((result) {
+  void _deleteVACircle(VACircle selected) {
+    VACircleServices.deleteVACircle(selected).then((result) {
       debugPrint('Debug report: $result');
 
       log('HTTP result: $result');
@@ -457,7 +530,7 @@ class _VACircleTableState extends State<VACircleTable> {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        _getHobli();
+        _getVACircle();
         // _showSnackBar(context, result);
       }
 
@@ -465,12 +538,12 @@ class _VACircleTableState extends State<VACircleTable> {
     });
   }
 
-  void _showDeleteDialog(VACircle hobliObject) {
+  void _showDeleteDialog(VACircle vaCircleObject) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(
-            "Are you sure want to delete the Hobli ${hobliObject.hobliName} ?"),
+            "Are you sure want to delete the VA Circle ${vaCircleObject.VACircleName} ?"),
         actions: <Widget>[
           TextButton(
             child: Text(
@@ -486,7 +559,7 @@ class _VACircleTableState extends State<VACircleTable> {
               style: tableHeadingTextStyle,
             ),
             style: redCircularButton,
-            onPressed: () => _deleteHobli(hobliObject),
+            onPressed: () => _deleteVACircle(vaCircleObject),
           ),
         ],
       ),

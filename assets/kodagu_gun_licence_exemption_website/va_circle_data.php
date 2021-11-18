@@ -7,7 +7,7 @@ $servername="localhost";
 $username="root";
 $password="";
 $dbname="EXEMPTION_KODAGU";
-$table="Hobli";
+$table="VACircle";
 $action=$_POST["action"];
 $conn=new mysqli($servername,$username,$password,$dbname);
 
@@ -33,9 +33,25 @@ if("GET_TALUK" == $action){
     $conn->close();
     return;
 }
+if("GET_HOBLI" == $action){
+    $db_data = array();
+    $sql = "SELECT * from Hobli";
+    $result = $conn->query($sql);
+    if($result->num_rows > 0){
+        while($row = $result->fetch_assoc()){
+            $db_data[] = $row;
+        }
+        // Send back the complete records as a json
+        echo json_encode($db_data);
+    }else{
+        echo "error".$conn -> error;
+    }
+    $conn->close();
+    return;
+}
 
-if("CREATE_TABLE_HOBLI"==$action){
-    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, hobli_code VARCHAR(10),hobli_name CHAR(30),taluk_code varchar(30),PRIMARY KEY(hobli_code),FOREIGN KEY(taluk_code)REFERENCES Taluk(taluk_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
+if("CREATE_TABLE_VA_CIRCLE"==$action){
+    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, va_circle_code VARCHAR(10),va_circle_name CHAR(30),taluk_code varchar(20),hobli_code varchar(30),PRIMARY KEY(va_circle_code),FOREIGN KEY(hobli_code)REFERENCES Hobli(hobli_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
 
     if($conn->query($sql)===TRUE)
     {
@@ -49,7 +65,7 @@ if("CREATE_TABLE_HOBLI"==$action){
     return;
 }
 
-if("GET_HOBLI" == $action){
+if("GET_VA_CIRCLE" == $action){
     $db_data = array();
     $sql = "SELECT * from $table ";
     $result = $conn->query($sql);
@@ -65,33 +81,35 @@ if("GET_HOBLI" == $action){
     $conn->close();
     return;
 }
-if("ADD_HOBLI"==$action)
+if("ADD_VA_CIRCLE"==$action)
 {
-    $hobli_code=$_POST["hobli_code"];
-    $hobli_name=$_POST["hobli_name"];
+    $va_circle_code=$_POST["va_circle_code"];
+    $va_circle_name=$_POST["va_circle_name"];
+    $hobli_code =$_POST["hobli_code"];
     $taluk_code=$_POST["taluk_code"];
-    $sql="INSERT INTO Hobli(hobli_code,hobli_name,taluk_code)VALUES('$hobli_code','$hobli_name','$taluk_code')";
+    $sql="INSERT INTO $table(va_circle_code,va_circle_name,hobli_code,taluk_code)VALUES('$va_circle_code','$va_circle_name','$hobli_code','$taluk_code')";
     $result=$conn->query($sql);
     echo "Success";
     $conn->close();
     return;
 }
-if("UPDATE_HOBLI"==$action)
+if("UPDATE_VA_CIRCLE"==$action)
 {
- $hobli_code = $_POST["hobli_code"];
- $hobli_name = $_POST["hobli_name"];
- $taluk_code = $_POST["taluk_code"];
+ $va_circle_code=$_POST["va_circle_code"];
+ $va_circle_name=$_POST["va_circle_name"];
+ $hobli_code =$_POST["hobli_code"];
+ $taluk_code=$_POST["taluk_code"];
  $sl_no = $_POST["sl_no"];
- $sql="UPDATE $table SET hobli_code = '$hobli_code', hobli_name='$hobli_name',taluk_code='$taluk_code' where sl_no = $sl_no ";
+ $sql="UPDATE $table SET va_circle_code = '$va_circle_code', va_circle_name='$va_circle_name',taluk_code='$taluk_code' ,hobli_code = '$hobli_code' where sl_no = $sl_no ";
  $result=$conn->query($sql);
     echo "Success";
     $conn->close();
     return;
 }
 
-if("DELETE_HOBLI" == $action)
+if("DELETE_VA_CIRCLE" == $action)
 {
- $hobli_code = $_POST["hobli_code"];
+ $va_circle_code=$_POST["va_circle_code"];
  $sl_no = $_POST["sl_no"];
  $sql ="DELETE FROM $table WHERE sl_no = $sl_no ";
   $result=$conn->query($sql);

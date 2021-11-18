@@ -47,6 +47,12 @@ class NavigationDrawer extends StatelessWidget {
             ),
             SizedBox(height: sizedBoxHeight),
             buildMenuItem(
+              text: 'Police Station',
+              icon: Icons.policy_rounded,
+              onClicked: () => selectedItem(context, 4),
+            ),
+            SizedBox(height: sizedBoxHeight),
+            buildMenuItem(
               text: 'Profile',
               icon: Icons.person,
             ),

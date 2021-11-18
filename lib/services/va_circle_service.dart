@@ -10,7 +10,7 @@ class VACircleServices {
   static const ROOT =
       "http://localhost/kodagu_gun_licence_exemption_website/va_circle_data.php";
 
-  static const _CREATE_TABLE_ACTION = 'CREATE_TABLE_VACIRCLE';
+  static const _CREATE_TABLE_ACTION = 'CREATE_TABLE_VA_CIRCLE';
   static const _GET_VA_CIRCLE_ACTION = 'GET_VA_CIRCLE';
   static const _ADD_VA_CIRCLE_ACTION = 'ADD_VA_CIRCLE';
   static const _UPDATE_VA_CIRCLE_ACTION = 'UPDATE_VA_CIRCLE';
@@ -111,15 +111,16 @@ class VACircleServices {
     return parsed.map<VACircle>((json) => VACircle.fromJson(json)).toList();
   }
 
-  static Future<String> addVACircle(
-      String selectedTaluk, String hobli_code, String hobli_name) async {
+  static Future<String> addVACircle(String selectedTaluk, String selectedHobli,
+      String vaCircleCode, String vaCircleName) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_VA_CIRCLE_ACTION;
 
-      map['hobli_code'] = hobli_code;
-      map['hobli_name'] = hobli_name;
+      map['va_circle_code'] = vaCircleCode;
+      map['va_circle_name'] = vaCircleName;
       map['taluk_code'] = selectedTaluk;
+      map['hobli_code'] = selectedHobli;
       log('Selected $selectedTaluk');
 
       final response = await http.post(Uri.parse(ROOT), body: map);
@@ -128,66 +129,67 @@ class VACircleServices {
 
       if (200 == response.statusCode) {
         log('Response string Adding:$v');
-        // getHobli();
+        getVACircle();
         return response.body;
       } else {
-        return "Error Adding Hobli";
+        return "Error Adding VA Circle";
       }
     } catch (e) {
       log('Exception :$e');
-      getHobli();
+      getVACircle();
       return "Something went wrong";
     }
   }
 
-  static Future<String> updateVACircle(Hobli selected, String vaCircleCode,
-      String hobli_code, String hobli_name) async {
+  static Future<String> updateVACircle(
+      VACircle selected, String vaCircleCode, String vaCircleName) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_VA_CIRCLE_ACTION;
       map['va_circle_code'] = vaCircleCode;
-      map['hobli_name'] = hobli_name;
+      map['va_circle_name'] = vaCircleName;
+      map['hobli_code'] = selected.hobliCode;
       map['sl_no'] = selected.slNo;
-      map['taluk_code'] = selected.taluk_code;
+      map['taluk_code'] = selected.talukCode;
       // map['taluk_code']
-      log(hobli_code);
+      log(vaCircleCode);
 
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();
       log('Response string :$v');
       if (200 == response.statusCode) {
-        getHobli();
+        getVACircle();
         return response.body;
       } else {
-        return "Error Updating Hobli";
+        return "Error Updating VA Circle";
       }
     } catch (e) {
       log('Exception :$e');
-      getHobli();
+      getVACircle();
       return "Something went wrong";
     }
   }
 
-  static Future<String> deleteVACircle(Hobli hobli_obj) async {
+  static Future<String> deleteVACircle(VACircle vaCircle) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _DELETE_VA_CIRCLE_ACTION;
-      map['hobli_code'] = hobli_obj.hobliCode;
-      map['sl_no'] = hobli_obj.slNo;
+      map['va_circle_code'] = vaCircle.VACircleCode;
+      map['sl_no'] = vaCircle.slNo;
 
       final response = await http.post(Uri.parse(ROOT), body: map);
 
       String v = response.statusCode.toString();
       log('Response string :$v');
       if (200 == response.statusCode) {
-        getHobli();
+        getVACircle();
         return response.body;
       } else {
-        return "Error Deleting Hobli";
+        return "Error Deleting VA Circle";
       }
     } catch (e) {
       log('Exception :$e');
-      getHobli();
+      getVACircle();
       return "Something went wrong";
     }
   }

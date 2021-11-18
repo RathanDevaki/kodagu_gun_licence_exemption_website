@@ -2,6 +2,7 @@ import 'dart:js';
 
 import 'package:admin/services/taluk_service.dart';
 import 'package:admin/screens/home_screen.dart';
+import 'package:admin/services/va_circle_service.dart';
 import 'screens/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,6 +48,12 @@ class MyApp extends StatelessWidget {
         //  _showSnackBar(context, result);
         //_showProgress(widget.title);
       }
+      VACircleServices.createTable().then((result) {
+        if ('success' == result) {
+          //  _showSnackBar(context, result);
+          //_showProgress(widget.title);
+        }
+      });
     });
   }
 
