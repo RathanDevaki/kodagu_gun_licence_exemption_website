@@ -24,19 +24,19 @@ class _HobliTableState extends State<HobliTable> {
   final _formKey = GlobalKey<FormState>();
   late Hobli _selectedHobli;
   // late List taluk_names;
-
+  late Hobli hobliTemp;
   late List<String> taluk_names =
       []; // = ['Madikeri', 'Virajpet', 'Somwarpet'];
 
   String? selectedTaluk;
   late String _selectedTalluk_;
   late String _selectedTallukCode_;
-
+  late String temp;
   @override
   void initState() {
     super.initState();
     _getTaluk();
-    _getHobli();
+    // _getHobli();
     _hobliNameController = TextEditingController();
     _hobliCodeController = TextEditingController();
 
@@ -44,6 +44,8 @@ class _HobliTableState extends State<HobliTable> {
   }
 
   _showHobli(Hobli hobli_ref) {
+    hobliTemp = hobli_ref;
+    log('show hobli' + hobliTemp.taluk_name);
     showAddHobliDialog(transactionType);
     _hobliCodeController.text = hobli_ref.hobliCode;
     _hobliNameController.text = hobli_ref.hobliName;
@@ -62,6 +64,7 @@ class _HobliTableState extends State<HobliTable> {
   _getHobli() {
     HobliServices.getHobli().then((hobli) {
       setState(() {
+        log('message hobli');
         hobli_ = hobli;
         print('Log in hobli $hobli_');
         return;
@@ -133,7 +136,8 @@ class _HobliTableState extends State<HobliTable> {
                         onPressed: () {
                           transactionType = "ADD";
                           showAddHobliDialog(transactionType);
-                        }),
+                        },
+                      ),
               ),
             ),
           ],
@@ -150,7 +154,7 @@ class _HobliTableState extends State<HobliTable> {
                     Text(hobliShow.hobliName),
                   ),
                   DataCell(
-                    Text(hobliShow.taluk_code),
+                    Text(hobliShow.taluk_name),
                   ),
                   DataCell(
                     Responsive.isMobile(context)
@@ -159,6 +163,8 @@ class _HobliTableState extends State<HobliTable> {
                               onPressed: () {
                                 transactionType = "UPDATE";
                                 _selectedHobli = hobliShow;
+                                // hobliTemp = hobliShow;
+                                temp = hobliShow.taluk_name;
                                 _showHobli(hobliShow);
                               },
                               icon: Icon(
@@ -171,6 +177,7 @@ class _HobliTableState extends State<HobliTable> {
                             onPressed: () {
                               transactionType = "UPDATE";
                               _selectedHobli = hobliShow;
+                              //  hobliTemp = hobliShow;
                               _showHobli(hobliShow);
                             },
                             style: ElevatedButton.styleFrom(
@@ -278,18 +285,27 @@ class _HobliTableState extends State<HobliTable> {
                             elevation: 16,
                             hint: Padding(
                               padding: leftRightPadding,
-                              child: Text('Select Taluk'),
+                              child: transactionType == 'UPDATE'
+                                  ? Text(hobliTemp.taluk_name)
+                                  : Text('Select Taluk'),
                             ),
                             // taluk_names.map(buildMenuItem).toList()
+
                             items: taluk_.map(buildMenuItem).toList(),
-                            validator: (_selectedTaluk) =>
-                                _selectedTaluk == null
-                                    ? '  Please Select Taluk  '
-                                    : null,
+                            validator: (_selectedTaluk) {
+                              if (_selectedTaluk == null &&
+                                  transactionType == 'ADD') {
+                                return '  Please Select Taluk  ';
+                              } else if (transactionType == 'UPDATE') {
+                                log('else Update -');
+                              }
+                            },
                             onChanged: (String? value_) => dropDownState(() {
                               this.selectedTaluk = value_;
                               _selectedTalluk_ = value_.toString();
-                              log(_selectedTalluk_);
+
+                              log('sel tal' + _selectedTalluk_);
+                              log('selc2' + hobliTemp.taluk_name);
                             }),
                             value: selectedTaluk,
                           );
@@ -414,6 +430,7 @@ class _HobliTableState extends State<HobliTable> {
           ),
         ),
       );
+
   _clearValues() {
     _hobliCodeController.text = "";
     _hobliNameController.text = "";
@@ -424,6 +441,9 @@ class _HobliTableState extends State<HobliTable> {
         _hobliNameController.text.isEmpty) {
       // print('Empty Field');
     } else {
+      log(
+        'update hob',
+      );
       HobliServices.updateHobli(
         selected,
         _hobliCodeController.text,

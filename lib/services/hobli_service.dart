@@ -27,7 +27,7 @@ class HobliServices {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _GET_TALUK;
-      //log('in Taluk');
+      log('in tlk');
       final response = await http.post(Uri.parse(ROOT), body: map);
       log(response.statusCode.toString());
       //   print('Get details : ${response.body}');
@@ -53,9 +53,10 @@ class HobliServices {
 
   static Future<List<Hobli>> getHobli() async {
     try {
+      log('in Hobli');
       var map = Map<String, dynamic>();
       map['action'] = _GET_HOBLI_ACTION;
-      log('in Hobli');
+
       final response = await http.post(Uri.parse(ROOT), body: map);
 
       log('Get details hobli: ${response.body}');
@@ -115,10 +116,11 @@ class HobliServices {
       map['action'] = _UPDATE_HOBLI_ACTION;
       map['hobli_code'] = hobli_code;
       map['hobli_name'] = hobli_name;
+      String sel = selected.taluk_name;
       map['sl_no'] = selected.slNo;
-      map['taluk_code'] = selected.taluk_code;
+      map['taluk_name'] = selected.taluk_name;
       // map['taluk_code']
-      log(hobli_code);
+      log('Print: $hobli_code,$hobli_name,$sel');
 
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();

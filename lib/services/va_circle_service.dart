@@ -54,7 +54,7 @@ class VACircleServices {
     return parsed.map<Taluk>((json) => Taluk.fromJson(json)).toList();
   }
 
-  static Future<List<Hobli>> getHobli() async {
+  static Future<List<Hobli>> getHobliForDropdown() async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _GET_HOBLI;

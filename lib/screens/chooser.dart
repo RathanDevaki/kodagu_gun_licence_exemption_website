@@ -13,41 +13,50 @@ class Chooser extends StatelessWidget {
       appBar: CommonAppBar(),
       body: SafeArea(
         child: Container(
-          height: 200,
-          alignment: Alignment.center,
+          width: double.infinity,
+          color: primaryColor,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+
             //mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              TextButton(
-                child: Text(
-                  "Admin".toUpperCase(),
-                  style: tableHeadingTextStyle,
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: TextButton(
+                  child: Text(
+                    "Admin".toUpperCase(),
+                    style: tableHeadingTextStyle,
+                  ),
+                  style: outlinedButtonStyle,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                    );
+                  },
                 ),
-                style: outlinedButtonStyle,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
-                },
               ),
-              TextButton(
-                child: Text(
-                  "User".toUpperCase(),
-                  style: tableHeadingTextStyle,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: TextButton(
+                  child: Text(
+                    "User".toUpperCase(),
+                    style: tableHeadingTextStyle,
+                  ),
+                  style: outlinedButtonStyle,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ApplicationForm(),
+                      ),
+                    );
+                  },
                 ),
-                style: outlinedButtonStyle,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ApplicationForm(),
-                    ),
-                  );
-                },
               ),
             ],
           ),

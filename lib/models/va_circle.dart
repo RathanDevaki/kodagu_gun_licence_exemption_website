@@ -15,8 +15,8 @@ class VACircle {
 
   factory VACircle.fromJson(Map<String, dynamic> json) {
     return VACircle(
-      hobliCode: json['hobli_code'] as String,
-      talukCode: json['taluk_code'] as String,
+      hobliCode: json['hobli_name'] as String,
+      talukCode: json['taluk_name'] as String,
       slNo: json['sl_no'] as String,
       VACircleCode: json['va_circle_code'] as String,
       VACircleName: json['va_circle_name'] as String,

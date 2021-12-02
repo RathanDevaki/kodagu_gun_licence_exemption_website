@@ -98,10 +98,10 @@ class _VACircleTableState extends State<VACircleTable> {
   }
 
   _getHobli() {
-    VACircleServices.getHobli().then((hobli) {
+    VACircleServices.getHobliForDropdown().then((hobli) {
       setState(() {
         hobli_ = hobli;
-        print('Log in hobli $hobli_');
+        print('Log in hobli..8 $hobli_');
         return;
       });
     });
@@ -377,7 +377,7 @@ class _VACircleTableState extends State<VACircleTable> {
                             onChanged: (String? value_) => dropDownState(() {
                               this.selectedHobli = value_;
                               _selectedHobli_ = value_.toString();
-                              log('hobli $_selectedHobli_');
+                              log('hobli sss $_selectedHobli_');
                             }),
                             value: selectedHobli,
                           );

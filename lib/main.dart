@@ -1,5 +1,4 @@
-import 'dart:js';
-
+import 'package:admin/screens/chooser.dart';
 import 'package:admin/services/taluk_service.dart';
 import 'package:admin/screens/home_screen.dart';
 import 'package:admin/services/va_circle_service.dart';
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: Colors.black),
         canvasColor: bgColor,
       ),
-      home: HomeScreen(),
+      home: Chooser(),
       //showScreen(dynamic),
     );
   }
