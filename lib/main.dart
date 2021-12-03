@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:admin/screens/chooser.dart';
 import 'package:admin/services/taluk_service.dart';
 import 'package:admin/screens/home_screen.dart';

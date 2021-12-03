@@ -12,53 +12,141 @@ class Chooser extends StatelessWidget {
     return Scaffold(
       appBar: CommonAppBar(),
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          color: primaryColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.0),
+                color: tableBackground),
+            width: 460,
+            height: 220,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
 
-            //mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: TextButton(
-                  child: Text(
-                    "Admin".toUpperCase(),
-                    style: tableHeadingTextStyle,
-                  ),
-                  style: outlinedButtonStyle,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
-                      ),
-                    );
-                  },
+              //mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Gun License Exemption Certificate Kodagu ',
+                  style: headingTextStyle,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: TextButton(
-                  child: Text(
-                    "User".toUpperCase(),
-                    style: tableHeadingTextStyle,
-                  ),
-                  style: outlinedButtonStyle,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ApplicationForm(),
-                      ),
-                    );
-                  },
+                Divider(
+                  color: secondaryColorDark,
                 ),
-              ),
-            ],
+                Container(
+                  constraints: BoxConstraints(maxWidth: 250.0, minHeight: 50.0),
+                  margin: EdgeInsets.all(10),
+                  child: RaisedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    },
+                    color: Theme.of(context).accentColor,
+                    child: Padding(
+                      padding: EdgeInsets.all(0),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 24.0),
+                              child: Text(
+                                'Master',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  constraints: BoxConstraints(maxWidth: 250.0, minHeight: 50.0),
+                  margin: EdgeInsets.all(10),
+                  child: RaisedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ApplicationForm()));
+                    },
+                    color: Theme.of(context).accentColor,
+                    child: Padding(
+                      padding: EdgeInsets.all(0),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 24.0),
+                              child: Text(
+                                'Users',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 16.0),
+                //   child: TextButton(
+                //     child: Text(
+                //       "Admin".toUpperCase(),
+                //       style: tableHeadingTextStyle,
+                //     ),
+                //     style: outlinedButtonStyle,
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => HomeScreen(),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.only(bottom: 16.0),
+                //   child: TextButton(
+                //     child: Text(
+                //       "User".toUpperCase(),
+                //       style: tableHeadingTextStyle,
+                //     ),
+                //     style: outlinedButtonStyle,
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => ApplicationForm(),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
+              ],
+            ),
           ),
         ),
       ),

@@ -36,7 +36,7 @@ class _HobliTableState extends State<HobliTable> {
   void initState() {
     super.initState();
     _getTaluk();
-    // _getHobli();
+    _getHobli();
     _hobliNameController = TextEditingController();
     _hobliCodeController = TextEditingController();
 
