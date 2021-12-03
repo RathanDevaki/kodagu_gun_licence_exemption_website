@@ -24,7 +24,7 @@ class Chooser extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
 
-              //mainAxisSize: MainAxisSize.min,
+              //mainAxisSize: MainAxisSize.min,.
               children: <Widget>[
                 Text(
                   'Gun License Exemption Certificate Kodagu ',

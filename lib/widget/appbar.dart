@@ -24,7 +24,7 @@ PreferredSizeWidget CommonAppBar() {
               ),
               blurRadius: 24.0,
               spreadRadius: 4.0,
-            ), //BoxShadow
+            ), //BoxShadow.
           ],
         ),
         child: CircleAvatar(

@@ -584,7 +584,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     thickness: 1,
                   ),
 
-//Submit
+//Submit.
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30.0)),
