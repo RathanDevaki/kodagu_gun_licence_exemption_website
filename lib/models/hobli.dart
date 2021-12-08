@@ -16,7 +16,7 @@ class Hobli {
       slNo: json['sl_no'] as String,
       hobliCode: json['hobli_code'] as String,
       hobliName: json['hobli_name'] as String,
-      taluk_name: json['taluk_code'] as String,
+      taluk_name: json['taluk_name'] as String,
     );
   }
 }

@@ -425,8 +425,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
                       Expanded(
                         child: new Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child:
-                              Text('Whether Jamma Tenure holder in Kodagu :'),
+                          child: Text(
+                              'Whether Jamma Tenure holder in Kodagu ,the particulars of Jamma Holding:'),
                         ),
                       ),
                       Expanded(
@@ -558,6 +558,87 @@ class _ApplicationFormState extends State<ApplicationForm> {
                           },
                           decoration: new InputDecoration(
                             labelText: "Any Criminal Case against you?",
+                            labelStyle: TextStyle(fontSize: 14),
+                            fillColor: Colors.amber,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(16.0),
+                              borderSide: new BorderSide(),
+                            ),
+                            //fillColor: Colors.green
+                          ),
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "Please fill the details.";
+                            } else {
+                              return null;
+                            }
+                          },
+                          //keyboardType: TextInputType.multiline,
+                          style: new TextStyle(),
+                        ),
+                      ),
+                    ],
+                  ),
+
+//bond under chapter VII
+
+                  new Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Expanded(
+                        child: new Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                              'Whether the applicant has ever been ordered to execute a bond under chapter VII of Cr.P.C for keeping the peace or good Behaviour. If so, when and for what period:'),
+                        ),
+                      ),
+                      Expanded(
+                        child: new TextFormField(
+                          //controller: controller1,
+                          onEditingComplete: () {
+                            print(controller1.text);
+                          },
+                          decoration: new InputDecoration(
+                            labelText: "Fill the details",
+                            labelStyle: TextStyle(fontSize: 14),
+                            fillColor: Colors.amber,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(16.0),
+                              borderSide: new BorderSide(),
+                            ),
+                            //fillColor: Colors.green
+                          ),
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "Please fill the details.";
+                            } else {
+                              return null;
+                            }
+                          },
+                          //keyboardType: TextInputType.multiline,
+                          style: new TextStyle(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  new Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Expanded(
+                        child: new Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                              'Whether the applicant has been prohibited under the arms Act 1959 or any other law from having the arms,ammunitions:'),
+                        ),
+                      ),
+                      Expanded(
+                        child: new TextFormField(
+                          //controller: controller1,
+                          onEditingComplete: () {
+                            print(controller1.text);
+                          },
+                          decoration: new InputDecoration(
+                            labelText: "Prohibited under Arms Act 1959?",
                             labelStyle: TextStyle(fontSize: 14),
                             fillColor: Colors.amber,
                             border: new OutlineInputBorder(

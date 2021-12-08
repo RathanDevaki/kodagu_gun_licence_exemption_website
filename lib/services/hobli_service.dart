@@ -15,6 +15,7 @@ class HobliServices {
   static const _UPDATE_HOBLI_ACTION = 'UPDATE_HOBLI';
   static const _DELETE_HOBLI_ACTION = 'DELETE_HOBLI';
   static const _GET_TALUK = 'GET_TALUK';
+
   static Future<String> createTable() async {
     var map = Map<String, dynamic>();
     map['action'] = _CREATE_TABLE_ACTION;
@@ -109,19 +110,23 @@ class HobliServices {
     }
   }
 
-  static Future<String> updateHobli(
-      Hobli selected, String hobli_code, String hobli_name) async {
+  static Future<String> updateHobli(String? selectedTalluk, Hobli selected,
+      String hobli_code, String hobli_name) async {
     try {
       var map = Map<String, dynamic>();
+
       map['action'] = _UPDATE_HOBLI_ACTION;
       map['hobli_code'] = hobli_code;
       map['hobli_name'] = hobli_name;
-      String sel = selected.taluk_name;
-      map['sl_no'] = selected.slNo;
-      map['taluk_name'] = selected.taluk_name;
+      map['taluk_code'] = selectedTalluk;
+      map['constraint'] = selected.hobliCode;
       // map['taluk_code']
-      log('Print: $hobli_code,$hobli_name,$sel');
-
+      log('Datas' +
+          selectedTalluk.toString() +
+          '--' +
+          selected.hobliCode +
+          '--' +
+          hobli_code);
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();
       log('Response string :$v');
