@@ -93,7 +93,7 @@ class VACircleServices {
       log('Get details VA_CIRCLE: ${response.body}');
 
       if (200 == response.statusCode) {
-        log('Response Code: ${response.statusCode}');
+        log('Response Code VA: ${response.statusCode}');
         List<VACircle> va_circle_list = parseResponseVACircle(response.body);
         log('Returns getVACircle:$va_circle_list');
         return va_circle_list;
@@ -148,9 +148,9 @@ class VACircleServices {
       map['action'] = _UPDATE_VA_CIRCLE_ACTION;
       map['va_circle_code'] = vaCircleCode;
       map['va_circle_name'] = vaCircleName;
-      map['hobli_code'] = selected.hobliCode;
+      map['hobli_code'] = selected.hobliName;
       map['sl_no'] = selected.slNo;
-      map['taluk_code'] = selected.talukCode;
+      map['taluk_code'] = selected.talukName;
       // map['taluk_code']
       log(vaCircleCode);
 

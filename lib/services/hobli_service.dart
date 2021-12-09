@@ -121,11 +121,11 @@ class HobliServices {
       map['taluk_code'] = selectedTalluk;
       map['constraint'] = selected.hobliCode;
       // map['taluk_code']
-      log('Datas' +
+      log('Datas: selected tq' +
           selectedTalluk.toString() +
-          '--' +
+          'PrevHobliCode' +
           selected.hobliCode +
-          '--' +
+          'UpdateHobCod' +
           hobli_code);
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();

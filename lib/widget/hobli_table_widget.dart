@@ -28,7 +28,7 @@ class _HobliTableState extends State<HobliTable> {
   late List<String> taluk_names =
       []; // = ['Madikeri', 'Virajpet', 'Somwarpet'];
   int flag = 0;
-
+  int i=0;
   String? selectedTaluk;
   late String _selectedTalluk_;
 
@@ -46,7 +46,6 @@ class _HobliTableState extends State<HobliTable> {
 
   _showHobli(Hobli hobli_ref) {
     hobliTemp = hobli_ref;
-    log('show hobli' + hobliTemp.taluk_name);
     showAddHobliDialog(transactionType);
     _hobliCodeController.text = hobli_ref.hobliCode;
     _hobliNameController.text = hobli_ref.hobliName;
@@ -146,7 +145,7 @@ class _HobliTableState extends State<HobliTable> {
               .map(
                 (hobliShow) => DataRow(cells: [
                   DataCell(
-                    Text(hobliShow.slNo),
+                    Text((++i).toString()),
                   ),
                   DataCell(
                     Text(hobliShow.hobliCode),
@@ -162,10 +161,11 @@ class _HobliTableState extends State<HobliTable> {
                         ? Center(
                             child: IconButton(
                               onPressed: () {
+                                i=0;
                                 transactionType = "UPDATE";
                                 _selectedHobli = hobliShow;
                                 hobliTemp = hobliShow;
-                                //temp = hobliShow.taluk_name;
+
                                 _showHobli(hobliShow);
                               },
                               icon: Icon(
@@ -176,9 +176,10 @@ class _HobliTableState extends State<HobliTable> {
                           )
                         : ElevatedButton(
                             onPressed: () {
+                              i=0;
                               transactionType = "UPDATE";
                               _selectedHobli = hobliShow;
-                              //  hobliTemp = hobliShow;
+                                hobliTemp = hobliShow;
                               _showHobli(hobliShow);
                             },
                             style: ElevatedButton.styleFrom(
@@ -198,6 +199,7 @@ class _HobliTableState extends State<HobliTable> {
                         ? Center(
                             child: IconButton(
                               onPressed: () {
+                                i=0;
                                 _showDeleteDialog(hobliShow);
                               },
                               icon: Icon(
@@ -208,6 +210,7 @@ class _HobliTableState extends State<HobliTable> {
                           )
                         : ElevatedButton(
                             onPressed: () {
+                              i=0;
                               _showDeleteDialog(hobliShow);
                             },
                             style: ElevatedButton.styleFrom(
@@ -374,6 +377,7 @@ class _HobliTableState extends State<HobliTable> {
               ? TextButton(
                   style: outlinedButtonStyle,
                   onPressed: () {
+                    i=0;
                     if (_formKey.currentState!.validate()) {
                       _addHobli();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -432,6 +436,8 @@ class _HobliTableState extends State<HobliTable> {
   _clearValues() {
     _hobliCodeController.text = "";
     _hobliNameController.text = "";
+    selectedTaluk=null;
+
   }
 
   _updateHobli(Hobli selected, String? selectedTalluk) {
@@ -454,7 +460,10 @@ class _HobliTableState extends State<HobliTable> {
 
         log('HTTP result: $result');
         if ('Success' == result) {
+
           _getHobli();
+          selectedTaluk=null;
+          _clearValues();
           // _showSnackBar(context, result);
         }
         _clearValues();
