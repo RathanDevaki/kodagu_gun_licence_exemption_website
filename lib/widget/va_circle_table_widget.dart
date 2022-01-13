@@ -34,27 +34,30 @@ class _VACircleTableState extends State<VACircleTable> {
   late String _selectedTallukCode_;
   late VACircle vaTemp;
   String? selectedHobli;
-  String? tempselectedHobli;
+
   late String _selectedHobli_;
   late String _selectedHobliCode_;
-  int i=0;
+  int inc=0;
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     _getTaluk();
     _getHobli();
     _getVACircle();
     _vaCircleNameController = TextEditingController();
     _vaCircleCodeController = TextEditingController();
-    tempselectedHobli = 'Bhaguuu';
+
     transactionType = '';
   }
 
-  _addVACircle() {
+  _addVACircle()
+  {
     VACircleServices.addVACircle(_selectedTalluk_, _selectedHobli_,
             _vaCircleCodeController.text, _vaCircleNameController.text)
         .then(
-      (result) {
+      (result)
+      {
         debugPrint('Debug report: $result');
 
         log('HTTP result: $result');
@@ -68,7 +71,8 @@ class _VACircleTableState extends State<VACircleTable> {
     //Navigator.pop(context, 'Add');
   }
 
-  _showVACircle(VACircle vaCircle_ref) {
+  _showVACircle(VACircle vaCircle_ref)
+  {
     vaTemp=vaCircle_ref;
     showAddVACircleDialog(transactionType);
     _vaCircleCodeController.text = vaCircle_ref.VACircleCode;
@@ -85,18 +89,21 @@ class _VACircleTableState extends State<VACircleTable> {
     });
   }
 
-  _getTaluk() {
-    VACircleServices.getTaluk().then((talukNames) {
-      setState(() {
+  _getTaluk()
+  {
+    VACircleServices.getTaluk().then((talukNames)
+    {
+      setState(()
+      {
         taluk_ = talukNames;
-
         return;
       });
     });
   }
 
   _getHobli() {
-    VACircleServices.getHobliForDropdown().then((hobli) {
+    VACircleServices.getHobliForDropdown().then((hobli)
+    {
       setState(() {
         hobli_ = hobli;
         print('Log in hobli..8 $hobli_');
@@ -105,11 +112,15 @@ class _VACircleTableState extends State<VACircleTable> {
     });
   }
 
-  _updateVACircle(VACircle selected) {
+  _updateVACircle(VACircle selected,String? selectedTaluk1,String? selectedHobli1)
+  {
     if (_vaCircleCodeController.text.isEmpty ||
         _vaCircleNameController.text.isEmpty) {
       // print('Empty Field');
     } else {
+      log('T,h'+selectedTaluk1.toString()+'--'+selectedHobli1.toString());
+      log('V- TalukName'+selected.talukName);
+      log('V-update Hobli-'+selected.hobliName);
       VACircleServices.updateVACircle(
         selected,
         _vaCircleCodeController.text,
@@ -206,7 +217,7 @@ class _VACircleTableState extends State<VACircleTable> {
               .map(
                 (vaShow) => DataRow(cells: [
                   DataCell(
-                    Text((++i).toString()),
+                    Text((++inc).toString()),
                   ),
                   DataCell(
                     Text(vaShow.VACircleCode),
@@ -225,6 +236,7 @@ class _VACircleTableState extends State<VACircleTable> {
                         ? Center(
                             child: IconButton(
                               onPressed: () {
+                                inc=0;
                                 transactionType = "UPDATE";
                                 _selectedVA = vaShow;
                                 vaTemp=vaShow;
@@ -238,6 +250,7 @@ class _VACircleTableState extends State<VACircleTable> {
                           )
                         : ElevatedButton(
                             onPressed: () {
+                              inc=0;
                               transactionType = "UPDATE";
                               _selectedVA = vaShow;
                               vaTemp=vaShow;
@@ -260,6 +273,7 @@ class _VACircleTableState extends State<VACircleTable> {
                         ? Center(
                             child: IconButton(
                               onPressed: () {
+                                inc=0;
                                 _showDeleteDialog(vaShow);
                               },
                               icon: Icon(
@@ -270,6 +284,7 @@ class _VACircleTableState extends State<VACircleTable> {
                           )
                         : ElevatedButton(
                             onPressed: () {
+                              inc=0;
                               _showDeleteDialog(vaShow);
                             },
                             style: ElevatedButton.styleFrom(
@@ -329,18 +344,16 @@ class _VACircleTableState extends State<VACircleTable> {
                           return DropdownButtonFormField<String>(
                             elevation: 16,
                             hint: transactionType == 'UPDATE'
-                                ? Text(vaTemp.talukName)
+                                ? Text(_selectedTalluk_=vaTemp.talukName)
                                 : Text('Select Taluk'),
 
 
                             items: taluk_.map(buildMenuItem).toList(),
-                            validator: (_selectedTaluk) =>
-                                _selectedTaluk == null
-                                    ? '  Please Select Taluk  '
-                                    : null,
+
                             onChanged: (String? value_) => dropDownState(() {
                               this.selectedTaluk = value_;
                               _selectedTalluk_ = value_.toString();
+                              _selectedVA.talukName=_selectedTalluk_;
                               log(_selectedTalluk_);
                             }),
                             value: selectedTaluk,
@@ -365,18 +378,16 @@ class _VACircleTableState extends State<VACircleTable> {
                           return DropdownButtonFormField<String>(
                             elevation: 16,
                             hint: transactionType == 'UPDATE'
-                                ? Text(vaTemp.hobliName)
+                                ? Text(_selectedVA.hobliName)
                                 : Text('Select Taluk'),
                             // taluk_names.map(buildMenuItem).toList()
                             items: hobli_.map(buildMenuItemHobli).toList(),
-                            validator: (_selectedHobli) =>
-                                _selectedHobli == null
-                                    ? '  Please Select Hobli  '
-                                    : null,
+
                             onChanged: (String? value_) => dropDownState(() {
                               this.selectedHobli = value_;
                               _selectedHobli_ = value_.toString();
-                              log('hobli sss $_selectedHobli_');
+                              _selectedVA.hobliName=_selectedHobli_;
+                              log('hobli sss $_selectedHobli_--- $selectedHobli');
                             }),
                             value: selectedHobli,
                           );
@@ -447,6 +458,7 @@ class _VACircleTableState extends State<VACircleTable> {
               ? TextButton(
                   style: outlinedButtonStyle,
                   onPressed: () {
+                    inc=0;
                     if (_formKey.currentState!.validate()) {
                       _addVACircle();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -468,8 +480,9 @@ class _VACircleTableState extends State<VACircleTable> {
               : TextButton(
                   style: outlinedButtonStyle,
                   onPressed: () {
+                    inc=0;
                     if (_formKey.currentState!.validate()) {
-                      _updateVACircle(_selectedVA);
+                      _updateVACircle(_selectedVA,selectedHobli,selectedTaluk);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Hobli Updated Succesfully"),

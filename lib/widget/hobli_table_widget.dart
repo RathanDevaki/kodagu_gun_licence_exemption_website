@@ -28,7 +28,7 @@ class _HobliTableState extends State<HobliTable> {
   late List<String> taluk_names =
       []; // = ['Madikeri', 'Virajpet', 'Somwarpet'];
   int flag = 0;
-  int i=0;
+  int inc=0;
   String? selectedTaluk;
   late String _selectedTalluk_;
 
@@ -145,7 +145,7 @@ class _HobliTableState extends State<HobliTable> {
               .map(
                 (hobliShow) => DataRow(cells: [
                   DataCell(
-                    Text((++i).toString()),
+                    Text((++inc).toString()),
                   ),
                   DataCell(
                     Text(hobliShow.hobliCode),
@@ -161,7 +161,7 @@ class _HobliTableState extends State<HobliTable> {
                         ? Center(
                             child: IconButton(
                               onPressed: () {
-                                i=0;
+                                inc=0;
                                 transactionType = "UPDATE";
                                 _selectedHobli = hobliShow;
                                 hobliTemp = hobliShow;
@@ -176,7 +176,7 @@ class _HobliTableState extends State<HobliTable> {
                           )
                         : ElevatedButton(
                             onPressed: () {
-                              i=0;
+                              inc=0;
                               transactionType = "UPDATE";
                               _selectedHobli = hobliShow;
                                 hobliTemp = hobliShow;
@@ -199,7 +199,7 @@ class _HobliTableState extends State<HobliTable> {
                         ? Center(
                             child: IconButton(
                               onPressed: () {
-                                i=0;
+                                inc=0;
                                 _showDeleteDialog(hobliShow);
                               },
                               icon: Icon(
@@ -210,7 +210,7 @@ class _HobliTableState extends State<HobliTable> {
                           )
                         : ElevatedButton(
                             onPressed: () {
-                              i=0;
+                              inc=0;
                               _showDeleteDialog(hobliShow);
                             },
                             style: ElevatedButton.styleFrom(
@@ -254,6 +254,8 @@ class _HobliTableState extends State<HobliTable> {
     //  String? value;
     showDialog<String>(
       context: context,
+
+      barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
         title: transactionType == 'ADD'
             ? const Text(
@@ -298,7 +300,8 @@ class _HobliTableState extends State<HobliTable> {
                               if (_selectedTaluk == null &&
                                   transactionType == 'ADD') {
                                 return '  Please Select Taluk  ';
-                              } else if (transactionType == 'UPDATE') {
+                              } else if (transactionType == 'UPDATE')
+                              {
                                 log('else Update -');
                               }
                             },
@@ -377,7 +380,7 @@ class _HobliTableState extends State<HobliTable> {
               ? TextButton(
                   style: outlinedButtonStyle,
                   onPressed: () {
-                    i=0;
+                    inc=0;
                     if (_formKey.currentState!.validate()) {
                       _addHobli();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -400,6 +403,7 @@ class _HobliTableState extends State<HobliTable> {
                   style: outlinedButtonStyle,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+
                       _updateHobli(_selectedHobli, selectedTaluk);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -440,7 +444,8 @@ class _HobliTableState extends State<HobliTable> {
 
   }
 
-  _updateHobli(Hobli selected, String? selectedTalluk) {
+  _updateHobli(Hobli selected, String? selectedTalluk)
+  {
     if (_hobliCodeController.text.isEmpty ||
         _hobliNameController.text.isEmpty ||
         selectedTalluk == null) {
