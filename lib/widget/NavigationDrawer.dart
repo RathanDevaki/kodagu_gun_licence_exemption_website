@@ -1,5 +1,6 @@
 import 'package:admin/screens/hobli_screen_holder.dart';
 import 'package:admin/screens/va_circle_holder_screen.dart';
+import 'package:admin/screens/village_screen.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/screens/custom_textbox.dart';
 import 'package:admin/screens/taluk_table_holder_screen.dart';
@@ -107,6 +108,9 @@ class NavigationDrawer extends StatelessWidget {
             builder: (context) => VACircleScreen(),
           ),
         );
+        break;
+      case 3:
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>VillageScreen(),));
     }
   }
 }

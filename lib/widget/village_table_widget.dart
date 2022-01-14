@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:admin/models/hobli.dart';
 import 'package:admin/models/talluk.dart';
 import 'package:admin/models/va_circle.dart';
+import 'package:admin/models/village.dart';
 import 'package:admin/services/hobli_service.dart';
 import 'package:admin/services/va_circle_service.dart';
 import 'package:admin/utilities/constants.dart';
@@ -10,18 +11,19 @@ import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class VACircleTable extends StatefulWidget {
-  const VACircleTable({Key? key}) : super(key: key);
+class VillageTable extends StatefulWidget {
+  const VillageTable({Key? key}) : super(key: key);
 
   @override
-  _VACircleTableState createState() => _VACircleTableState();
+  _VillageState createState() => _VillageState();
 }
 
 // hey
-class _VACircleTableState extends State<VACircleTable> {
+class _VillageState extends State<VillageTable> {
   late List<VACircle> va_circle_ = [];
   late List<Taluk> taluk_ = [];
   late List<Hobli> hobli_ = [];
+  late List<Village> vilage_ = [];
 
   late String transactionType;
   late TextEditingController _vaCircleNameController;
@@ -54,9 +56,9 @@ class _VACircleTableState extends State<VACircleTable> {
   _addVACircle()
   {
     VACircleServices.addVACircle(_selectedTalluk_, _selectedHobli_,
-            _vaCircleCodeController.text, _vaCircleNameController.text)
+        _vaCircleCodeController.text, _vaCircleNameController.text)
         .then(
-      (result)
+          (result)
       {
         debugPrint('Debug report: $result');
 
@@ -195,113 +197,113 @@ class _VACircleTableState extends State<VACircleTable> {
                 //flex: 8,
                 child: Responsive.isMobile(context)
                     ? ElevatedButton(
-                        style: outlinedButtonStyle,
-                        child: Icon(Icons.add),
-                        onPressed: () {
-                          transactionType = "ADD";
-                          showAddVACircleDialog(transactionType);
-                        },
-                      )
+                  style: outlinedButtonStyle,
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    transactionType = "ADD";
+                    showAddVACircleDialog(transactionType);
+                  },
+                )
                     : TextButton(
-                        child: Text(
-                          "Add".toUpperCase(),
-                          style: tableHeadingTextStyle,
-                        ),
-                        style: outlinedButtonStyle,
-                        onPressed: () {
-                          transactionType = "ADD";
-                          showAddVACircleDialog(transactionType);
-                        }),
+                    child: Text(
+                      "Add".toUpperCase(),
+                      style: tableHeadingTextStyle,
+                    ),
+                    style: outlinedButtonStyle,
+                    onPressed: () {
+                      transactionType = "ADD";
+                      showAddVACircleDialog(transactionType);
+                    }),
               ),
             ),
           ],
           rows: va_circle_
               .map(
                 (vaShow) => DataRow(cells: [
-                  DataCell(
-                    Text((++inc).toString()),
+              DataCell(
+                Text((++inc).toString()),
+              ),
+              DataCell(
+                Text(vaShow.VACircleCode),
+              ),
+              DataCell(
+                Text(vaShow.VACircleName),
+              ),
+              DataCell(
+                Text(vaShow.talukName),
+              ),
+              DataCell(
+                Text(vaShow.hobliName),
+              ),
+              DataCell(
+                Responsive.isMobile(context)
+                    ? Center(
+                  child: IconButton(
+                    onPressed: () {
+                      inc=0;
+                      transactionType = "UPDATE";
+                      _selectedVA = vaShow;
+                      vaTemp=vaShow;
+                      _showVACircle(vaShow);
+                    },
+                    icon: Icon(
+                      Icons.edit,
+                      color: secondaryColorDark,
+                    ),
                   ),
-                  DataCell(
-                    Text(vaShow.VACircleCode),
+                )
+                    : ElevatedButton(
+                  onPressed: () {
+                    inc=0;
+                    transactionType = "UPDATE";
+                    _selectedVA = vaShow;
+                    vaTemp=vaShow;
+                    _showVACircle(vaShow);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: secondaryColorDark,
+                    elevation: 16.0,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
+                    // textStyle: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  DataCell(
-                    Text(vaShow.VACircleName),
+                  child: Text(
+                    'EDIT',
                   ),
-                  DataCell(
-                    Text(vaShow.talukName),
+                ),
+              ),
+              DataCell(
+                Responsive.isMobile(context)
+                    ? Center(
+                  child: IconButton(
+                    onPressed: () {
+                      inc=0;
+                      _showDeleteDialog(vaShow);
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: deleteColor,
+                    ),
                   ),
-                  DataCell(
-                    Text(vaShow.hobliName),
+                )
+                    : ElevatedButton(
+                  onPressed: () {
+                    inc=0;
+                    _showDeleteDialog(vaShow);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: deleteColor,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
+                    // textStyle: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  DataCell(
-                    Responsive.isMobile(context)
-                        ? Center(
-                            child: IconButton(
-                              onPressed: () {
-                                inc=0;
-                                transactionType = "UPDATE";
-                                _selectedVA = vaShow;
-                                vaTemp=vaShow;
-                                _showVACircle(vaShow);
-                              },
-                              icon: Icon(
-                                Icons.edit,
-                                color: secondaryColorDark,
-                              ),
-                            ),
-                          )
-                        : ElevatedButton(
-                            onPressed: () {
-                              inc=0;
-                              transactionType = "UPDATE";
-                              _selectedVA = vaShow;
-                              vaTemp=vaShow;
-                              _showVACircle(vaShow);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: secondaryColorDark,
-                              elevation: 16.0,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              // textStyle: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            child: Text(
-                              'EDIT',
-                            ),
-                          ),
+                  child: Text(
+                    'Delete'.toUpperCase(),
                   ),
-                  DataCell(
-                    Responsive.isMobile(context)
-                        ? Center(
-                            child: IconButton(
-                              onPressed: () {
-                                inc=0;
-                                _showDeleteDialog(vaShow);
-                              },
-                              icon: Icon(
-                                Icons.delete,
-                                color: deleteColor,
-                              ),
-                            ),
-                          )
-                        : ElevatedButton(
-                            onPressed: () {
-                              inc=0;
-                              _showDeleteDialog(vaShow);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: deleteColor,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              // textStyle: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            child: Text(
-                              'Delete'.toUpperCase(),
-                            ),
-                          ),
-                  ),
-                ]),
-              )
+                ),
+              ),
+            ]),
+          )
               .toList(),
         ),
       ),
@@ -315,13 +317,13 @@ class _VACircleTableState extends State<VACircleTable> {
       builder: (BuildContext context) => AlertDialog(
         title: transactionType == 'ADD'
             ? const Text(
-                'Add New VA Circle',
-                style: tableHeadingTextStyle,
-              )
+          'Add New VA Circle',
+          style: tableHeadingTextStyle,
+        )
             : const Text(
-                'Update VA Circle',
-                style: tableHeadingTextStyle,
-              ),
+          'Update VA Circle',
+          style: tableHeadingTextStyle,
+        ),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 0.24,
           height: 220,
@@ -381,7 +383,7 @@ class _VACircleTableState extends State<VACircleTable> {
                             elevation: 16,
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.hobliName)
-                                : Text('Select Hobli'),
+                                : Text('Select Taluk'),
                             // taluk_names.map(buildMenuItem).toList()
                             items: hobli_.map(buildMenuItemHobli).toList(),
 
@@ -458,74 +460,74 @@ class _VACircleTableState extends State<VACircleTable> {
           ),
           transactionType == "ADD"
               ? TextButton(
-                  style: outlinedButtonStyle,
-                  onPressed: () {
-                    inc=0;
-                    if (_formKey.currentState!.validate()) {
-                      _addVACircle();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("New VA Circle Added Succesfully"),
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    } else {
-                      log("Error Adding");
-                      return;
-                    }
-                  },
-                  child: const Text(
-                    'Add',
-                    style: tableHeadingTextStyle,
+            style: outlinedButtonStyle,
+            onPressed: () {
+              inc=0;
+              if (_formKey.currentState!.validate()) {
+                _addVACircle();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("New VA Circle Added Succesfully"),
                   ),
-                )
+                );
+                Navigator.of(context).pop();
+              } else {
+                log("Error Adding");
+                return;
+              }
+            },
+            child: const Text(
+              'Add',
+              style: tableHeadingTextStyle,
+            ),
+          )
               : TextButton(
-                  style: outlinedButtonStyle,
-                  onPressed: () {
-                    inc=0;
-                    if (_formKey.currentState!.validate()) {
-                      _updateVACircle(_selectedVA,selectedHobli,selectedTaluk);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Hobli Updated Succesfully"),
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    } else {
-                      log("Error Updating");
-                      return;
-                    }
-                  },
-                  child: const Text(
-                    'Update',
-                    style: tableHeadingTextStyle,
+            style: outlinedButtonStyle,
+            onPressed: () {
+              inc=0;
+              if (_formKey.currentState!.validate()) {
+                _updateVACircle(_selectedVA,selectedHobli,selectedTaluk);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Hobli Updated Succesfully"),
                   ),
-                ),
+                );
+                Navigator.of(context).pop();
+              } else {
+                log("Error Updating");
+                return;
+              }
+            },
+            child: const Text(
+              'Update',
+              style: tableHeadingTextStyle,
+            ),
+          ),
         ],
       ),
     );
   }
 
   DropdownMenuItem<String> buildMenuItem(Taluk item) => DropdownMenuItem(
-        value: item.talukCode,
-        child: Padding(
-          padding: leftRightPadding,
-          child: Text(
-            item.talukName,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
+    value: item.talukCode,
+    child: Padding(
+      padding: leftRightPadding,
+      child: Text(
+        item.talukName,
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
   DropdownMenuItem<String> buildMenuItemHobli(Hobli item) => DropdownMenuItem(
-        value: item.hobliCode,
-        child: Padding(
-          padding: leftRightPadding,
-          child: Text(
-            item.hobliName,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
+    value: item.hobliCode,
+    child: Padding(
+      padding: leftRightPadding,
+      child: Text(
+        item.hobliName,
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
 
   _clearValues() {
     selectedHobli=null;

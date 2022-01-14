@@ -155,7 +155,7 @@ class VACircleServices {
       map['sl_no'] = selected.slNo;
       map['taluk_code'] = selected.talukName;
       map['constraints']=selected.VACircleCode;
-      // map['taluk_code']
+
       log('Ser_tqCOde'+selected.talukName);
 
       final response = await http.post(Uri.parse(ROOT), body: map);
