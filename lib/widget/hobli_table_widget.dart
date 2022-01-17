@@ -16,6 +16,7 @@ class HobliTable extends StatefulWidget {
 }
 
 class _HobliTableState extends State<HobliTable> {
+  static const double kMinInteractiveDimension = 48.0;
   late List<Hobli> hobli_ = [];
   late List<Taluk> taluk_ = [];
   late String transactionType;
@@ -288,13 +289,15 @@ class _HobliTableState extends State<HobliTable> {
                         builder:
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
-                            elevation: 16,
+
                             hint: Padding(
                               padding: leftRightPadding,
                               child: transactionType == 'UPDATE'
                                   ? Text(hobliTemp.taluk_name)
                                   : Text('Select Taluk'),
                             ),
+                            isDense: true,
+                            itemHeight:40.0,
                             items: taluk_.map(buildMenuItem).toList(),
                             validator: (_selectedTaluk) {
                               if (_selectedTaluk == null &&

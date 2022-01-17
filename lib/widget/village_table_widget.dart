@@ -164,7 +164,13 @@ class _VillageState extends State<VillageTable> {
             ),
             DataColumn(
               label: Text(
-                'VA Circle Code',
+                'Village Code',
+                style: tableHeadingTextStyle,
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'Village Name',
                 style: tableHeadingTextStyle,
               ),
             ),
@@ -223,6 +229,9 @@ class _VillageState extends State<VillageTable> {
               DataCell(
                 Text((++inc).toString()),
               ),
+                  DataCell(
+                    Text(vaShow.slNo),
+                  ),
               DataCell(
                 Text(vaShow.VACircleCode),
               ),
@@ -317,11 +326,11 @@ class _VillageState extends State<VillageTable> {
       builder: (BuildContext context) => AlertDialog(
         title: transactionType == 'ADD'
             ? const Text(
-          'Add New VA Circle',
+          'Add New Village',
           style: tableHeadingTextStyle,
         )
             : const Text(
-          'Update VA Circle',
+          'Update Village',
           style: tableHeadingTextStyle,
         ),
         content: SizedBox(
@@ -383,7 +392,7 @@ class _VillageState extends State<VillageTable> {
                             elevation: 16,
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.hobliName)
-                                : Text('Select Taluk'),
+                                : Text('Select Hobli'),
                             // taluk_names.map(buildMenuItem).toList()
                             items: hobli_.map(buildMenuItemHobli).toList(),
 
@@ -398,6 +407,41 @@ class _VillageState extends State<VillageTable> {
                         },
                       ),
                     ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0),
+                        border: Border.all(
+                          color: Colors.black45,
+                        ),
+                      ),
+                      //hei
+                      child: StatefulBuilder(
+                        builder:
+                            (BuildContext context, StateSetter dropDownState) {
+                          return DropdownButtonFormField<String>(
+                            elevation: 16,
+                            hint: transactionType == 'UPDATE'
+                                ? Text(_selectedVA.hobliName)
+                                : Text('Select VA Circle'),
+                            // taluk_names.map(buildMenuItem).toList()
+                            items: hobli_.map(buildMenuItemHobli).toList(),
+
+                            onChanged: (String? value_) => dropDownState(() {
+                              this.selectedHobli = value_;
+                              _selectedHobli_ = value_.toString();
+                              _selectedVA.hobliName=_selectedHobli_;
+                              log('hobli sss $_selectedHobli_--- $selectedHobli');
+                            }),
+                            value: selectedHobli,
+                          );
+                        },
+                      ),
+                    ),
+
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                     ),
@@ -563,7 +607,7 @@ class _VillageState extends State<VillageTable> {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(
-            "Are you sure want to delete the VA Circle ${vaCircleObject.VACircleName} ?"),
+            "Are you sure want to delete the Village ${vaCircleObject.VACircleName} ?"),
         actions: <Widget>[
           TextButton(
             child: Text(

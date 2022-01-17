@@ -1,27 +1,19 @@
-import 'package:admin/models/va_circle.dart';
-import 'package:admin/models/village.dart';
-import 'package:admin/widget/va_circle_table_widget.dart';
-import 'package:admin/widget/village_table_widget.dart';
-import 'package:flutter/material.dart';
-
+import 'package:admin/models/station.dart';
 import 'package:admin/utilities/constants.dart';
-
 import 'package:admin/utilities/responsive.dart';
-
 import 'package:admin/widget/NavigationDrawer.dart';
 import 'package:admin/widget/appbar.dart';
+import 'package:admin/widget/hobli_table_widget.dart';
+import 'package:flutter/material.dart';
+class PoliceStationScreen extends StatefulWidget {
+  const PoliceStationScreen({Key? key}) : super(key: key);
 
-import 'package:flutter/foundation.dart';
-
-class VillageScreen extends StatefulWidget {
-  const VillageScreen({Key? key}) : super(key: key);
-  final String title = 'Data from Mysql';
   @override
-  _VillageScreenState createState() => _VillageScreenState();
+  _PoliceStationScreenState createState() => _PoliceStationScreenState();
 }
 
-class _VillageScreenState extends State<VillageScreen> {
-  late Village villageDate;
+class _PoliceStationScreenState extends State<PoliceStationScreen> {
+  late Station hobliData;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
@@ -36,7 +28,7 @@ class _VillageScreenState extends State<VillageScreen> {
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: VillageTable(),
+          child: HobliTable(),
         ));
   }
 
@@ -63,7 +55,7 @@ class _VillageScreenState extends State<VillageScreen> {
                     Padding(
                       padding: defaultPadding,
                       child: Text(
-                        'Village Details'.toUpperCase(),
+                        'Police Stations Details'.toUpperCase(),
                         style: headingTextStyle,
                       ),
                     ),
@@ -79,4 +71,5 @@ class _VillageScreenState extends State<VillageScreen> {
       ),
     );
   }
-}
+  }
+

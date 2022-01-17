@@ -1,4 +1,5 @@
 import 'package:admin/screens/hobli_screen_holder.dart';
+import 'package:admin/screens/police_station_table_holder_screen.dart';
 import 'package:admin/screens/va_circle_holder_screen.dart';
 import 'package:admin/screens/village_screen.dart';
 import 'package:admin/utilities/constants.dart';
@@ -56,6 +57,7 @@ class NavigationDrawer extends StatelessWidget {
             buildMenuItem(
               text: 'Profile',
               icon: Icons.person,
+              onClicked: ()=>selectedItem(context, 5),
             ),
             SizedBox(height: sizedBoxHeight),
             buildMenuItem(
@@ -111,6 +113,10 @@ class NavigationDrawer extends StatelessWidget {
         break;
       case 3:
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>VillageScreen(),));
+        break;
+      case 4:
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PoliceStationScreen(),));
+        break;
     }
   }
 }
