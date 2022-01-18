@@ -29,7 +29,7 @@ class _HobliTableState extends State<HobliTable> {
   late List<String> taluk_names =
       []; // = ['Madikeri', 'Virajpet', 'Somwarpet'];
   int flag = 0;
-  int inc=0;
+  late int inc;
   String? selectedTaluk;
   late String _selectedTalluk_;
 
@@ -41,7 +41,7 @@ class _HobliTableState extends State<HobliTable> {
     _getHobli();
     _hobliNameController = TextEditingController();
     _hobliCodeController = TextEditingController();
-
+    inc=0;
     transactionType = '';
   }
 
@@ -75,6 +75,7 @@ class _HobliTableState extends State<HobliTable> {
 
   @override
   Widget build(BuildContext context) {
+
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -226,11 +227,11 @@ class _HobliTableState extends State<HobliTable> {
                           ),
                   ),
                 ]),
-              )
-              .toList(),
+              ).toList(),
         ),
       ),
     );
+
   }
 
   _addHobli() {
@@ -296,8 +297,8 @@ class _HobliTableState extends State<HobliTable> {
                                   ? Text(hobliTemp.taluk_name)
                                   : Text('Select Taluk'),
                             ),
-                            isDense: true,
-                            itemHeight:40.0,
+                            isDense: false,
+                            itemHeight:kMinInteractiveDimension,
                             items: taluk_.map(buildMenuItem).toList(),
                             validator: (_selectedTaluk) {
                               if (_selectedTaluk == null &&

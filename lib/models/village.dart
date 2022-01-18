@@ -25,4 +25,4 @@ class Village {
       villageName: json['village_code'] as String,
     );
   }
-}
+}//https://github.com/flutter/flutter/issues/69398

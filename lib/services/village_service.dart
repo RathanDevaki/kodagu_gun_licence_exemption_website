@@ -151,7 +151,7 @@ class VillageServices {
     return parsed.map<Village>((json) => Village.fromJson(json)).toList();
   }
 
-  static Future<String> addVACircle(String selectedTaluk, String selectedHobli,String selectedVACircle,
+  static Future<String> addVillage(String selectedTaluk, String selectedHobli,String selectedVACircle,
       String villageCode, String villageName) async {
     try {
       var map = Map<String, dynamic>();

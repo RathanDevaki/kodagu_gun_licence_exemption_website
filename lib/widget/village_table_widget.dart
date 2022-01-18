@@ -6,6 +6,7 @@ import 'package:admin/models/va_circle.dart';
 import 'package:admin/models/village.dart';
 import 'package:admin/services/hobli_service.dart';
 import 'package:admin/services/va_circle_service.dart';
+import 'package:admin/services/village_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
@@ -28,17 +29,25 @@ class _VillageState extends State<VillageTable> {
   late String transactionType;
   late TextEditingController _vaCircleNameController;
   late TextEditingController _vaCircleCodeController;
+
   final _formKey = GlobalKey<FormState>();
+  late Village _selectedVillage;
+
   late VACircle _selectedVA;
   late List<String> taluk_names =[];
+
   String? selectedTaluk;
   late String _selectedTalluk_;
   late String _selectedTallukCode_;
   late VACircle vaTemp;
+  late Village villageTemp;
   String? selectedHobli;
-
   late String _selectedHobli_;
   late String _selectedHobliCode_;
+
+  String? selectedVACircle;
+  late String _selectedVACircle_;
+
   int inc=0;
   @override
   void initState()
@@ -53,9 +62,9 @@ class _VillageState extends State<VillageTable> {
     transactionType = '';
   }
 
-  _addVACircle()
+  _addVillage()
   {
-    VACircleServices.addVACircle(_selectedTalluk_, _selectedHobli_,
+    VillageServices.addVillage(_selectedTalluk_, _selectedHobli_,_selectedVACircle_,
         _vaCircleCodeController.text, _vaCircleNameController.text)
         .then(
           (result)
@@ -73,27 +82,18 @@ class _VillageState extends State<VillageTable> {
     //Navigator.pop(context, 'Add');
   }
 
-  _showVACircle(VACircle vaCircle_ref)
+  _showVACircle(Village village_ref)
   {
-    vaTemp=vaCircle_ref;
+    villageTemp=village_ref;
     showAddVACircleDialog(transactionType);
-    _vaCircleCodeController.text = vaCircle_ref.VACircleCode;
-    _vaCircleNameController.text = vaCircle_ref.VACircleName;
+    _vaCircleCodeController.text = village_ref.villageCode;
+    _vaCircleNameController.text = village_ref.villageName;
   }
 
-  _getVACircle() {
-    VACircleServices.getVACircle().then((va_list) {
-      setState(() {
-        va_circle_ = va_list;
-        log('--------'+va_list.toString());
-        return;
-      });
-    });
-  }
 
   _getTaluk()
   {
-    VACircleServices.getTaluk().then((talukNames)
+    VillageServices.getTaluk().then((talukNames)
     {
       setState(()
       {
@@ -104,11 +104,21 @@ class _VillageState extends State<VillageTable> {
   }
 
   _getHobli() {
-    VACircleServices.getHobliForDropdown().then((hobli)
+    VillageServices.getHobliForDropdown().then((hobli)
     {
       setState(() {
         hobli_ = hobli;
         print('Log in hobli..8 $hobli_');
+        return;
+      });
+    });
+  }
+
+  _getVACircle() {
+    VillageServices.getVAForDropdown().then((va_list) {
+      setState(() {
+        va_circle_ = va_list;
+        log('--------'+va_list.toString());
         return;
       });
     });
@@ -223,26 +233,26 @@ class _VillageState extends State<VillageTable> {
               ),
             ),
           ],
-          rows: va_circle_
+          rows: vilage_
               .map(
                 (vaShow) => DataRow(cells: [
               DataCell(
                 Text((++inc).toString()),
               ),
                   DataCell(
-                    Text(vaShow.slNo),
+                    Text(vaShow.villageCode),
                   ),
               DataCell(
-                Text(vaShow.VACircleCode),
+                Text(vaShow.villageName),
               ),
               DataCell(
                 Text(vaShow.VACircleName),
               ),
               DataCell(
-                Text(vaShow.talukName),
+                Text(vaShow.hobliName),
               ),
               DataCell(
-                Text(vaShow.hobliName),
+                Text(vaShow.talukName),
               ),
               DataCell(
                 Responsive.isMobile(context)
@@ -251,8 +261,8 @@ class _VillageState extends State<VillageTable> {
                     onPressed: () {
                       inc=0;
                       transactionType = "UPDATE";
-                      _selectedVA = vaShow;
-                      vaTemp=vaShow;
+                      _selectedVillage = vaShow;
+                      villageTemp=vaShow;
                       _showVACircle(vaShow);
                     },
                     icon: Icon(
@@ -428,15 +438,15 @@ class _VillageState extends State<VillageTable> {
                                 ? Text(_selectedVA.hobliName)
                                 : Text('Select VA Circle'),
                             // taluk_names.map(buildMenuItem).toList()
-                            items: hobli_.map(buildMenuItemHobli).toList(),
+                            items: va_circle_.map(buildMenuItemHobli).toList(),
 
                             onChanged: (String? value_) => dropDownState(() {
-                              this.selectedHobli = value_;
-                              _selectedHobli_ = value_.toString();
-                              _selectedVA.hobliName=_selectedHobli_;
-                              log('hobli sss $_selectedHobli_--- $selectedHobli');
+                              this.selectedVACircle = value_;
+                              _selectedVACircle_ = value_.toString();
+                              _selectedVA.hobliName=_selectedVACircle_;
+                              log('hobli sss $_selectedVACircle_--- $selectedVACircle');
                             }),
-                            value: selectedHobli,
+                            value: selectedVACircle,
                           );
                         },
                       ),
@@ -508,7 +518,7 @@ class _VillageState extends State<VillageTable> {
             onPressed: () {
               inc=0;
               if (_formKey.currentState!.validate()) {
-                _addVACircle();
+                _addVillage();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("New VA Circle Added Succesfully"),
@@ -562,6 +572,7 @@ class _VillageState extends State<VillageTable> {
       ),
     ),
   );
+
   DropdownMenuItem<String> buildMenuItemHobli(Hobli item) => DropdownMenuItem(
     value: item.hobliCode,
     child: Padding(
@@ -572,10 +583,20 @@ class _VillageState extends State<VillageTable> {
       ),
     ),
   );
-
+  DropdownMenuItem<String> buildMenuItemVA(VACircle item) => DropdownMenuItem(
+    value: item.hobliCode,
+    child: Padding(
+      padding: leftRightPadding,
+      child: Text(
+        item.hobliName,
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
   _clearValues() {
     selectedHobli=null;
     selectedTaluk=null;
+    selectedVACircle=null;
     _vaCircleCodeController.text = "";
     _vaCircleNameController.text = "";
   }
