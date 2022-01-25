@@ -34,6 +34,24 @@ if("GET_TALUK" == $action){
     return;
 }
 
+if("GET_TALUK1" == $action){
+    $db_data = array();
+    $taluk_name=$_POST['taluk_name'];
+    $sql = "SELECT taluk_code from Taluk where taluk_name='".$taluk_name."' ";
+    $result = $conn->query($sql);
+    if($result->num_rows > 0){
+        while($row = $result->fetch_assoc()){
+            $db_data[] = $row;
+        }
+        // Send back the complete records as a json
+        echo json_encode($db_data);
+    }else{
+        echo "error tq1".$conn -> error;
+    }
+    $conn->close();
+    return;
+}
+
 if("CREATE_TABLE_HOBLI"==$action){
     $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, hobli_code VARCHAR(10),hobli_name CHAR(30),taluk_code varchar(30),PRIMARY KEY(hobli_code),FOREIGN KEY(taluk_code)REFERENCES Taluk(taluk_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
 
@@ -51,7 +69,7 @@ if("CREATE_TABLE_HOBLI"==$action){
 
 if("GET_HOBLI" == $action){
     $db_data = array();
-    $sql = "SELECT h.sl_no,h.hobli_code,h.hobli_name,t.taluk_name from Hobli h LEFT JOIN Taluk t ON h.taluk_code=t.taluk_code ORDER BY h.sl_no";
+    $sql = "SELECT h.sl_no,h.hobli_code,h.hobli_name,h.taluk_code,t.taluk_name from Hobli h LEFT JOIN Taluk t ON h.taluk_code=t.taluk_code ORDER BY h.sl_no";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){

@@ -67,7 +67,7 @@ if("CREATE_TABLE_VA_CIRCLE"==$action){
 
 if("GET_VA_CIRCLE" == $action){
     $db_data = array();
-    $sql = "SELECT va.sl_no,va.va_circle_code,va.va_circle_name,t.taluk_name,h.hobli_name from VACircle va INNER JOIN Taluk t ON va.taluk_code=t.taluk_code INNER JOIN Hobli h ON h.hobli_code=va.hobli_code";
+    $sql = "SELECT va.sl_no,va.va_circle_code,va.va_circle_name,va.va_circle_code,va.taluk_code,va.hobli_code,t.taluk_name,h.hobli_name from VACircle va INNER JOIN Taluk t ON va.taluk_code=t.taluk_code INNER JOIN Hobli h ON h.hobli_code=va.hobli_code";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
@@ -95,6 +95,7 @@ if("ADD_VA_CIRCLE"==$action)
 }
 if("UPDATE_VA_CIRCLE"==$action)
 {
+ 
  $va_circle_code=$_POST["va_circle_code"];
  $va_circle_name=$_POST["va_circle_name"];
  $hobli_code =$_POST["hobli_code"];
