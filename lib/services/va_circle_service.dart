@@ -145,18 +145,18 @@ class VACircleServices {
   }
 
   static Future<String> updateVACircle(
-      VACircle selected, String vaCircleCode, String vaCircleName) async {
+      VACircle selected, String vaCircleCode, String vaCircleName,String? selectedTaluk1,String? selectedHobli1) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_VA_CIRCLE_ACTION;
       map['va_circle_code'] = vaCircleCode;
       map['va_circle_name'] = vaCircleName;
-      map['hobli_code'] = selected.hobliName;
+      map['hobli_code'] = selectedHobli1;
       map['sl_no'] = selected.slNo;
-      map['taluk_code'] = selected.talukName;
+      map['taluk_code'] = selectedTaluk1;
       map['constraints']=selected.VACircleCode;
 
-      log('Ser_tqCOde'+selected.talukName);
+      log('Ser_tqCOde \n'+selectedTaluk1.toString()+' hobli code '+selected.taluk_code+' - ');
 
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();
@@ -170,7 +170,7 @@ class VACircleServices {
     } catch (e) {
       log('Exception :$e');
       getVACircle();
-      return "Something went wrong";
+      return "Something went wrong while updating";
     }
   }
 

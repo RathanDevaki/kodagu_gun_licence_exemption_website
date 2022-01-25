@@ -22,7 +22,7 @@ class _TalukTableState extends State<TalukTable> {
   late Taluk _selectedTaluk;
   final _formKey = GlobalKey<FormState>();
   late String transactionType;
-  int i=0;
+  int i = 0;
   @override
   void initState() {
     super.initState();
@@ -53,6 +53,7 @@ class _TalukTableState extends State<TalukTable> {
 
   @override
   Widget build(BuildContext context) {
+    i = 0;
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -164,7 +165,7 @@ class _TalukTableState extends State<TalukTable> {
                             child: IconButton(
                               onPressed: () {
                                 //_selectedTaluk = talukShow;
-                                i=0;
+                                i = 0;
                                 _showDeleteDialog(talukShow);
                               },
                               icon: Icon(
@@ -175,7 +176,7 @@ class _TalukTableState extends State<TalukTable> {
                           )
                         : ElevatedButton(
                             onPressed: () {
-                              i=0;
+                              i = 0;
                               _showDeleteDialog(talukShow);
                             },
                             style: ElevatedButton.styleFrom(
@@ -311,7 +312,7 @@ class _TalukTableState extends State<TalukTable> {
               ? TextButton(
                   style: outlinedButtonStyle,
                   onPressed: () {
-                    i=0;
+                    i = 0;
                     if (_formKey.currentState!.validate()) {
                       _addTaluk();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -333,7 +334,7 @@ class _TalukTableState extends State<TalukTable> {
               : TextButton(
                   style: outlinedButtonStyle,
                   onPressed: () {
-                    i=0;
+                    i = 0;
                     if (_formKey.currentState!.validate()) {
                       _updateTaluk(_selectedTaluk);
                       ScaffoldMessenger.of(context).showSnackBar(

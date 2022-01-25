@@ -15,6 +15,7 @@ class HobliServices {
   static const _UPDATE_HOBLI_ACTION = 'UPDATE_HOBLI';
   static const _DELETE_HOBLI_ACTION = 'DELETE_HOBLI';
   static const _GET_TALUK = 'GET_TALUK';
+  static const _GET_TALUK1 = 'GET_TALUK1';
 
   static Future<String> createTable() async {
     var map = Map<String, dynamic>();
@@ -33,7 +34,8 @@ class HobliServices {
       log(response.statusCode.toString());
       //   print('Get details : ${response.body}');
 
-      if (200 == response.statusCode) {
+      if (200 == response.statusCode)
+      {
         //    print('Response Code: ${response.statusCode}');
         List<Taluk> taluk_names = parseResponseHobliTaluk(response.body);
         print('Returns getTaluk:$taluk_names');
@@ -47,10 +49,40 @@ class HobliServices {
     }
   }
 
-  static List<Taluk> parseResponseHobliTaluk(String responseBody) {
+  static List<Taluk> parseResponseHobliTaluk(String responseBody)
+  {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Taluk>((json) => Taluk.fromJson(json)).toList();
   }
+
+  // static Future<List<Taluk>> getTaluk1(String? selectedTalluk) async {
+  //   try {
+  //     var map = Map<String, dynamic>();
+  //     map['action'] = _GET_TALUK1;
+  //     map['taluk_name']=selectedTalluk;
+  //     log('in tlk1 taluk name--'+selectedTalluk.toString());
+  //     final response = await http.post(Uri.parse(ROOT), body: map);
+  //     log(response.statusCode.toString());
+  //     //   print('Get details : ${response.body}');
+  //
+  //     if (200 == response.statusCode) {
+  //       //    print('Response Code: ${response.statusCode}');
+  //       List<Taluk> taluk_names1 = parseResponseHobliTaluk1(response.body);
+  //       log('Get details Taluk 1: ${response.body}');
+  //       return taluk_names1;
+  //     } else {
+  //       return <Taluk>[];
+  //     }
+  //   } catch (e) {
+  //     return <Taluk>[];
+  //     // print(e);
+  //   }
+  // }
+  //
+  // static List<Taluk> parseResponseHobliTaluk1(String responseBody) {
+  //   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  //   return parsed.map<Taluk>((json) => Taluk.fromJson(json)).toList();
+  // }
 
   static Future<List<Hobli>> getHobli() async {
     try {
@@ -120,12 +152,13 @@ class HobliServices {
       map['hobli_name'] = hobli_name;
       map['taluk_code'] = selectedTalluk;
       map['constraint'] = selected.hobliCode;
+      map['taluk_name'] = selected.taluk_name;
       // map['taluk_code']
-      log('Datas: selected tq' +
+      log('Datas: selected tq-' +
           selectedTalluk.toString() +
-          'PrevHobliCode' +
+          ' =PrevHobliCode=' +
           selected.hobliCode +
-          'UpdateHobCod' +
+          ' -UpdateHobCod- ' +
           hobli_code);
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();

@@ -21,6 +21,12 @@ class VillageTable extends StatefulWidget {
 
 // hey
 class _VillageState extends State<VillageTable> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+
+  /*
   late List<VACircle> va_circle_ = [];
   late List<Taluk> taluk_ = [];
   late List<Hobli> hobli_ = [];
@@ -649,5 +655,5 @@ class _VillageState extends State<VillageTable> {
         ],
       ),
     );
-  }
+  } */
 }

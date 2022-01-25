@@ -33,6 +33,7 @@ class _HobliTableState extends State<HobliTable> {
   String? selectedTaluk;
   late String _selectedTalluk_;
 
+
   late String temp;
   @override
   void initState() {
@@ -55,13 +56,12 @@ class _HobliTableState extends State<HobliTable> {
   _getTaluk() {
     HobliServices.getTaluk().then((talukNames) {
       setState(() {
-        taluk_ = talukNames;
+        taluk_= talukNames;
 
         return;
       });
     });
   }
-
   _getHobli() {
     HobliServices.getHobli().then((hobli) {
       setState(() {
@@ -234,7 +234,8 @@ class _HobliTableState extends State<HobliTable> {
 
   }
 
-  _addHobli() {
+  _addHobli()
+  {
     HobliServices.addHobli(_selectedTalluk_, _hobliCodeController.text,
             _hobliNameController.text)
         .then(
@@ -252,8 +253,9 @@ class _HobliTableState extends State<HobliTable> {
     //Navigator.pop(context, 'Add');
   }
 
-  void showAddHobliDialog(String transactionType) {
-    //  String? value;
+  void showAddHobliDialog(String transactionType)
+  {
+
     showDialog<String>(
       context: context,
 
@@ -300,20 +302,21 @@ class _HobliTableState extends State<HobliTable> {
                             isDense: false,
                             itemHeight:kMinInteractiveDimension,
                             items: taluk_.map(buildMenuItem).toList(),
-                            validator: (_selectedTaluk) {
-                              if (_selectedTaluk == null &&
-                                  transactionType == 'ADD') {
-                                return '  Please Select Taluk  ';
-                              } else if (transactionType == 'UPDATE')
-                              {
-                                log('else Update -');
-                              }
-                            },
+                            // validator: (_selectedTaluk) {
+                            //   if (_selectedTaluk == null &&
+                            //       transactionType == 'ADD') {
+                            //     return '  Please Select Taluk  ';
+                            //   } else if (transactionType == 'UPDATE')
+                            //   {
+                            //     log('else Update - hint');
+                            //   }
+                            // },
                             onChanged: (value_) => dropDownState(() {
-                              flag = 1;
+
                               this.selectedTaluk = value_.toString();
                               log('flag changed{$flag , $selectedTaluk}');
                               _selectedTalluk_ = value_.toString();
+                              flag = 1;
                             }),
                             value: selectedTaluk,
                           );
@@ -407,8 +410,10 @@ class _HobliTableState extends State<HobliTable> {
                   style: outlinedButtonStyle,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-
-                      _updateHobli(_selectedHobli, selectedTaluk);
+                        if(flag==0){
+                          selectedTaluk=hobliTemp.taluk_code;
+                        }
+                      _updateHobli(_selectedHobli, selectedTaluk,flag);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Hobli Updated Succesfully"),
@@ -448,7 +453,7 @@ class _HobliTableState extends State<HobliTable> {
 
   }
 
-  _updateHobli(Hobli selected, String? selectedTalluk)
+  _updateHobli(Hobli selected, String? selectedTalluk,int flag)
   {
     if (_hobliCodeController.text.isEmpty ||
         _hobliNameController.text.isEmpty ||
@@ -459,6 +464,7 @@ class _HobliTableState extends State<HobliTable> {
         selectedTalluk = selected.taluk_name;
         log('selected.talukname' + selected.taluk_name);
       }
+
       HobliServices.updateHobli(
         selectedTalluk,
         selected,
