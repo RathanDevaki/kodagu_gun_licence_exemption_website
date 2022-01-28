@@ -8,8 +8,7 @@ import 'package:admin/models/village.dart';
 import 'package:http/http.dart' as http;
 
 class VillageServices {
-  static const ROOT =
-      "http://localhost/kodagu_gun_licence_exemption_website/va_circle_data.php";
+  static const ROOT = "http://localhost/kodagu_gun_licence_exemption_website/village_data.php";
 
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE_VILLAGE';
   static const _GET_VILLAGE_ACTION = 'GET_VILLAGE';
@@ -183,19 +182,21 @@ class VillageServices {
     }
   }
 
-  static Future<String> updateVACircle(
-      VACircle selected, String vaCircleCode, String vaCircleName) async {
+  static Future<String> updateVillage(
+      Village selected, String villageCode, String villageName,String? selectedTaluk1,String? selectedHobli1,String? selectedVACircle1) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_VILLAGE_ACTION;
-      map['va_circle_code'] = vaCircleCode;
-      map['va_circle_name'] = vaCircleName;
-      map['hobli_code'] = selected.hobliName;
       map['sl_no'] = selected.slNo;
-      map['taluk_code'] = selected.talukName;
-      map['constraints']=selected.VACircleCode;
 
-      log('Ser_tqCOde'+selected.talukName);
+      map['village_code'] = villageCode;
+      map['village_name'] = villageName;
+      map['hobli_code'] = selectedHobli1;
+      map['taluk_code'] = selectedTaluk1;
+      map['va_circle_code'] = selectedVACircle1;
+      map['constraints']=selected.villlageCode;
+
+      log('Ser_tqCOde \n'+selectedTaluk1.toString()+' hobli code '+selected.talukName+' - ');
 
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();
@@ -209,16 +210,16 @@ class VillageServices {
     } catch (e) {
       log('Exception :$e');
       getVillage();
-      return "Something went wrong";
+      return "Something went wrong while updating";
     }
   }
 
-  static Future<String> deleteVACircle(VACircle vaCircle) async {
+  static Future<String> deleteVillage(Village _village) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _DELETE_VILLAGE_ACTION;
-      map['va_circle_code'] = vaCircle.VACircleCode;
-      map['sl_no'] = vaCircle.slNo;
+      map['va_circle_code'] = _village.VACircleCode;
+      map['sl_no'] = _village.slNo;
 
       final response = await http.post(Uri.parse(ROOT), body: map);
 

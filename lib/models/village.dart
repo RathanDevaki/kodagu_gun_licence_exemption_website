@@ -1,28 +1,38 @@
 class Village {
   String slNo;
   String talukName;
+  String taluk_code;
   String hobliName;
+  String hobli_code;
+  String VACircleCode;
   String VACircleName;
-  String villageCode;
+  String villlageCode;
   String villageName;
 
   Village({
     required this.hobliName,
     required this.talukName,
     required this.slNo,
+    required this.VACircleCode,
     required this.VACircleName,
-    required this.villageCode,
+    required this.taluk_code,
+    required this.hobli_code,
+    required this.villlageCode,
     required this.villageName,
   });
 
-  factory Village.fromJson(Map<String, dynamic> json) {
+  factory Village.fromJson(Map<String, dynamic> json)
+  {
     return Village(
       hobliName: json['hobli_name'] as String,
       talukName: json['taluk_name'] as String,
       slNo: json['sl_no'] as String,
+      VACircleCode: json['va_circle_code'] as String,
       VACircleName: json['va_circle_name'] as String,
-      villageCode: json['village_name'] as String,
-      villageName: json['village_code'] as String,
+      taluk_code: json['taluk_code'] as String,
+      hobli_code: json['hobli_code'] as String,
+      villageName: json['village_name'] as String,
+      villlageCode: json['village_code'] as String,
     );
   }
-}//https://github.com/flutter/flutter/issues/69398
+}

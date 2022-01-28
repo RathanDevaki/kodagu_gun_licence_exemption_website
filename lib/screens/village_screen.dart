@@ -21,7 +21,7 @@ class VillageScreen extends StatefulWidget {
 }
 
 class _VillageScreenState extends State<VillageScreen> {
-  late Village villageDate;
+ // late Village villageDate;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
