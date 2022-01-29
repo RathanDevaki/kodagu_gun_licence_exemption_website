@@ -196,8 +196,8 @@ class VillageServices {
       map['va_circle_code'] = selectedVACircle1;
       map['constraints']=selected.villlageCode;
 
-      log('Ser_tqCOde \n'+selectedTaluk1.toString()+' hobli code '+selected.talukName+' - ');
-
+      log('Service->details \n taluk: $selectedTaluk1 hobli: $selectedHobli1 \nv:$selectedVACircle1 \nvillageCode $villageCode\n villageName $villageName \nSlno'+selected.slNo+'\nconst:'+selected.villlageCode+'');
+      log('va: $selectedVACircle1');
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();
       log('Response string :$v');

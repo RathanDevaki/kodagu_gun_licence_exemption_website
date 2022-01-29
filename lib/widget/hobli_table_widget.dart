@@ -255,7 +255,7 @@ class _HobliTableState extends State<HobliTable> {
 
   void showAddHobliDialog(String transactionType)
   {
-
+    flag=0;
     showDialog<String>(
       context: context,
 

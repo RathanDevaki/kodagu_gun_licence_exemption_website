@@ -151,7 +151,7 @@ class _VillageState extends State<VillageTable> {
           flag1=0;
           flag2=0;
           flag3=0;
-          _getVACircle();
+          _getVillage();
 
           // _showSnackBar(context, result);
         }
@@ -163,6 +163,7 @@ class _VillageState extends State<VillageTable> {
 
   @override
   Widget build(BuildContext context) {
+    inc=0;
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -337,7 +338,9 @@ class _VillageState extends State<VillageTable> {
   }
   void showAddVillageDialog(String transactionType) {
     //  String? value;
+    flag1=flag2=flag3=0;
     showDialog<String>(
+
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: transactionType == 'ADD'
@@ -450,7 +453,8 @@ class _VillageState extends State<VillageTable> {
                             onChanged: (String? value_) => dropDownState(() {
 
                               this.selectedVACircle = value_;
-                              selectedVACircle=_selectedVACircle_ = value_.toString();
+                            _selectedVACircle_ = value_.toString();
+                              log('VA sel: $_selectedVACircle_--- $selectedVACircle');
                               flag3=1;
 
                             }),
@@ -546,7 +550,7 @@ class _VillageState extends State<VillageTable> {
             style: outlinedButtonStyle,
             onPressed: () {
               inc=0;
-              log('flag value $flag1 , $flag2');
+              print('flag value $flag1 , $flag2 , $flag3');
 
               if (_formKey.currentState!.validate()) {
                 if(flag1==0){
@@ -563,12 +567,12 @@ class _VillageState extends State<VillageTable> {
                 _updateVillage(_selectedVA,selectedTaluk,selectedHobli,selectedVACircle);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("Hobli Updated Succesfully"),
+                    content: Text("Village Updated Succesfully"),
                   ),
                 );
                 Navigator.of(context).pop();
               } else {
-                log("Error Updating");
+                log("Error Updating Village");
                 return;
               }
             },
@@ -635,7 +639,7 @@ class _VillageState extends State<VillageTable> {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        _getVACircle();
+        _getVillage();
         // _showSnackBar(context, result);
       }
 

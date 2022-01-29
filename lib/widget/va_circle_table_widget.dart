@@ -316,6 +316,7 @@ class _VACircleTableState extends State<VACircleTable> {
 
   void showAddVACircleDialog(String transactionType) {
     //  String? value;
+    flag1=flag2=0;
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
