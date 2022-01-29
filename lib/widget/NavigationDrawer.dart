@@ -1,3 +1,4 @@
+import 'package:admin/screens/admin_login.dart';
 import 'package:admin/screens/hobli_screen_holder.dart';
 import 'package:admin/screens/police_station_table_holder_screen.dart';
 import 'package:admin/screens/va_circle_holder_screen.dart';
@@ -116,6 +117,9 @@ class NavigationDrawer extends StatelessWidget {
         break;
       case 4:
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PoliceStationScreen(),));
+        break;
+      case 5:
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AdminLogin(),));
         break;
     }
   }
