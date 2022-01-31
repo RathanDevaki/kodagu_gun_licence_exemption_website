@@ -1,5 +1,4 @@
 <?php
-
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Credentials: true");
 header("Content-type:application/json;charset=utf-8"); 
@@ -122,7 +121,8 @@ if("UPDATE_VILLAGE"==$action)
  $sl_no = $_POST["sl_no"];
  $constraints=$_POST["constraints"];
  
- $sql="UPDATE $table SET village_code='".$village_code."',village_name='".$village_name."', taluk_code='".$taluk_code."' ,hobli_code = '".$hobli_code."',va_circle_code = '".$va_circle_code."' where village_code = '".$constraints."' ";
+ 
+$sql="UPDATE Village SET village_code='".$village_code."',village_name='".$village_name."', taluk_code='".$taluk_code."' ,hobli_code = '".$hobli_code."',va_circle_code = '".$va_circle_code."' where sl_no = '".$sl_no."' ";
  $result=$conn->query($sql);
     echo "Success";
     $conn->close();

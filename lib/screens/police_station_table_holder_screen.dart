@@ -4,7 +4,9 @@ import 'package:admin/utilities/responsive.dart';
 import 'package:admin/widget/NavigationDrawer.dart';
 import 'package:admin/widget/appbar.dart';
 import 'package:admin/widget/hobli_table_widget.dart';
+import 'package:admin/widget/police_station_widget.dart';
 import 'package:flutter/material.dart';
+
 class PoliceStationScreen extends StatefulWidget {
   const PoliceStationScreen({Key? key}) : super(key: key);
 
@@ -28,7 +30,7 @@ class _PoliceStationScreenState extends State<PoliceStationScreen> {
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: HobliTable(),
+          child: PoliceStationTable(),
         ));
   }
 
@@ -43,8 +45,8 @@ class _PoliceStationScreenState extends State<PoliceStationScreen> {
           children: <Widget>[
             Responsive.isDesktop(context)
                 ? Expanded(
-              child: NavigationDrawer(),
-            )
+                    child: NavigationDrawer(),
+                  )
                 : Container(),
             Expanded(
               flex: 5,
@@ -71,5 +73,4 @@ class _PoliceStationScreenState extends State<PoliceStationScreen> {
       ),
     );
   }
-  }
-
+}

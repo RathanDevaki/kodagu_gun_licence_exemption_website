@@ -51,7 +51,7 @@ if("GET_HOBLI" == $action){
 }
 
 if("CREATE_TABLE_VA_CIRCLE"==$action){
-    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, va_circle_code VARCHAR(10),va_circle_name CHAR(30),taluk_code varchar(20),hobli_code varchar(30),PRIMARY KEY(va_circle_code),FOREIGN KEY(hobli_code)REFERENCES Hobli(hobli_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
+    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, va_circle_code VARCHAR(10),va_circle_name CHAR(30),taluk_code varchar(20),hobli_code varchar(30),PRIMARY KEY(va_circle_code),FOREIGN KEY(taluk_code)REFERENCES Taluk(taluk_code),FOREIGN KEY(hobli_code)REFERENCES Hobli(hobli_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
 
     if($conn->query($sql)===TRUE)
     {

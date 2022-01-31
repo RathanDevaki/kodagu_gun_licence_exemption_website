@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:admin/screens/chooser.dart';
+import 'package:admin/services/station_service.dart';
 import 'package:admin/services/taluk_service.dart';
 import 'package:admin/screens/home_screen.dart';
 import 'package:admin/services/va_circle_service.dart';
@@ -57,6 +58,12 @@ class MyApp extends StatelessWidget {
       }
     });
     VillageServices.createTable().then((result) {
+      if ('success' == result) {
+        //  _showSnackBar(context, result);
+        //_showProgress(widget.title);
+      }
+    });
+    StationServices.createTable().then((result) {
       if ('success' == result) {
         //  _showSnackBar(context, result);
         //_showProgress(widget.title);
