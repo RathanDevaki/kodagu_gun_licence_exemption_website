@@ -1,5 +1,8 @@
+import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
-class AdminLogin extends StatefulWidget {
+
+class AdminLogin extends StatefulWidget
+{
   const AdminLogin({Key? key}) : super(key: key);
 
   @override
@@ -9,14 +12,16 @@ class AdminLogin extends StatefulWidget {
 class _AdminLoginState extends State<AdminLogin> {
   @override
   Widget build(BuildContext context) {
-   return MaterialApp(
-
-        title: 'Flutter Login Web',
-        home:Column(
+   return Scaffold(
+        body:Center(
+        child:Container(
+        width: 500,
+        height: 500,
+        child:Column(
       children: [
         TextField(
           decoration: InputDecoration(
-            hintText: 'Enter email or Phone number',
+            hintText: 'Enter Login ID',
             filled: true,
             fillColor: Colors.blueGrey[50],
             labelStyle: TextStyle(fontSize: 12),
@@ -63,7 +68,7 @@ class _AdminLoginState extends State<AdminLogin> {
               BoxShadow(
                 color: Colors.blue,
                 spreadRadius: 10,
-                blurRadius: 20,
+                blurRadius: 15,
               ),
             ],
           ),
@@ -71,7 +76,7 @@ class _AdminLoginState extends State<AdminLogin> {
             child: Container(
                 width: double.infinity,
                 height: 50,
-                child: Center(child: Text("Sign In"))),
+                child: Center(child: Text("Sign In"),),),
             onPressed: () => print("it's pressed"),
             style: ElevatedButton.styleFrom(
               primary: Colors.deepPurple,
@@ -82,36 +87,36 @@ class _AdminLoginState extends State<AdminLogin> {
             ),
           ),
         ),
-        SizedBox(height: 40),
-        Row(children: [
-          Expanded(
-            child: Divider(
-              color: Colors.grey[300],
-              height: 50,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text("Or continue with"),
-          ),
-          Expanded(
-            child: Divider(
-              color: Colors.grey[400],
-              height: 50,
-            ),
-          ),
-        ]),
-        SizedBox(height: 40),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // _loginWithButton(image: 'images/google.png'),
-            // _loginWithButton(image: 'images/github.png', isActive: true),
-            // _loginWithButton(image: 'images/facebook.png'),
-          ],
-        ),
+        // SizedBox(height: 40),
+        // Row(children: [
+        //   Expanded(
+        //     child: Divider(
+        //       color: Colors.grey[300],
+        //       height: 50,
+        //     ),
+        //   ),
+        //   Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 20),
+        //     child: Text("Or continue with"),
+        //   ),
+        //   Expanded(
+        //     child: Divider(
+        //       color: Colors.grey[400],
+        //       height: 50,
+        //     ),
+        //   ),
+        // ]),
+        // SizedBox(height: 40),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     // _loginWithButton(image: 'images/google.png'),
+        //     // _loginWithButton(image: 'images/github.png', isActive: true),
+        //     // _loginWithButton(image: 'images/facebook.png'),
+        //   ],
+        // ),
       ],
-    ));
+    ),),),);
   }
 }
 
