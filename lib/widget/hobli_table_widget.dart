@@ -33,10 +33,10 @@ class _HobliTableState extends State<HobliTable> {
   String? selectedTaluk;
   late String _selectedTalluk_;
 
-
   late String temp;
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     _getTaluk();
     _getHobli();
@@ -75,7 +75,7 @@ class _HobliTableState extends State<HobliTable> {
 
   @override
   Widget build(BuildContext context) {
-
+inc=0;
     return Center(
       child: Container(
         decoration: BoxDecoration(

@@ -61,6 +61,7 @@ class _PoliceStationScreenState extends State<PoliceStationScreen> {
                         style: headingTextStyle,
                       ),
                     ),
+
                     Expanded(
                       child: _databody(),
                     ),

@@ -7,8 +7,7 @@ import 'package:admin/models/talluk.dart';
 import 'package:http/http.dart' as http;
 
 class StationServices {
-  static const ROOT =
-      "http://localhost/kodagu_gun_licence_exemption_website/police_station_data.php";
+  static const ROOT = "http://localhost/kodagu_gun_licence_exemption_website/police_station_data.php";
 
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE_POLICE_STATION';
   static const _GET_STATION_ACTION = 'GET_STATION';
@@ -81,7 +80,7 @@ class StationServices {
 
   static List<Station> parseResponseStation(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<Station>((json) => Hobli.fromJson(json)).toList();
+    return parsed.map<Station>((json) => Station.fromJson(json)).toList();
   }
 
   static Future<String> addStation(
@@ -127,7 +126,7 @@ class StationServices {
       map['constraint'] = selected.station_code;
       map['taluk_name'] = selected.taluk_name;
 
-      log('Datas: selected tq $selectedTalluk');
+      log('Datas: selected tq $selectedTalluk , $station_code , $station_name_en , $station_name_ka , '+selected.station_code +'='+ selected.taluk_name);
       final response = await http.post(Uri.parse(ROOT), body: map);
       String v = response.statusCode.toString();
       log('Response string :$v');
@@ -144,14 +143,14 @@ class StationServices {
     }
   }
 
-  static Future<String> deleteStation(Station st_obj) async {
+  static Future<String> deleteStation(String st_code) async
+  {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _DELETE_STATION_ACTION;
+      map['station_code'] = st_code;
 
-      map['station_code'] = st_obj.station_code;
-      map['sl_no'] = st_obj.slNo;
-
+      log('sl_nooo'+st_code);
       final response = await http.post(Uri.parse(ROOT), body: map);
 
       String v = response.statusCode.toString();
@@ -160,12 +159,13 @@ class StationServices {
         getStation();
         return response.body;
       } else {
-        return "Error Deleting Station";
+        return "Error Deleting Hobli";
       }
-    } catch (e) {
+    }
+    catch (e) {
       log('Exception :$e');
       getStation();
-      return "Something went wrong";
+      return "Something went wrong $e";
     }
   }
 }
