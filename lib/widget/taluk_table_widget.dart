@@ -19,6 +19,7 @@ class _TalukTableState extends State<TalukTable> {
 
   late TextEditingController _talukCodeController;
   late TextEditingController _talukNameController;
+  late TextEditingController _talukNameController_ka;
   late Taluk _selectedTaluk;
   final _formKey = GlobalKey<FormState>();
   late String transactionType;
@@ -28,6 +29,7 @@ class _TalukTableState extends State<TalukTable> {
     super.initState();
     _talukCodeController = TextEditingController();
     _talukNameController = TextEditingController();
+    _talukNameController_ka = TextEditingController();
     transactionType = "";
 
     //_scaffoldKey = GlobalKey();
@@ -38,6 +40,7 @@ class _TalukTableState extends State<TalukTable> {
     showAddTalukDialog(transactionType);
     _talukCodeController.text = taluk_ref.talukCode;
     _talukNameController.text = taluk_ref.talukName;
+    _talukNameController_ka.text = taluk_ref.talukNameKA;
   }
 
   _getTaluk() {
@@ -84,6 +87,12 @@ class _TalukTableState extends State<TalukTable> {
               ),
             ),
             DataColumn(
+              label: Text(
+                'ತಾಲೂಕಿನ ಹೆಸರು',
+                style: tableHeadingTextStyle,
+              ),
+            ),
+            DataColumn(
               label: Visibility(
                 visible: false,
                 child: Text('Update'),
@@ -125,6 +134,9 @@ class _TalukTableState extends State<TalukTable> {
                   ),
                   DataCell(
                     Text(talukShow.talukName),
+                  ),
+                  DataCell(
+                    Text(talukShow.talukNameKA),
                   ),
                   DataCell(
                     Responsive.isMobile(context)
@@ -205,12 +217,12 @@ class _TalukTableState extends State<TalukTable> {
 
   _addTaluk() {
     if (_talukCodeController.text.isEmpty ||
-        _talukNameController.text.isEmpty) {
+        _talukNameController.text.isEmpty ||  _talukNameController_ka.text.isEmpty) {
       //print('Empty Field');
     } else {
       // _showProgress('Adding Taluk');
       TalukServices.addTaluk(
-              _talukCodeController.text, _talukNameController.text)
+              _talukCodeController.text, _talukNameController.text,_talukNameController_ka.text)
           .then(
         (result) {
           debugPrint('Debug report: $result');
@@ -279,9 +291,19 @@ class _TalukTableState extends State<TalukTable> {
                     ),
                     new TextFormField(
                       controller: _talukNameController,
-                      decoration: textFormDecoration,
+
+                      decoration: new InputDecoration(
+                        labelText: "Taluk Name ",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
                       validator: (val) {
-                        if (val!.length == 0) {
+                        if (val == null || val.isEmpty) {
                           return "Taluk Name cannot be empty";
                         } else {
                           return null;
@@ -290,6 +312,34 @@ class _TalukTableState extends State<TalukTable> {
                       //keyboardType: TextInputType.multiline,
                       style: new TextStyle(),
                     ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ),
+                    new TextFormField(
+                      controller: _talukNameController_ka,
+
+                      decoration: new InputDecoration(
+                        labelText: "ತಾಲೂಕಿನ ಹೆಸರು",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "Taluk name cannot be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      //keyboardType: TextInputType.multiline,
+                      style: new TextStyle(),
+                    ),
+
                   ],
                 ),
               ),
@@ -366,7 +416,7 @@ class _TalukTableState extends State<TalukTable> {
     } else {
       // _showProgress('Adding Taluk');
       TalukServices.updateTaluk(
-              _talukCodeController.text, _talukNameController.text, sl_no_)
+              _talukCodeController.text, _talukNameController.text, _talukNameController_ka.text,sl_no_)
           .then((result) {
         debugPrint('Debug report: $result');
 

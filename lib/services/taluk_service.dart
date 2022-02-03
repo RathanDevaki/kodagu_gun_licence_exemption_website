@@ -79,12 +79,13 @@ class TalukServices {
     return parsed.map<Taluk>((json) => Taluk.fromJson(json)).toList();
   }
 
-  static Future<String> addTaluk(String taluk_code, String taluk_name) async {
+  static Future<String> addTaluk(String taluk_code, String taluk_name,String taluk_name_ka) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_TALUK_ACTION;
       map['taluk_code'] = taluk_code;
       map['taluk_name'] = taluk_name;
+      map['taluk_name_ka'] = taluk_name_ka;
       log(taluk_code);
 
       final response = await http.post(Uri.parse(ROOT), body: map);
@@ -105,12 +106,13 @@ class TalukServices {
   }
 
   static Future<String> updateTaluk(
-      String taluk_code, String taluk_name, String sl_no) async {
+      String taluk_code, String taluk_name, String taluk_name_ka,String sl_no) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_TALUK_ACTION;
       map['taluk_code'] = taluk_code;
       map['taluk_name'] = taluk_name;
+      map['taluk_name_ka'] = taluk_name_ka;
       map['sl_no'] = sl_no;
       log(taluk_code);
 

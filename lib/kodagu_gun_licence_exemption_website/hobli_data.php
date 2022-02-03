@@ -53,7 +53,7 @@ if("GET_TALUK1" == $action){
 }
 
 if("CREATE_TABLE_HOBLI"==$action){
-    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, hobli_code VARCHAR(10),hobli_name CHAR(30),taluk_code varchar(30),PRIMARY KEY(hobli_code),FOREIGN KEY(taluk_code)REFERENCES Taluk(taluk_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
+    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, hobli_code VARCHAR(10),hobli_name CHAR(30),hobli_name_ka CHAR(30),taluk_code varchar(30),PRIMARY KEY(hobli_code),FOREIGN KEY(taluk_code)REFERENCES Taluk(taluk_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
 
     if($conn->query($sql)===TRUE)
     {
@@ -69,7 +69,7 @@ if("CREATE_TABLE_HOBLI"==$action){
 
 if("GET_HOBLI" == $action){
     $db_data = array();
-    $sql = "SELECT h.sl_no,h.hobli_code,h.hobli_name,h.taluk_code,t.taluk_name from Hobli h LEFT JOIN Taluk t ON h.taluk_code=t.taluk_code ORDER BY h.sl_no";
+    $sql = "SELECT h.sl_no,h.hobli_code,h.hobli_name,h.hobli_name_ka,h.taluk_code,t.taluk_name from Hobli h LEFT JOIN Taluk t ON h.taluk_code=t.taluk_code ORDER BY h.sl_no";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
@@ -88,8 +88,9 @@ if("ADD_HOBLI"==$action)
 {
     $hobli_code=$_POST["hobli_code"];
     $hobli_name=$_POST["hobli_name"];
+      $hobli_name_ka=$_POST["hobli_name_ka"];
     $taluk_code=$_POST["taluk_code"];
-    $sql="INSERT INTO Hobli(hobli_code,hobli_name,taluk_code)VALUES('".$hobli_code."','".$hobli_name."','".$taluk_code."')";
+    $sql="INSERT INTO Hobli(hobli_code,hobli_name,hobli_name_ka,taluk_code)VALUES('".$hobli_code."','".$hobli_name."','".$hobli_name_ka."','".$taluk_code."')";
     $result=$conn->query($sql);
     echo "Success";
     $conn->close();
@@ -100,10 +101,12 @@ if("UPDATE_HOBLI"==$action)
 $constraint=$_POST["constraint"];
  $hobli_code = $_POST["hobli_code"];
  $hobli_name = $_POST["hobli_name"];
+ $hobli_name_ka = $_POST["hobli_name_ka"];
  $taluk_code = $_POST["taluk_code"];
+ 
  $sl_no = $_POST["sl_no"];
 
- $sql="UPDATE Hobli SET hobli_code = '".$hobli_code."', hobli_name='".$hobli_name."', taluk_code='".$taluk_code."' where hobli_code ='".$constraint."' ";
+ $sql="UPDATE Hobli SET hobli_code = '".$hobli_code."', hobli_name='".$hobli_name."',hobli_name_ka='".$hobli_name_ka."', taluk_code='".$taluk_code."' where hobli_code ='".$constraint."' ";
  $result=$conn->query($sql);
     echo "Success";
     $conn->close();

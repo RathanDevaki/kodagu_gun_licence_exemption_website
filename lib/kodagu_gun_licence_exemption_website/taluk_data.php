@@ -17,7 +17,7 @@ if($conn->connect_error)
     return;
 }
 if("CREATE_TABLE"==$action){
-    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, taluk_code VARCHAR(10)PRIMARY KEY,taluk_name CHAR(30))ENGINE=InnoDB";
+    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, taluk_code VARCHAR(10)PRIMARY KEY,taluk_name CHAR(30),taluk_name_ka CHAR(30))ENGINE=InnoDB";
 
     if($conn->query($sql)===TRUE)
     {
@@ -33,7 +33,7 @@ if("CREATE_TABLE"==$action){
 
 if("GET_TALUK" == $action){
     $db_data = array();
-    $sql = "SELECT sl_no,taluk_code, taluk_name from $table ORDER BY sl_no";
+    $sql = "SELECT * FROM Taluk ORDER BY sl_no";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
@@ -51,7 +51,8 @@ if("ADD_TALUK"==$action)
 {
     $taluk_code=$_POST["taluk_code"];
     $taluk_name=$_POST["taluk_name"];
-    $sql="INSERT INTO $table(taluk_code,taluk_name)VALUES('".$taluk_code."','".$taluk_name."')";
+    $taluk_name_ka=$_POST["taluk_name_ka"];
+    $sql="INSERT INTO $table(taluk_code,taluk_name,taluk_name_ka)VALUES('".$taluk_code."','".$taluk_name."','".$taluk_name_ka."')";
     $result=$conn->query($sql);
     echo "Success";
     $conn->close();
@@ -61,8 +62,9 @@ if("UPDATE_TALUK"==$action)
 {
  $taluk_code = $_POST["taluk_code"];
  $taluk_name = $_POST["taluk_name"];
+ $taluk_name_ka = $_POST["taluk_name_ka"];
  $sl_no = $_POST["sl_no"];
- $sql="UPDATE $table SET taluk_code = '".$taluk_code."', taluk_name='".$taluk_name."' where sl_no = '".$sl_no."' ";
+ $sql="UPDATE $table SET taluk_code = '".$taluk_code."', taluk_name='".$taluk_name."',taluk_name_ka='".$tluk_name_ka."' where sl_no = '".$sl_no."' ";
  $result=$conn->query($sql);
     echo "Success";
     $conn->close();

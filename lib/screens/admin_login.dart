@@ -1,3 +1,4 @@
+import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +16,17 @@ class _AdminLoginState extends State<AdminLogin> {
    return Scaffold(
         body:Center(
         child:Container(
+          //color: secondaryColor,
+           padding: EdgeInsets.all(16.0),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.0),color: tableBackground, boxShadow: [BoxShadow(
+          color: Colors.grey,
+          blurRadius: 16.0,
+        ),]),
         width: 500,
-        height: 500,
+
         child:Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize:MainAxisSize.min,
       children: [
         TextField(
           decoration: InputDecoration(

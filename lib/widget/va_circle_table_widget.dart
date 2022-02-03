@@ -437,11 +437,22 @@ class _VACircleTableState extends State<VACircleTable> {
                     ),
                     new TextFormField(
                       controller: _vaCircleNameController,
-                      decoration: textFormDecoration,
+
+                      decoration: new InputDecoration(
+                        labelText: "VA Circle Name ",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
                       validator: (val) {
                         if (val == null || val.isEmpty) {
                           return "VA Circle Name cannot be empty";
                         } else {
+                          log('vac name$val');
                           return null;
                         }
                       },

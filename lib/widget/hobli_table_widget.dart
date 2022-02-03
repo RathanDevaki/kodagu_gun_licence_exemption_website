@@ -21,6 +21,7 @@ class _HobliTableState extends State<HobliTable> {
   late List<Taluk> taluk_ = [];
   late String transactionType;
   late TextEditingController _hobliNameController;
+  late TextEditingController _hobliNameController_ka;
   late TextEditingController _hobliCodeController;
   final _formKey = GlobalKey<FormState>();
   late Hobli _selectedHobli;
@@ -41,6 +42,7 @@ class _HobliTableState extends State<HobliTable> {
     _getTaluk();
     _getHobli();
     _hobliNameController = TextEditingController();
+    _hobliNameController_ka = TextEditingController();
     _hobliCodeController = TextEditingController();
     inc=0;
     transactionType = '';
@@ -51,6 +53,8 @@ class _HobliTableState extends State<HobliTable> {
     showAddHobliDialog(transactionType);
     _hobliCodeController.text = hobli_ref.hobliCode;
     _hobliNameController.text = hobli_ref.hobliName;
+    _hobliNameController_ka.text = hobli_ref.hobliName_ka;
+
   }
 
   _getTaluk() {
@@ -107,6 +111,12 @@ inc=0;
             ),
             DataColumn(
               label: Text(
+                'ಹೋಬಳಿ ಹೆಸರು',
+                style: tableHeadingTextStyle,
+              ),
+            ),
+            DataColumn(
+              label: Text(
                 'Taluk Name',
                 style: tableHeadingTextStyle,
               ),
@@ -154,6 +164,9 @@ inc=0;
                   ),
                   DataCell(
                     Text(hobliShow.hobliName),
+                  ),
+                  DataCell(
+                    Text(hobliShow.hobliName_ka),
                   ),
                   DataCell(
                     Text(hobliShow.taluk_name),
@@ -237,7 +250,7 @@ inc=0;
   _addHobli()
   {
     HobliServices.addHobli(_selectedTalluk_, _hobliCodeController.text,
-            _hobliNameController.text)
+            _hobliNameController.text,_hobliNameController_ka.text)
         .then(
       (result) {
         debugPrint('Debug report: $result');
@@ -354,7 +367,17 @@ inc=0;
                     ),
                     new TextFormField(
                       controller: _hobliNameController,
-                      decoration: textFormDecoration,
+
+                      decoration: new InputDecoration(
+                        labelText: "Hobli Name ",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
                       validator: (val) {
                         if (val == null || val.isEmpty) {
                           return "Hobli Name cannot be empty";
@@ -365,6 +388,35 @@ inc=0;
                       //keyboardType: TextInputType.multiline,
                       style: new TextStyle(),
                     ),
+
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ),
+                    new TextFormField(
+                      controller: _hobliNameController_ka,
+
+                      decoration: new InputDecoration(
+                        labelText: "ಹೋಬಳಿ ಹೆಸರು ",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "Hobli Name cannot be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      //keyboardType: TextInputType.multiline,
+                      style: new TextStyle(),
+                    ),
+
                   ],
                 ),
               ),
@@ -449,6 +501,7 @@ inc=0;
   _clearValues() {
     _hobliCodeController.text = "";
     _hobliNameController.text = "";
+    _hobliNameController_ka.text = "";
     selectedTaluk=null;
 
   }
@@ -456,7 +509,7 @@ inc=0;
   _updateHobli(Hobli selected, String? selectedTalluk,int flag)
   {
     if (_hobliCodeController.text.isEmpty ||
-        _hobliNameController.text.isEmpty ||
+        _hobliNameController.text.isEmpty || _hobliNameController_ka.text.isEmpty ||
         selectedTalluk == null) {
       print('Empty Field');
     } else {
@@ -470,6 +523,7 @@ inc=0;
         selected,
         _hobliCodeController.text,
         _hobliNameController.text,
+        _hobliNameController_ka.text,
       ).then((result) {
         debugPrint('Debug report: $result');
 
