@@ -6,6 +6,7 @@ class VACircle {
   String hobli_code;
   String VACircleCode;
   String VACircleName;
+  String VACircleName_ka;
 
   VACircle({
     required this.hobliName,
@@ -15,6 +16,7 @@ class VACircle {
     required this.VACircleName,
     required this.taluk_code,
     required this.hobli_code,
+    required this.VACircleName_ka,
   });
 
   factory VACircle.fromJson(Map<String, dynamic> json)
@@ -27,6 +29,7 @@ class VACircle {
       VACircleName: json['va_circle_name'] as String,
       taluk_code: json['taluk_code'] as String,
       hobli_code: json['hobli_code'] as String,
+      VACircleName_ka: json['va_circle_name_ka'] as String,
     );
   }
 }

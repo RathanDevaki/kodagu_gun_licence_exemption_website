@@ -115,11 +115,11 @@ class VACircleServices {
   }
 
   static Future<String> addVACircle(String selectedTaluk, String selectedHobli,
-      String vaCircleCode, String vaCircleName) async {
+      String vaCircleCode, String vaCircleName,String vaCircleName_ka) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_VA_CIRCLE_ACTION;
-
+      map['va_circle_name_ka']= vaCircleName_ka;
       map['va_circle_code'] = vaCircleCode;
       map['va_circle_name'] = vaCircleName;
       map['taluk_code'] = selectedTaluk;
@@ -145,12 +145,13 @@ class VACircleServices {
   }
 
   static Future<String> updateVACircle(
-      VACircle selected, String vaCircleCode, String vaCircleName,String? selectedTaluk1,String? selectedHobli1) async {
+      VACircle selected, String vaCircleCode, String vaCircleName,String vaCircleName_ka,String? selectedTaluk1,String? selectedHobli1) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_VA_CIRCLE_ACTION;
       map['va_circle_code'] = vaCircleCode;
       map['va_circle_name'] = vaCircleName;
+      map['va_circle_name_ka']=vaCircleName_ka;
       map['hobli_code'] = selectedHobli1;
       map['sl_no'] = selected.slNo;
       map['taluk_code'] = selectedTaluk1;

@@ -25,6 +25,7 @@ class _VACircleTableState extends State<VACircleTable> {
 
   late String transactionType;
   late TextEditingController _vaCircleNameController;
+  late TextEditingController _vaCircleNameController_ka;
   late TextEditingController _vaCircleCodeController;
   final _formKey = GlobalKey<FormState>();
   late VACircle _selectedVA;
@@ -48,6 +49,7 @@ class _VACircleTableState extends State<VACircleTable> {
     _getHobli();
     _getVACircle();
     _vaCircleNameController = TextEditingController();
+    _vaCircleNameController_ka = TextEditingController();
     _vaCircleCodeController = TextEditingController();
 
     transactionType = '';
@@ -55,8 +57,9 @@ class _VACircleTableState extends State<VACircleTable> {
 
   _addVACircle()
   {
+    log('kannada '+_vaCircleNameController_ka.text);
     VACircleServices.addVACircle(_selectedTalluk_, _selectedHobli_,
-        _vaCircleCodeController.text, _vaCircleNameController.text)
+        _vaCircleCodeController.text, _vaCircleNameController.text,_vaCircleNameController_ka.text)
         .then(
           (result)
       {
@@ -79,6 +82,7 @@ class _VACircleTableState extends State<VACircleTable> {
     showAddVACircleDialog(transactionType);
     _vaCircleCodeController.text = vaCircle_ref.VACircleCode;
     _vaCircleNameController.text = vaCircle_ref.VACircleName;
+    _vaCircleNameController_ka.text=vaCircle_ref.VACircleName_ka;
   }
 
   _getVACircle() {
@@ -117,7 +121,7 @@ class _VACircleTableState extends State<VACircleTable> {
 
   _updateVACircle(VACircle selected,String? selectedTaluk1,String? selectedHobli1)
   {
-    if (_vaCircleCodeController.text.isEmpty || _vaCircleNameController.text.isEmpty)
+    if (_vaCircleCodeController.text.isEmpty || _vaCircleNameController.text.isEmpty || _vaCircleNameController_ka.text.isEmpty)
     {
       print('Empty Field');
     } else {
@@ -129,6 +133,7 @@ class _VACircleTableState extends State<VACircleTable> {
         selected,
         _vaCircleCodeController.text,
         _vaCircleNameController.text,
+        _vaCircleNameController_ka.text,
         selectedTaluk1,
         selectedHobli1,
       ).then((result) {
@@ -177,6 +182,12 @@ class _VACircleTableState extends State<VACircleTable> {
             DataColumn(
               label: Text(
                 'VA Circle Name',
+                style: tableHeadingTextStyle,
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'VA ವೃತ್ತದ ಹೆಸರು',
                 style: tableHeadingTextStyle,
               ),
             ),
@@ -235,6 +246,9 @@ class _VACircleTableState extends State<VACircleTable> {
               DataCell(
                 Text(vaShow.VACircleName),
               ),
+                  DataCell(
+                    Text(vaShow.VACircleName_ka),
+                  ),
               DataCell(
                 Text(vaShow.talukName),
               ),
@@ -459,6 +473,36 @@ class _VACircleTableState extends State<VACircleTable> {
                       //keyboardType: TextInputType.multiline,
                       style: new TextStyle(),
                     ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ),
+                    new TextFormField(
+                      controller: _vaCircleNameController_ka,
+
+                      decoration: new InputDecoration(
+                        labelText: "VA ವೃತ್ತದ ಹೆಸರು",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "VA Circle Name cannot be empty";
+                        } else {
+                          log('vac name ka$val');
+                          return null;
+                        }
+                      },
+                      //keyboardType: TextInputType.multiline,
+                      style: new TextStyle(),
+                    ),
+
+
                   ],
                 ),
               ),
@@ -517,7 +561,7 @@ class _VACircleTableState extends State<VACircleTable> {
                 _updateVACircle(_selectedVA,selectedTaluk,selectedHobli);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("Hobli Updated Succesfully"),
+                    content: Text("VA Circle Updated Succesfully"),
                   ),
                 );
                 Navigator.of(context).pop();
@@ -562,6 +606,7 @@ class _VACircleTableState extends State<VACircleTable> {
     selectedTaluk=null;
     _vaCircleCodeController.text = "";
     _vaCircleNameController.text = "";
+    _vaCircleNameController_ka.text = "";
   }
 
   void _deleteVACircle(VACircle selected) {

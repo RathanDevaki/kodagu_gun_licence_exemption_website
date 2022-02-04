@@ -6,6 +6,7 @@ import 'package:admin/services/hobli_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class HobliTable extends StatefulWidget {
@@ -16,6 +17,7 @@ class HobliTable extends StatefulWidget {
 }
 
 class _HobliTableState extends State<HobliTable> {
+  //var format = '/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/";
   static const double kMinInteractiveDimension = 48.0;
   late List<Hobli> hobli_ = [];
   late List<Taluk> taluk_ = [];
@@ -33,14 +35,14 @@ class _HobliTableState extends State<HobliTable> {
   late int inc;
   String? selectedTaluk;
   late String _selectedTalluk_;
-
+  String _sort='sl_no';
   late String temp;
   @override
   void initState()
   {
     super.initState();
     _getTaluk();
-    _getHobli();
+    _getHobli(_sort);
     _hobliNameController = TextEditingController();
     _hobliNameController_ka = TextEditingController();
     _hobliCodeController = TextEditingController();
@@ -66,8 +68,8 @@ class _HobliTableState extends State<HobliTable> {
       });
     });
   }
-  _getHobli() {
-    HobliServices.getHobli().then((hobli) {
+  _getHobli(String sortBy) {
+    HobliServices.getHobli(sortBy).then((hobli) {
       setState(() {
         log('message hobli');
         hobli_ = hobli;
@@ -87,39 +89,71 @@ inc=0;
           borderRadius: BorderRadius.circular(12),
         ),
         child: DataTable(
-          columnSpacing: MediaQuery.of(context).size.width * 0.02,
+
+          dataRowHeight: 32,
+          columnSpacing: MediaQuery.of(context).size.width * 0.01,
           sortColumnIndex: 1,
           sortAscending: true,
           columns: [
             DataColumn(
+
               label: Text(
                 'SL. NO',
                 style: tableHeadingTextStyle,
               ),
             ),
             DataColumn(
-              label: Text(
+              label: InkWell(onTap: (){
+                setState(() {
+                  _sort='hobli_code';
+                  _getHobli(_sort);
+                });
+
+              },child:Text(
                 'Hobli Code',
+
                 style: tableHeadingTextStyle,
-              ),
+              ),),
             ),
             DataColumn(
-              label: Text(
+              label: InkWell(onTap: (){
+                setState(() {
+                  _sort='hobli_name';
+                  _getHobli(_sort);
+                });
+
+              },child:Text(
                 'Hobli Name',
+
                 style: tableHeadingTextStyle,
-              ),
+              ),),
             ),
+
             DataColumn(
-              label: Text(
+              label: InkWell(onTap: (){
+                setState(() {
+                  _sort='hobli_name';
+                  _getHobli(_sort);
+                });
+
+              },child:Text(
                 'ಹೋಬಳಿ ಹೆಸರು',
+
                 style: tableHeadingTextStyle,
-              ),
+              ),),
             ),
             DataColumn(
-              label: Text(
+              label: InkWell(onTap: (){
+                setState(() {
+                  _sort='taluk_code';
+                  _getHobli(_sort);
+                });
+
+              },child:Text(
                 'Taluk Name',
+
                 style: tableHeadingTextStyle,
-              ),
+              ),),
             ),
             DataColumn(
               label: Visibility(
@@ -186,6 +220,7 @@ inc=0;
                               icon: Icon(
                                 Icons.edit,
                                 color: secondaryColorDark,
+                                size: 16,
                               ),
                             ),
                           )
@@ -198,10 +233,13 @@ inc=0;
                               _showHobli(hobliShow);
                             },
                             style: ElevatedButton.styleFrom(
+
                               primary: secondaryColorDark,
-                              elevation: 16.0,
+
+
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
+                                  horizontal: 8, vertical: 8),
+
                               // textStyle: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             child: Text(
@@ -220,6 +258,7 @@ inc=0;
                               icon: Icon(
                                 Icons.delete,
                                 color: deleteColor,
+                                size: 16,
                               ),
                             ),
                           )
@@ -257,7 +296,7 @@ inc=0;
 
         log('HTTP result: $result');
         if ('Success' == result) {
-          _getHobli();
+          _getHobli(_sort);
           // _showSnackBar(context, result);
         }
         _clearValues();
@@ -305,15 +344,16 @@ inc=0;
                         builder:
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
-
+                            decoration: InputDecoration(
+                                enabledBorder:InputBorder.none),
                             hint: Padding(
                               padding: leftRightPadding,
                               child: transactionType == 'UPDATE'
                                   ? Text(hobliTemp.taluk_name)
                                   : Text('Select Taluk'),
                             ),
-                            isDense: false,
-                            itemHeight:kMinInteractiveDimension,
+
+
                             items: taluk_.map(buildMenuItem).toList(),
                             // validator: (_selectedTaluk) {
                             //   if (_selectedTaluk == null &&
@@ -337,12 +377,14 @@ inc=0;
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _hobliCodeController,
-
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
+                      ],
                       decoration: new InputDecoration(
+                        
                         labelText: "Hobli Code ",
                         labelStyle: TextStyle(fontSize: 14),
                         fillColor: Colors.amber,
@@ -363,11 +405,12 @@ inc=0;
                       style: new TextStyle(),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _hobliNameController,
-
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
+                      ],
                       decoration: new InputDecoration(
                         labelText: "Hobli Name ",
                         labelStyle: TextStyle(fontSize: 14),
@@ -391,11 +434,12 @@ inc=0;
 
 
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _hobliNameController_ka,
-
+                      inputFormatters: [FilteringTextInputFormatter.deny( RegExp(r'^[_\+-=@,\.;]+$')),
+                      ],
                       decoration: new InputDecoration(
                         labelText: "ಹೋಬಳಿ ಹೆಸರು ",
                         labelStyle: TextStyle(fontSize: 14),
@@ -530,7 +574,7 @@ inc=0;
         log('HTTP result: $result');
         if ('Success' == result) {
 
-          _getHobli();
+          _getHobli(_sort);
           selectedTaluk=null;
           _clearValues();
           // _showSnackBar(context, result);
@@ -555,7 +599,7 @@ inc=0;
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        _getHobli();
+        _getHobli(_sort);
         // _showSnackBar(context, result);
       }
 
