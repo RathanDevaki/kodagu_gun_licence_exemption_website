@@ -8,6 +8,7 @@ import 'package:admin/services/va_circle_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class VACircleTable extends StatefulWidget {
@@ -162,8 +163,8 @@ class _VACircleTableState extends State<VACircleTable> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: DataTable(
-
-          columnSpacing: MediaQuery.of(context).size.width * 0.02,
+dataRowHeight: 32,
+          columnSpacing: MediaQuery.of(context).size.width * 0.01,
           sortColumnIndex: 1,
           sortAscending: true,
           columns: [
@@ -238,22 +239,22 @@ class _VACircleTableState extends State<VACircleTable> {
               .map(
                 (vaShow) => DataRow(cells: [
               DataCell(
-                Text((++inc).toString()),
+                SelectableText((++inc).toString()),
               ),
               DataCell(
-                Text(vaShow.VACircleCode),
+                SelectableText(vaShow.VACircleCode),
               ),
               DataCell(
-                Text(vaShow.VACircleName),
+                SelectableText(vaShow.VACircleName),
               ),
                   DataCell(
-                    Text(vaShow.VACircleName_ka),
+                    SelectableText(vaShow.VACircleName_ka),
                   ),
               DataCell(
-                Text(vaShow.talukName),
+                SelectableText(vaShow.talukName),
               ),
               DataCell(
-                Text(vaShow.hobliName),
+                SelectableText(vaShow.hobliName),
               ),
               DataCell(
                 Responsive.isMobile(context)
@@ -268,6 +269,7 @@ class _VACircleTableState extends State<VACircleTable> {
                     icon: Icon(
                       Icons.edit,
                       color: secondaryColorDark,
+                      size: 16,
                     ),
                   ),
                 )
@@ -301,6 +303,7 @@ class _VACircleTableState extends State<VACircleTable> {
                     icon: Icon(
                       Icons.delete,
                       color: deleteColor,
+                      size: 16,
                     ),
                   ),
                 )
@@ -366,11 +369,21 @@ class _VACircleTableState extends State<VACircleTable> {
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
                             elevation: 16,
+
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.talukName)
                                 : Text('Select Taluk'),
-
-
+                            decoration: InputDecoration(
+                                enabledBorder:InputBorder.none),
+                            validator: (_selectedTaluk) {
+                              if (_selectedTaluk == null &&
+                                  transactionType == 'ADD') {
+                                return '  Please Select Taluk  ';
+                              } else if (transactionType == 'UPDATE')
+                              {
+                                log('else Update - hint');
+                              }
+                            },
                             items: taluk_.map(buildMenuItem).toList(),
 
                             onChanged: (String? value_) => dropDownState(() {
@@ -386,7 +399,7 @@ class _VACircleTableState extends State<VACircleTable> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -401,12 +414,22 @@ class _VACircleTableState extends State<VACircleTable> {
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
                             elevation: 16,
+                            decoration: InputDecoration(
+                                enabledBorder:InputBorder.none),
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.hobliName)
                                 : Text('Select Hobli'),
                             // taluk_names.map(buildMenuItem).toList()
                             items: hobli_.map(buildMenuItemHobli).toList(),
-
+                            validator: (_selectedHobli) {
+                              if (_selectedHobli == null &&
+                                  transactionType == 'ADD') {
+                                return '  Please Select Hobli  ';
+                              } else if (transactionType == 'UPDATE')
+                              {
+                                log('else Update - hint');
+                              }
+                            },
                             onChanged: (String? value_) => dropDownState(()
                             {
 
@@ -421,11 +444,12 @@ class _VACircleTableState extends State<VACircleTable> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _vaCircleCodeController,
-
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
+                      ],
                       decoration: new InputDecoration(
                         labelText: "VA Circle Code ",
                         labelStyle: TextStyle(fontSize: 14),
@@ -447,11 +471,12 @@ class _VACircleTableState extends State<VACircleTable> {
                       style: new TextStyle(),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _vaCircleNameController,
-
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
+                      ],
                       decoration: new InputDecoration(
                         labelText: "VA Circle Name ",
                         labelStyle: TextStyle(fontSize: 14),
@@ -475,7 +500,7 @@ class _VACircleTableState extends State<VACircleTable> {
                     ),
 
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _vaCircleNameController_ka,

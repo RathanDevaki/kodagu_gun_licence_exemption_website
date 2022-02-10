@@ -10,6 +10,7 @@ import 'package:admin/services/village_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class VillageTable extends StatefulWidget
@@ -26,6 +27,7 @@ class _VillageState extends State<VillageTable> {
   late String transactionType;
 
   late TextEditingController _villageNameController;
+  late TextEditingController _villageNameController_ka;
   late TextEditingController _villageCodeController;
   final _formKey = GlobalKey<FormState>();
   late Village _selectedVA;
@@ -54,6 +56,7 @@ class _VillageState extends State<VillageTable> {
     _getVACircle();
     _getVillage();
     _villageNameController = TextEditingController();
+    _villageNameController_ka = TextEditingController();
     _villageCodeController = TextEditingController();
     transactionType = '';
   }
@@ -61,7 +64,7 @@ class _VillageState extends State<VillageTable> {
   _addVillage()
   {
     VillageServices.addVillage(_selectedTalluk_, _selectedHobli_,_selectedVACircle_,
-        _villageCodeController.text, _villageNameController.text)
+        _villageCodeController.text, _villageNameController.text,_villageNameController_ka.text)
         .then(
           (result)
       {
@@ -84,6 +87,7 @@ class _VillageState extends State<VillageTable> {
     showAddVillageDialog(transactionType);
     _villageCodeController.text = v_ref.villlageCode;
     _villageNameController.text = v_ref.villageName;
+    _villageNameController_ka.text = v_ref.villageName_ka;
   }
 
   _getTaluk()
@@ -132,7 +136,7 @@ class _VillageState extends State<VillageTable> {
 
   _updateVillage(Village selected,String? selectedTaluk1,String? selectedHobli1,String? selectedVaCircle1)
   {
-    if (_villageCodeController.text.isEmpty || _villageNameController.text.isEmpty)
+    if (_villageCodeController.text.isEmpty || _villageNameController.text.isEmpty|| _villageNameController_ka.text.isEmpty)
     {
       print('Empty Field');
     } else {
@@ -140,6 +144,7 @@ class _VillageState extends State<VillageTable> {
         selected,
         _villageCodeController.text,
         _villageNameController.text,
+          _villageNameController_ka.text,
         selectedTaluk1,
         selectedHobli1,
         selectedVaCircle1
@@ -171,8 +176,8 @@ class _VillageState extends State<VillageTable> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: DataTable(
-
-          columnSpacing: MediaQuery.of(context).size.width * 0.02,
+          dataRowHeight: 32,
+          columnSpacing: MediaQuery.of(context).size.width * 0.01,
           sortColumnIndex: 1,
           sortAscending: true,
           columns: [
@@ -191,6 +196,12 @@ class _VillageState extends State<VillageTable> {
             DataColumn(
               label: Text(
                 'Village Name',
+                style: tableHeadingTextStyle,
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'ಗ್ರಾಮದ ಹೆಸರು',
                 style: tableHeadingTextStyle,
               ),
             ),
@@ -247,22 +258,25 @@ class _VillageState extends State<VillageTable> {
               .map(
                 (vaShow) => DataRow(cells: [
               DataCell(
-                Text((++inc).toString()),
+                SelectableText((++inc).toString()),
               ),
               DataCell(
-                Text(vaShow.villlageCode),
+                SelectableText(vaShow.villlageCode),
               ),
               DataCell(
-                Text(vaShow.villageName),
-              ),
-              DataCell(
-                Text(vaShow.talukName),
-              ),
-              DataCell(
-                Text(vaShow.hobliName),
+                SelectableText(vaShow.villageName),
               ),
                   DataCell(
-                    Text(vaShow.VACircleName),
+                    SelectableText(vaShow.villageName_ka),
+                  ),
+              DataCell(
+                SelectableText(vaShow.talukName),
+              ),
+              DataCell(
+                SelectableText(vaShow.hobliName),
+              ),
+                  DataCell(
+                    SelectableText(vaShow.VACircleName),
                   ),
               DataCell(
                 Responsive.isMobile(context)
@@ -277,6 +291,7 @@ class _VillageState extends State<VillageTable> {
                     icon: Icon(
                       Icons.edit,
                       color: secondaryColorDark,
+                      size: 16,
                     ),
                   ),
                 )
@@ -310,6 +325,7 @@ class _VillageState extends State<VillageTable> {
                     icon: Icon(
                       Icons.delete,
                       color: deleteColor,
+                      size: 16,
                     ),
                   ),
                 )
@@ -354,7 +370,7 @@ class _VillageState extends State<VillageTable> {
         ),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 0.24,
-          height: 220,
+          height: 250,
           child: Scaffold(
             body: Form(
               key: _formKey,
@@ -374,11 +390,21 @@ class _VillageState extends State<VillageTable> {
                         builder:
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
-                            elevation: 16,
+                            elevation: 16,decoration: InputDecoration(
+                              enabledBorder:InputBorder.none),
+
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.talukName)
                                 : Text('Select Taluk'),
-
+                            validator: (_selectedTaluk) {
+                              if (_selectedTaluk == null &&
+                                  transactionType == 'ADD') {
+                                return '  Please Select Taluk  ';
+                              } else if (transactionType == 'UPDATE')
+                              {
+                                log('else Update - hint');
+                              }
+                            },
 
                             items: taluk_.map(buildMenuItem).toList(),
 
@@ -395,7 +421,7 @@ class _VillageState extends State<VillageTable> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -405,6 +431,7 @@ class _VillageState extends State<VillageTable> {
                         ),
                       ),
                       //hei
+
                       child: StatefulBuilder(
                         builder:
                             (BuildContext context, StateSetter dropDownState) {
@@ -413,7 +440,17 @@ class _VillageState extends State<VillageTable> {
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.hobliName)
                                 : Text('Select Hobli'),
-
+                            decoration: InputDecoration(
+                                enabledBorder:InputBorder.none),
+                            validator: (_selectedTaluk) {
+                              if (_selectedTaluk == null &&
+                                  transactionType == 'ADD') {
+                                return '  Please Select Hobli  ';
+                              } else if (transactionType == 'UPDATE')
+                              {
+                                log('else Update - hint');
+                              }
+                            },
                             items: hobli_.map(buildMenuItemHobli).toList(),
 
                             onChanged: (String? value_) => dropDownState(()
@@ -430,7 +467,7 @@ class _VillageState extends State<VillageTable> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -444,10 +481,20 @@ class _VillageState extends State<VillageTable> {
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
                             elevation: 16,
+                            decoration: InputDecoration(
+                                enabledBorder:InputBorder.none),
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.VACircleName)
                                 : Text('Select VA Circle'),
-
+                            validator: (_selectedTaluk) {
+                              if (_selectedTaluk == null &&
+                                  transactionType == 'ADD') {
+                                return '  Please Select VA Circle  ';
+                              } else if (transactionType == 'UPDATE')
+                              {
+                                log('else Update - hint');
+                              }
+                            },
                             items: va_circle_.map(buildMenuItemVA).toList(),
 
                             onChanged: (String? value_) => dropDownState(() {
@@ -464,11 +511,11 @@ class _VillageState extends State<VillageTable> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _villageCodeController,
-
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
                       decoration: new InputDecoration(
                         labelText: "Village Code ",
                         labelStyle: TextStyle(fontSize: 14),
@@ -490,11 +537,48 @@ class _VillageState extends State<VillageTable> {
                       style: new TextStyle(),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _villageNameController,
-                      decoration: textFormDecoration,
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
+                      decoration: new InputDecoration(
+                        labelText: "Village Name ",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "Village Name cannot be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      //keyboardType: TextInputType.multiline,
+                      style: new TextStyle(),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
+                    ),
+                    new TextFormField(
+                      controller: _villageNameController_ka,
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
+                      decoration: new InputDecoration(
+                        labelText: "ಗ್ರಾಮದ ಹೆಸರು",
+                        labelStyle: TextStyle(fontSize: 14),
+                        fillColor: Colors.amber,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          borderSide: new BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
                       validator: (val) {
                         if (val == null || val.isEmpty) {
                           return "Village Name cannot be empty";
@@ -623,6 +707,7 @@ class _VillageState extends State<VillageTable> {
     selectedVACircle=null;
     _villageCodeController.text = "";
     _villageNameController.text = "";
+    _villageNameController_ka.text = "";
   }
 
   void _deleteVillage(Village selected) {

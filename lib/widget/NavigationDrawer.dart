@@ -16,6 +16,8 @@ class NavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     double sizedBoxHeight = MediaQuery.of(context).size.height * 0.020;
     return Drawer(
+      elevation: 20.0,
+     semanticLabel:'Label' ,
       child: Material(
         color: bgColor,
         child: ListView(

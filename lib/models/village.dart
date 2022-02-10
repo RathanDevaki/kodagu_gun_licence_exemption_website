@@ -8,6 +8,7 @@ class Village {
   String VACircleName;
   String villlageCode;
   String villageName;
+  String villageName_ka;
 
   Village({
     required this.hobliName,
@@ -19,6 +20,7 @@ class Village {
     required this.hobli_code,
     required this.villlageCode,
     required this.villageName,
+    required this.villageName_ka,
   });
 
   factory Village.fromJson(Map<String, dynamic> json)
@@ -32,6 +34,7 @@ class Village {
       taluk_code: json['taluk_code'] as String,
       hobli_code: json['hobli_code'] as String,
       villageName: json['village_name'] as String,
+      villageName_ka: json['village_name_ka'] as String,
       villlageCode: json['village_code'] as String,
     );
   }

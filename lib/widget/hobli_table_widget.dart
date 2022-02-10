@@ -191,19 +191,19 @@ inc=0;
               .map(
                 (hobliShow) => DataRow(cells: [
                   DataCell(
-                    Text((++inc).toString()),
+                    SelectableText((++inc).toString()),
                   ),
                   DataCell(
-                    Text(hobliShow.hobliCode),
+                    SelectableText(hobliShow.hobliCode),
                   ),
                   DataCell(
-                    Text(hobliShow.hobliName),
+                    SelectableText(hobliShow.hobliName),
                   ),
                   DataCell(
-                    Text(hobliShow.hobliName_ka),
+                    SelectableText(hobliShow.hobliName_ka),
                   ),
                   DataCell(
-                    Text(hobliShow.taluk_name),
+                    SelectableText(hobliShow.taluk_name),
                   ),
                   DataCell(
                     Responsive.isMobile(context)
@@ -355,15 +355,15 @@ inc=0;
 
 
                             items: taluk_.map(buildMenuItem).toList(),
-                            // validator: (_selectedTaluk) {
-                            //   if (_selectedTaluk == null &&
-                            //       transactionType == 'ADD') {
-                            //     return '  Please Select Taluk  ';
-                            //   } else if (transactionType == 'UPDATE')
-                            //   {
-                            //     log('else Update - hint');
-                            //   }
-                            // },
+                            validator: (_selectedTaluk) {
+                              if (_selectedTaluk == null &&
+                                  transactionType == 'ADD') {
+                                return '  Please Select Taluk  ';
+                              } else if (transactionType == 'UPDATE')
+                              {
+                                log('else Update - hint');
+                              }
+                            },
                             onChanged: (value_) => dropDownState(() {
 
                               this.selectedTaluk = value_.toString();

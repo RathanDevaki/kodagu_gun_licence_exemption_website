@@ -2,6 +2,7 @@ import 'package:admin/screens/application_form.dart';
 import 'package:admin/screens/home_screen.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/widget/appbar.dart';
+import 'package:admin/widget/captcha.dart';
 import 'package:flutter/material.dart';
 
 class Chooser extends StatelessWidget {
@@ -79,7 +80,7 @@ class Chooser extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ApplicationForm()));
+                              builder: (context) => Captcha()));
                     },
                     color: Theme.of(context).accentColor,
                     child: Padding(

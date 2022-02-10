@@ -68,7 +68,14 @@ class MyApp extends StatelessWidget {
         //  _showSnackBar(context, result);
         //_showProgress(widget.title);
       }
-    });
+    }
+        LoginServices.createTable().then((result) {
+      if ('success' == result) {
+        //  _showSnackBar(context, result);
+        //_showProgress(widget.title);
+      }
+    }
+    );
   }
 
   showScreen(param0) {

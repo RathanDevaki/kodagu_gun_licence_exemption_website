@@ -4,6 +4,7 @@ import 'package:admin/models/talluk.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:admin/services/taluk_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../utilities/constants.dart';
 
@@ -15,8 +16,8 @@ class TalukTable extends StatefulWidget {
 }
 
 class _TalukTableState extends State<TalukTable> {
-  late List<Taluk> taluk_ = [];
 
+  late List<Taluk> taluk_ = [];
   late TextEditingController _talukCodeController;
   late TextEditingController _talukNameController;
   late TextEditingController _talukNameController_ka;
@@ -64,7 +65,8 @@ class _TalukTableState extends State<TalukTable> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: DataTable(
-          columnSpacing: MediaQuery.of(context).size.width * 0.02,
+          dataRowHeight: 32,
+          columnSpacing: MediaQuery.of(context).size.width * 0.01,
           sortColumnIndex: 1,
           sortAscending: true,
           columns: [
@@ -127,16 +129,16 @@ class _TalukTableState extends State<TalukTable> {
               .map(
                 (talukShow) => DataRow(cells: [
                   DataCell(
-                    Text((++i).toString()),
+                    SelectableText((++i).toString()),
                   ),
                   DataCell(
-                    Text(talukShow.talukCode),
+                    SelectableText(talukShow.talukCode),
                   ),
                   DataCell(
-                    Text(talukShow.talukName),
+                    SelectableText(talukShow.talukName),
                   ),
                   DataCell(
-                    Text(talukShow.talukNameKA),
+                    SelectableText(talukShow.talukNameKA),
                   ),
                   DataCell(
                     Responsive.isMobile(context)
@@ -150,6 +152,7 @@ class _TalukTableState extends State<TalukTable> {
                               icon: Icon(
                                 Icons.edit,
                                 color: secondaryColorDark,
+                                size: 16,
                               ),
                             ),
                           )
@@ -181,8 +184,10 @@ class _TalukTableState extends State<TalukTable> {
                                 _showDeleteDialog(talukShow);
                               },
                               icon: Icon(
+
                                 Icons.delete,
                                 color: deleteColor,
+                                size: 16,
                               ),
                             ),
                           )
@@ -202,7 +207,7 @@ class _TalukTableState extends State<TalukTable> {
                             ),
                           ),
                   ),
-                ]),
+                ],),
               )
               .toList(),
         ),
@@ -265,7 +270,8 @@ class _TalukTableState extends State<TalukTable> {
                   children: <Widget>[
                     new TextFormField(
                       controller: _talukCodeController,
-
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
+                      ],
                       decoration: new InputDecoration(
                         labelText: "Taluk Code ",
                         labelStyle: TextStyle(fontSize: 14),
@@ -287,11 +293,12 @@ class _TalukTableState extends State<TalukTable> {
                       style: new TextStyle(),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _talukNameController,
-
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
+                      ],
                       decoration: new InputDecoration(
                         labelText: "Taluk Name ",
                         labelStyle: TextStyle(fontSize: 14),
@@ -314,11 +321,11 @@ class _TalukTableState extends State<TalukTable> {
                     ),
 
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
                       controller: _talukNameController_ka,
-
+                        inputFormatters: [FilteringTextInputFormatter.deny( RegExp(r'^[_\+-=@,\.;]+$')),],
                       decoration: new InputDecoration(
                         labelText: "ತಾಲೂಕಿನ ಹೆಸರು",
                         labelStyle: TextStyle(fontSize: 14),

@@ -151,13 +151,14 @@ class VillageServices {
   }
 
   static Future<String> addVillage(String selectedTaluk, String selectedHobli,String selectedVACircle,
-      String villageCode, String villageName) async {
+      String villageCode, String villageName,String villageName_ka) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_VILLAGE_ACTION;
 
       map['village_code']=villageCode;
       map['village_name'] = villageName;
+      map['village_name_ka'] = villageName_ka;
       map['taluk_code'] = selectedTaluk;
       map['hobli_code'] = selectedHobli;
       map['va_circle_code'] = selectedVACircle;
@@ -183,7 +184,7 @@ class VillageServices {
   }
 
   static Future<String> updateVillage(
-      Village selected, String villageCode, String villageName,String? selectedTaluk1,String? selectedHobli1,String? selectedVACircle1) async {
+      Village selected, String villageCode, String villageName,String villageName_ka,String? selectedTaluk1,String? selectedHobli1,String? selectedVACircle1) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_VILLAGE_ACTION;
@@ -191,6 +192,7 @@ class VillageServices {
 
       map['village_code'] = villageCode;
       map['village_name'] = villageName;
+      map['village_name_ka'] = villageName_ka;
       map['hobli_code'] = selectedHobli1;
       map['taluk_code'] = selectedTaluk1;
       map['va_circle_code'] = selectedVACircle1;

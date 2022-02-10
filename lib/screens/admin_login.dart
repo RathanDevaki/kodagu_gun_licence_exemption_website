@@ -1,20 +1,34 @@
+import 'dart:developer';
+
+import 'dart:ui';
+
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class AdminLogin extends StatefulWidget
+class AdminLoginPage extends StatefulWidget
 {
-  const AdminLogin({Key? key}) : super(key: key);
+  const AdminLoginPage({Key? key}) : super(key: key);
 
   @override
   _AdminLoginState createState() => _AdminLoginState();
 }
 
-class _AdminLoginState extends State<AdminLogin> {
+class _AdminLoginState extends State<AdminLoginPage> {
+  final _formKey =GlobalKey<FormState>();
+  late TextEditingController _usernameController;
+  late TextEditingController _passwordController;
+  @override
+  void initState(){
+    _usernameController=TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
    return Scaffold(
-        body:Center(
+        body:Form(key:_formKey, child:Center(
         child:Container(
           //color: secondaryColor,
            padding: EdgeInsets.all(16.0),
@@ -28,73 +42,98 @@ class _AdminLoginState extends State<AdminLogin> {
           crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize:MainAxisSize.min,
       children: [
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Enter Login ID',
-            filled: true,
-            fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
+        new TextFormField(
+         controller: _usernameController,
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
+
+          decoration: new InputDecoration(
+            labelText: "Enter Login ID",
             contentPadding: EdgeInsets.only(left: 30),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(15),
+
+            labelStyle: TextStyle(fontSize: 14),
+            fillColor: Colors.amber,
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(16.0),
+              borderSide: new BorderSide(),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(15),
-            ),
+            //fillColor: Colors.green
           ),
+
+          validator: (val) {
+            if (val == null || val.isEmpty) {
+              return "Login ID cannot be empty";
+            } else {
+              return null;
+            }
+          },
+          //keyboardType: TextInputType.multiline,
+          style: new TextStyle(),
         ),
         SizedBox(height: 30),
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Password',
-            counterText: 'Forgot password?',
-            suffixIcon: Icon(
-              Icons.visibility_off_outlined,
-              color: Colors.grey,
-            ),
-            filled: true,
-            fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
+        new TextFormField(
+           controller: _passwordController,
+          //inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
+
+          decoration: new InputDecoration(
+            labelText: "Enter Password",
             contentPadding: EdgeInsets.only(left: 30),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(15),
+            labelStyle: TextStyle(fontSize: 14),
+            fillColor: Colors.amber,
+            suffixIcon: IconButton(icon:Icon(Icons.visibility_off_outlined),onPressed:(){print('v');},color: Colors.grey,),
+
+            border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(16.0),
+              borderSide: new BorderSide(),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(15),
-            ),
+            //fillColor: Colors.green
           ),
+
+          validator: (val) {
+            if (val == null || val.isEmpty) {
+              return "Please enter your password";
+            } else {
+              return null;
+            }
+          },
+          //keyboardType: TextInputType.multiline,
+          style: new TextStyle(),
         ),
+
         SizedBox(height: 40),
-        Container(
+        Padding( padding:EdgeInsets.symmetric(horizontal: 8,vertical: 16,),child:Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: Colors.blue,
-                spreadRadius: 10,
-                blurRadius: 15,
+                color: Colors.black45,
+                spreadRadius: 8,
+                blurRadius: 16,
+                blurStyle: BlurStyle.normal,
               ),
             ],
           ),
-          child: ElevatedButton(
+          child:ElevatedButton(
             child: Container(
                 width: double.infinity,
                 height: 50,
                 child: Center(child: Text("Sign In"),),),
-            onPressed: () => print("it's pressed"),
+            onPressed: () {
+
+
+                if(_formKey.currentState!.validate()){
+                  log('Pressed');
+
+                log(_passwordController.text+' -- '+_usernameController.text);}
+            },
             style: ElevatedButton.styleFrom(
-              primary: Colors.deepPurple,
+              primary: Colors.black,
               onPrimary: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-          ),
+          ),),
         ),
         // SizedBox(height: 40),
         // Row(children: [
@@ -125,7 +164,7 @@ class _AdminLoginState extends State<AdminLogin> {
         //   ],
         // ),
       ],
-    ),),),);
+    ),),),),);
   }
 }
 

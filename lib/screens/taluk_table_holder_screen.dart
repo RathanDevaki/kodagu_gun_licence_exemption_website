@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/models/talluk.dart';
 import 'package:admin/utilities/responsive.dart';
+import 'package:admin/widget/footer.dart';
 import 'package:admin/widget/taluk_table_widget.dart';
 import 'package:admin/services/taluk_service.dart';
 import 'package:admin/widget/NavigationDrawer.dart';
@@ -61,6 +62,7 @@ class DataTableDBState extends State<DataTableDB> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: Footer(),
       key: _scaffoldKey,
       drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       appBar: CommonAppBar(),

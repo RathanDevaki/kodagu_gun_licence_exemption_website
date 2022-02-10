@@ -1,4 +1,5 @@
 import 'package:admin/models/hobli.dart';
+import 'package:admin/widget/footer.dart';
 import 'package:admin/widget/hobli_table_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
@@ -34,15 +35,23 @@ class _HobliScreenState extends State<HobliScreen> {
   SingleChildScrollView _databody() {
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: HobliTable(),
+        child: Column(
+         // scrollDirection: Axis.horizontal,
+          children:<Widget>[
+            Padding(
+                padding: EdgeInsets.only(bottom: 80),
+                child:HobliTable(),
+            ),
+            Footer(),
+          ],
         ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+     // bottomSheet: Footer(),
       key: _scaffoldKey,
       drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       appBar: CommonAppBar(),

@@ -2,6 +2,7 @@ import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:admin/widget/NavigationDrawer.dart';
 import 'package:admin/widget/appbar.dart';
+import 'package:admin/widget/footer.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,7 +11,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: CommonAppBar(),
+      bottomSheet: Footer(),
       drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       body: SafeArea(
         child: Row(
