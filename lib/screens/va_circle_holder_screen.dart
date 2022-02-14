@@ -1,4 +1,5 @@
 import 'package:admin/models/va_circle.dart';
+import 'package:admin/widget/footer.dart';
 import 'package:admin/widget/va_circle_table_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -41,6 +42,7 @@ class _VACircleScreenState extends State<VACircleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+     // bottomSheet: Footer(),
       key: _scaffoldKey,
       drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       appBar: CommonAppBar(),

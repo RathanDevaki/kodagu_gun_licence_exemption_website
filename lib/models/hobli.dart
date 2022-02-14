@@ -5,6 +5,7 @@ class Hobli {
   String slNo;
   String taluk_name;
 String taluk_code;
+
   Hobli({
     required this.hobliCode,
     required this.hobliName,

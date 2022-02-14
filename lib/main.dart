@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:admin/screens/chooser.dart';
+import 'package:admin/services/login_service.dart';
 import 'package:admin/services/station_service.dart';
 import 'package:admin/services/taluk_service.dart';
 import 'package:admin/screens/home_screen.dart';
@@ -68,14 +69,13 @@ class MyApp extends StatelessWidget {
         //  _showSnackBar(context, result);
         //_showProgress(widget.title);
       }
-    }
-        LoginServices.createTable().then((result) {
+    });
+        LoginServices.createTableAdmin().then((result) {
       if ('success' == result) {
         //  _showSnackBar(context, result);
         //_showProgress(widget.title);
       }
-    }
-    );
+    });
   }
 
   showScreen(param0) {

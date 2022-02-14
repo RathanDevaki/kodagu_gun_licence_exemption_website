@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'dart:ui';
 
+import 'package:admin/models/admin_login.dart';
+import 'package:admin/services/login_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +18,46 @@ class AdminLoginPage extends StatefulWidget
 }
 
 class _AdminLoginState extends State<AdminLoginPage> {
+
   final _formKey =GlobalKey<FormState>();
+  late List<AdminLogin> _login_data= [];
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
+  late AdminLogin admin_data;
   @override
   void initState(){
+    _getAdminLogin1();
     _usernameController=TextEditingController();
     _passwordController = TextEditingController();
   }
+_getAdminLogin(String _username,String _password){
+    LoginServices.getAdminLogin(_username,_password).then((_login) {
+      setState(()
+      {
+         _login_data=_login;
+        return;
+      },);
 
+    },);
+
+}
+  _getAdminLogin1(){
+    LoginServices.getAdminLogin1().then((_login) {
+      setState(()
+      {
+        _login_data=_login;
+
+        return;
+      },);
+
+    },);
+
+  }
   @override
   Widget build(BuildContext context) {
    return Scaffold(
         body:Form(key:_formKey, child:Center(
+
         child:Container(
           //color: secondaryColor,
            padding: EdgeInsets.all(16.0),
@@ -42,6 +71,24 @@ class _AdminLoginState extends State<AdminLoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize:MainAxisSize.min,
       children: [
+        Visibility(visible:false,child:DataTable(
+          columns: [
+            DataColumn(label: Text('UID'),),
+          ],
+          rows: _login_data
+              .map(
+                (login_obj) => DataRow(cells: [
+              DataCell(
+                SelectableText((admin_data=login_obj).toString()),
+              ),
+
+            ],),
+          )
+              .toList(),
+        ),),
+
+
+
         new TextFormField(
          controller: _usernameController,
           inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
@@ -49,7 +96,7 @@ class _AdminLoginState extends State<AdminLoginPage> {
           decoration: new InputDecoration(
             labelText: "Enter Login ID",
             contentPadding: EdgeInsets.only(left: 30),
-
+            prefixIcon: Icon(Icons.person),
             labelStyle: TextStyle(fontSize: 14),
             fillColor: Colors.amber,
             border: new OutlineInputBorder(
@@ -75,6 +122,7 @@ class _AdminLoginState extends State<AdminLoginPage> {
           //inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
 
           decoration: new InputDecoration(
+            prefixIcon: Icon(Icons.vpn_key),
             labelText: "Enter Password",
             contentPadding: EdgeInsets.only(left: 30),
             labelStyle: TextStyle(fontSize: 14),
@@ -118,13 +166,13 @@ class _AdminLoginState extends State<AdminLoginPage> {
                 width: double.infinity,
                 height: 50,
                 child: Center(child: Text("Sign In"),),),
-            onPressed: () {
-
+            onPressed: () async {
 
                 if(_formKey.currentState!.validate()){
-                  log('Pressed');
-
-                log(_passwordController.text+' -- '+_usernameController.text);}
+                  log('Pressed-'+_passwordController.text+'--'+_usernameController.text);
+                  await _getAdminLogin(_usernameController.text,_passwordController.text);
+                  log('pre='+admin_data.user_id);
+              }
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.black,
@@ -135,34 +183,7 @@ class _AdminLoginState extends State<AdminLoginPage> {
             ),
           ),),
         ),
-        // SizedBox(height: 40),
-        // Row(children: [
-        //   Expanded(
-        //     child: Divider(
-        //       color: Colors.grey[300],
-        //       height: 50,
-        //     ),
-        //   ),
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 20),
-        //     child: Text("Or continue with"),
-        //   ),
-        //   Expanded(
-        //     child: Divider(
-        //       color: Colors.grey[400],
-        //       height: 50,
-        //     ),
-        //   ),
-        // ]),
-        // SizedBox(height: 40),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     // _loginWithButton(image: 'images/google.png'),
-        //     // _loginWithButton(image: 'images/github.png', isActive: true),
-        //     // _loginWithButton(image: 'images/facebook.png'),
-        //   ],
-        // ),
+
       ],
     ),),),),);
   }

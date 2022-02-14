@@ -90,7 +90,6 @@ class _VACircleTableState extends State<VACircleTable> {
     VACircleServices.getVACircle().then((va_list) {
       setState(() {
         va_circle_ = va_list;
-        log('--------'+va_list.toString());
         return;
       });
     });
@@ -163,7 +162,7 @@ class _VACircleTableState extends State<VACircleTable> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: DataTable(
-dataRowHeight: 32,
+          dataRowHeight: 32,
           columnSpacing: MediaQuery.of(context).size.width * 0.01,
           sortColumnIndex: 1,
           sortAscending: true,
@@ -419,7 +418,7 @@ dataRowHeight: 32,
                             hint: transactionType == 'UPDATE'
                                 ? Text(_selectedVA.hobliName)
                                 : Text('Select Hobli'),
-                            // taluk_names.map(buildMenuItem).toList()
+
                             items: hobli_.map(buildMenuItemHobli).toList(),
                             validator: (_selectedHobli) {
                               if (_selectedHobli == null &&

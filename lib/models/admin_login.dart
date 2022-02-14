@@ -1,11 +1,21 @@
 class AdminLogin{
-  String userName;
+  String user_id;
   String password;
-  AdminLogin({required this.userName,required this.password,});
-  factory AdminLogin.fromJson(map<String,dynamic> json){
+  String sl_no;
+  String user_type;
+  AdminLogin({
+    required this.user_id,
+    required this.password,
+    required this.sl_no,
+    required this.user_type,
+  });
+  factory AdminLogin.fromJson(Map<String, dynamic> json) {
+
     return AdminLogin(
-        userName: json['username'] as String,
+        user_id: json['user_id'] as String,
         password: json['password'] as String,
+      sl_no: json['sl_no'] as String,
+      user_type: json['user_type'] as String,
     );
 
   }

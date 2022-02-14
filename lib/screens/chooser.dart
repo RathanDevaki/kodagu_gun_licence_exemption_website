@@ -80,7 +80,7 @@ class Chooser extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Captcha()));
+                              builder: (context) => LoginPage()));
                     },
                     color: Theme.of(context).accentColor,
                     child: Padding(
