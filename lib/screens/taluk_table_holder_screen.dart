@@ -62,7 +62,7 @@ class DataTableDBState extends State<DataTableDB> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: Footer(),
+      bottomSheet: Footer1(),
       key: _scaffoldKey,
       drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       appBar: CommonAppBar(),

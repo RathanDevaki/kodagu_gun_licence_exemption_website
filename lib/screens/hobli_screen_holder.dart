@@ -42,7 +42,7 @@ class _HobliScreenState extends State<HobliScreen> {
                 padding: EdgeInsets.only(bottom: 80),
                 child:HobliTable(),
             ),
-            Footer(),
+            Footer1(),
           ],
         ));
   }

@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
 
       appBar: CommonAppBar(),
-      bottomSheet: Footer(),
+      bottomSheet: Footer1(),
       drawer: Responsive.isDesktop(context) ? null : NavigationDrawer(),
       body: SafeArea(
         child: Row(

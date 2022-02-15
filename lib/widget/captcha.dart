@@ -1,11 +1,14 @@
 import 'dart:convert';
-
+import 'package:admin/utilities/responsive.dart';
+import 'package:admin/widget/bottom_bar.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-//import http package manually
 
+import 'footer.dart';
+//import http package manually
 class LoginPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +20,7 @@ class _LoginPage extends State<LoginPage>{
   late String errormsg;
   late bool error, showprogress;
   late String username, password;
-
+  final _formKey =GlobalKey<FormState>();
   var _username = TextEditingController();
   var _password = TextEditingController();
 
@@ -45,7 +48,7 @@ class _LoginPage extends State<LoginPage>{
         if(jsondata["success"]){
           setState(() {
             error = false;
-            showprogress = false;
+            showprogress = true;
           });
           //save the data returned from server
           //and navigate to home page
@@ -91,24 +94,24 @@ class _LoginPage extends State<LoginPage>{
     ));
 
     return Scaffold(
-      body: SingleChildScrollView(
-          child:Container(
-
+      bottomSheet: Footer1(),
+      body: Form(key:_formKey, child:SingleChildScrollView(
+          child:Center(child:Container(
             constraints: BoxConstraints(
                 minHeight:MediaQuery.of(context).size.height
               //set minimum height equal to 100% of VH
             ),
-            width:MediaQuery.of(context).size.width*0.50,
-            height:MediaQuery.of(context).size.width*0.50,
+            width:Responsive.isDesktop(context)?400:300,
+
             //make width of outer wrapper to 100%
             decoration:BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [ Colors.orange,Colors.deepOrangeAccent,
-                  Colors.red, Colors.redAccent,
-                ],
-              ),
+              // gradient: LinearGradient(
+              //   begin: Alignment.topRight,
+              //   end: Alignment.bottomLeft,
+              //   colors: [ Colors.orange,Colors.deepOrangeAccent,
+              //     Colors.purple, Colors.redAccent,
+              //   ],
+              // ),
             ), //show linear gradient background of page
 
             padding: EdgeInsets.all(20),
@@ -117,7 +120,7 @@ class _LoginPage extends State<LoginPage>{
               Container(
                 margin: EdgeInsets.only(top:80),
                 child: Text("Login", style: TextStyle(
-                    color:Colors.white,fontSize: 40, fontWeight: FontWeight.bold
+                    color:Colors.black,fontSize: 40, fontWeight: FontWeight.bold
                 ),), //title text
               ),
 
@@ -137,75 +140,146 @@ class _LoginPage extends State<LoginPage>{
                 //else set empty container as child
               ),
 
-              Container(
-                padding: EdgeInsets.fromLTRB(10,0,10,0),
-                margin: EdgeInsets.only(top:10),
-                child: TextField(
-                  controller: _username, //set username controller
-                  style:TextStyle(color:Colors.orange[100], fontSize:20),
-                  decoration: myInputDecoration(
-                    label: "Username",
-                    icon: Icons.person,
+              new TextFormField(
+                controller: _username,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
+               onChanged: (val){
+                  username=val;
+                },
+                decoration: new InputDecoration(
+                  labelText: "Enter Login ID",
+                  contentPadding: EdgeInsets.only(left: 30),
+                  prefixIcon: Icon(Icons.person),
+                  labelStyle: TextStyle(fontSize: 14),
+                  fillColor: Colors.amber,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(16.0),
+                    borderSide: new BorderSide(),
                   ),
-                  onChanged: (value){
-                    //set username  text on change
-                    username = value;
-                  },
-
+                  //fillColor: Colors.green
                 ),
+
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return "Login ID cannot be empty";
+                  } else {
+                    return null;
+                  }
+                },
+                //keyboardType: TextInputType.multiline,
+                style: new TextStyle(),
+              ),
+              SizedBox(height: 30),
+              new TextFormField(
+                controller: _password,
+                //inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
+                onChanged: (value){
+                  password=value;
+                },
+                decoration: new InputDecoration(
+                  prefixIcon: Icon(Icons.vpn_key),
+                  labelText: "Enter Password",
+                  contentPadding: EdgeInsets.only(left: 30),
+                  labelStyle: TextStyle(fontSize: 14),
+                  fillColor: Colors.amber,
+                  suffixIcon: IconButton(icon:Icon(Icons.visibility_off_outlined),onPressed:(){print('v');},color: Colors.grey,),
+
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(16.0),
+                    borderSide: new BorderSide(),
+                  ),
+                  //fillColor: Colors.green
+                ),
+
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return "Please enter your password";
+                  } else {
+                    return null;
+                  }
+                },
+                //keyboardType: TextInputType.multiline,
+                style: new TextStyle(),
               ),
 
-              Container(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: _password, //set password controller
-                  style: TextStyle(color:Colors.orange[100], fontSize:20),
-                  obscureText: true,
-                  decoration: myInputDecoration(
-                    label: "Password",
-                    icon: Icons.lock,
-                  ),
-                  onChanged: (value){
-                    // change password text
-                    password = value;
-                  },
-
+              SizedBox(height: 40),
+              Padding( padding:EdgeInsets.symmetric(horizontal: 8,vertical: 16,),child:Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black45,
+                      spreadRadius: 8,
+                      blurRadius: 16,
+                      blurStyle: BlurStyle.normal,
+                    ),
+                  ],
                 ),
-              ),
+                child:ElevatedButton(
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
 
-              Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.only(top:20),
-                child: SizedBox(
-                  height: 60, width: double.infinity,
-                  child:RaisedButton(
-                    onPressed: (){
+                    child: showprogress?
+                    LoadingJumpingLine.circle(duration: Duration(milliseconds: 1000),
+                      backgroundColor: Colors.grey,
+                    ):Center(child: Text("Sign In"),),),
+                  onPressed: () async {
+
+                    if(_formKey.currentState!.validate()){
                       setState(() {
                         //show progress indicator on click
                         showprogress = true;
                       });
                       startLogin();
 
-                    },
-                    child: showprogress?
-                    SizedBox(
-                      height:30, width:30,
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.orange[100],
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrangeAccent),
-                      ),
-                    ):Text("LOGIN NOW", style: TextStyle(fontSize: 20),),
-                    // if showprogress == true then show progress indicator
-                    // else show "LOGIN NOW" text
-                    colorBrightness: Brightness.dark,
-                    color: Colors.orange,
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    onPrimary: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius:BorderRadius.circular(30)
-                      //button corner radius
+                      borderRadius: BorderRadius.circular(15),
                     ),
                   ),
                 ),
               ),
+              ),
+
+              // Container(
+              //   padding: EdgeInsets.all(10),
+              //   margin: EdgeInsets.only(top:20),
+              //   child: SizedBox(
+              //     height: 60, width: double.infinity,
+              //     child:RaisedButton(
+              //       onPressed: (){
+              //         setState(() {
+              //           //show progress indicator on click
+              //           showprogress = true;
+              //         });
+              //         startLogin();
+              //
+              //       },
+              //       child: showprogress?
+              //       SizedBox(
+              //         height:30, width:30,
+              //         child: CircularProgressIndicator(
+              //           backgroundColor: Colors.orange[100],
+              //           valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrangeAccent),
+              //         ),
+              //       ):Text("LOGIN NOW", style: TextStyle(fontSize: 20),),
+              //       // if showprogress == true then show progress indicator
+              //       // else show "LOGIN NOW" text
+              //       colorBrightness: Brightness.dark,
+              //       color: Colors.orange,
+              //       shape: RoundedRectangleBorder(
+              //           borderRadius:BorderRadius.circular(30)
+              //         //button corner radius
+              //       ),
+              //     ),
+              //   ),
+              // ),
 
               Container(
                 padding: EdgeInsets.all(10),
@@ -214,21 +288,23 @@ class _LoginPage extends State<LoginPage>{
                     onTap:(){
                       //action on tap
                     },
-                    child:Text("Forgot Password? Troubleshoot",
+                    child:Text("Forgot Password? ",
                       style: TextStyle(color:Colors.white, fontSize:18),
                     )
                 ),
               )
             ]),
           )
-      ),
+      ),),),
     );
   }
 
-  InputDecoration myInputDecoration({required String label, required IconData icon}){
+  InputDecoration myInputDecoration({required String label, required IconData icon})
+  {
     return InputDecoration(
       hintText: label, //show label as placeholder
       hintStyle: TextStyle(color:Colors.orange[100], fontSize:20), //hint text style
+
       prefixIcon: Padding(
           padding: EdgeInsets.only(left:20, right:10),
           child:Icon(icon, color: Colors.orange[100],)

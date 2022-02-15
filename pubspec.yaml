@@ -21,6 +21,7 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
+  loading_animations: "^2.1.0"
   http: ^0.13.3
   flutter:
     sdk: flutter
@@ -37,6 +38,7 @@ dependencies:
   provider: ^5.0.0
   data_table_2: ^2.0.3
   fluttertoast: ^8.0.8
+  auto_size_text: ^3.0.0
 dev_dependencies:
   hb_check_code: ^0.0.1
   flutter_test:
