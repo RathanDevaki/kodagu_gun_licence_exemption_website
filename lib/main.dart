@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
         //_showProgress(widget.title);
       }
     });
-        LoginServices.createTableAdmin().then((result) {
+        TalukServices.createTableAdmin().then((result) {
       if ('success' == result) {
         //  _showSnackBar(context, result);
         //_showProgress(widget.title);

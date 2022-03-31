@@ -11,6 +11,8 @@ $table="Taluk";
 $action=$_POST["action"];
 $conn=new mysqli($servername,$username,$password,$dbname);
 
+
+
 if($conn->connect_error)
 {
     die("Connection Error".$conn->connect_error);
@@ -81,5 +83,23 @@ if("DELETE_TALUK" == $action)
     $conn->close();
     return;
 } 
+
+
+if("CREATE_ADMIN_LOGIN"==$action)
+  {
+    $sql="CREATE TABLE IF NOT EXISTS AdminLogin(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, user_id VARCHAR(100) PRIMARY KEY,password varchar(30),full_name varchar(100),user_type varchar(50))ENGINE=InnoDB";
+
+    if($conn->query($sql)===TRUE)
+    {
+        echo "Created Login successfully";
+    }
+    else
+    {
+        echo "Error creating table".$conn -> error;
+    }
+    $conn->close();
+    return;
+}
+
 
 ?>

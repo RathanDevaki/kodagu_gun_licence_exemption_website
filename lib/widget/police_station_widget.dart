@@ -1,161 +1,87 @@
 import 'dart:developer';
 
 import 'package:admin/models/hobli.dart';
+import 'package:admin/models/station.dart';
 import 'package:admin/models/talluk.dart';
-import 'package:admin/models/va_circle.dart';
 import 'package:admin/services/hobli_service.dart';
-import 'package:admin/services/va_circle_service.dart';
+import 'package:admin/services/station_service.dart';
 import 'package:admin/utilities/constants.dart';
 import 'package:admin/utilities/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class VACircleTable extends StatefulWidget {
-  const VACircleTable({Key? key}) : super(key: key);
+class PoliceStationTable extends StatefulWidget {
+  const PoliceStationTable({Key? key}) : super(key: key);
 
   @override
-  _VACircleTableState createState() => _VACircleTableState();
+  _PoliceStationState createState() => _PoliceStationState();
 }
 
-// hey
-class _VACircleTableState extends State<VACircleTable> {
-  int bp=0;
-  int drop_flag=0;
-  late List<VACircle> va_circle_ = [];
-  late List<Taluk> taluk_ = [];
-  late List<Hobli> hobli_ = [];
-  late List<DropdownMenuItem<String>> hobli_list=[];
-  late String transactionType;
-  late TextEditingController _vaCircleNameController;
-  late TextEditingController _vaCircleNameController_ka;
-  late TextEditingController _vaCircleCodeController;
+class _PoliceStationState extends State<PoliceStationTable> {
   final _formKey = GlobalKey<FormState>();
-  late VACircle _selectedVA;
-  late List<String> taluk_names =[];
+  static const double kMinInteractiveDimension = 48.0;
+
+  late List<Station> station_ = [];
+  late List<Taluk> taluk_ = [];
+  late String transactionType;
+
+  late TextEditingController _stationNameController_en;
+  late TextEditingController _stationNameController_ka;
+  late TextEditingController _stationCodeController;
+
+
+  late Station _selectedStation;
+  // late List taluk_names;
+  late Station stationTemp;
+  late List<String> taluk_names = []; // = ['Madikeri', 'Virajpet', 'Somwarpet'];
+  int flag = 0;
+  late int inc;
+
   String? selectedTaluk;
   late String _selectedTalluk_;
-  late String _selectedTallukCode_;
-  late var queryTaluk;
-  String? selectedHobli;
+  bool isSwitched=false;
 
-  late String _selectedHobli_;
-  late String _selectedHobliCode_;
-  int inc=0;
-  int flag1=0;
-  int flag2=0;
+  late String temp;
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     _getTaluk();
-    //_getHobli('kdgtlk004');
-    _getVACircle();
-    _vaCircleNameController = TextEditingController();
-    _vaCircleNameController_ka = TextEditingController();
-    _vaCircleCodeController = TextEditingController();
-
+    _getStation();
+    _stationNameController_en = TextEditingController();
+    _stationCodeController = TextEditingController();
+    _stationNameController_ka = TextEditingController();
+    inc=0;
     transactionType = '';
   }
 
-  _addVACircle()
-  {
-    log('kannada '+_vaCircleNameController_ka.text);
-    VACircleServices.addVACircle(_selectedTalluk_, _selectedHobli_,
-        _vaCircleCodeController.text, _vaCircleNameController.text,_vaCircleNameController_ka.text)
-        .then(
-          (result)
-      {
-        debugPrint('Debug report: $result');
-
-        log('HTTP result: $result');
-        if ('Success' == result) {
-          _getVACircle();
-          // _showSnackBar(context, result);
-        }
-        _clearValues();
-      },
-    );
-    //Navigator.pop(context, 'Add');
+  _showStation(Station station_ref) {
+    stationTemp = station_ref;
+    showAddStationDialog(transactionType);
+    _stationCodeController.text = station_ref.station_code;
+    _stationNameController_en.text = station_ref.station_name_en;
+    _stationNameController_ka.text=station_ref.station_name_ka;
   }
 
-  _showVACircle(VACircle vaCircle_ref)
-  {
-
-    showAddVACircleDialog(transactionType);
-    _vaCircleCodeController.text = vaCircle_ref.VACircleCode;
-    _vaCircleNameController.text = vaCircle_ref.VACircleName;
-    _vaCircleNameController_ka.text=vaCircle_ref.VACircleName_ka;
-  }
-
-  _getVACircle() {
-    VACircleServices.getVACircle().then((va_list) {
+  _getTaluk() {
+    StationServices.getTaluk().then((talukNames) {
       setState(() {
-        va_circle_ = va_list;
+        taluk_= talukNames;
+
         return;
       });
     });
   }
 
-  _getTaluk()
-  {
-    VACircleServices.getTaluk().then((talukNames)
-    {
-      setState(()
-      {
-        taluk_ = talukNames;
+  _getStation() {
+    StationServices.getStation().then((station1) {
+      setState(() {
+        log('message Station');
+        station_ = station1;
+        print('Log in _getStation $station_');
         return;
       });
     });
-  }
-
-  _getHobli(var _queryTaluk) async
-  {
-    log("qetrt"+_queryTaluk);
-    await VACircleServices.getHobliForDropdown(_queryTaluk).then((hobli)
-    {
-
-      setState(()
-      {   hobli_ = hobli; print('Log in hobli..8 $hobli_');
-        hobli_list=hobli_.map(buildMenuItemHobli).toList();
-
-      });
-      return;
-    });
-  }
-
-  _updateVACircle(VACircle selected,String? selectedTaluk1,String? selectedHobli1)
-  {
-    if (_vaCircleCodeController.text.isEmpty || _vaCircleNameController.text.isEmpty || _vaCircleNameController_ka.text.isEmpty)
-    {
-      print('Empty Field');
-    } else {
-      log('T,h $selectedTaluk1 -- $selectedHobli1');
-      log('V- TalukName'+selected.talukName);
-      log('V-update Hobli-'+selected.hobliName);
-
-      VACircleServices.updateVACircle(
-        selected,
-        _vaCircleCodeController.text,
-        _vaCircleNameController.text,
-        _vaCircleNameController_ka.text,
-        selectedTaluk1,
-        selectedHobli1,
-      ).then((result) {
-        debugPrint('Debug report: $result');
-
-        log('HTTP result: $result');
-        if ('Success' == result) {
-          flag1=0;
-          flag2=0;
-          _getVACircle();
-
-          // _showSnackBar(context, result);
-        }
-        _clearValues();
-        //  Navigator.pop(context);
-      });
-    }
   }
 
   @override
@@ -178,34 +104,38 @@ class _VACircleTableState extends State<VACircleTable> {
                 'SL. NO',
                 style: tableHeadingTextStyle,
               ),
+             // label: Switch(
+             //    value: isSwitched,
+             //    onChanged: (value) {
+             //      setState(() {
+             //        isSwitched = value;
+             //        print(isSwitched);
+             //      });
+             //    },
+             //    activeTrackColor: Colors.lightGreenAccent,
+             //    activeColor: Colors.green,
+             //  ),
             ),
             DataColumn(
               label: Text(
-                'VA Circle Code',
+                'Station Code',
                 style: tableHeadingTextStyle,
               ),
             ),
             DataColumn(
               label: Text(
-                'VA Circle Name',
+                'Station Name',
                 style: tableHeadingTextStyle,
               ),
-            ),
-            DataColumn(
+            ),  DataColumn(
               label: Text(
-                'VA ವೃತ್ತದ ಹೆಸರು',
+                'ಠಾಣೆ ಹೆಸರು',
                 style: tableHeadingTextStyle,
               ),
             ),
             DataColumn(
               label: Text(
                 'Taluk Name',
-                style: tableHeadingTextStyle,
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                'Hobli Name',
                 style: tableHeadingTextStyle,
               ),
             ),
@@ -224,42 +154,40 @@ class _VACircleTableState extends State<VACircleTable> {
                   child: Icon(Icons.add),
                   onPressed: () {
                     transactionType = "ADD";
-                    showAddVACircleDialog(transactionType);
+                    showAddStationDialog(transactionType);
                   },
                 )
                     : TextButton(
-                    child: Text(
-                      "Add".toUpperCase(),
-                      style: tableHeadingTextStyle,
-                    ),
-                    style: outlinedButtonStyle,
-                    onPressed: () {
-                      transactionType = "ADD";
-                      showAddVACircleDialog(transactionType);
-                    }),
+                  child: Text(
+                    "Add".toUpperCase(),
+                    style: tableHeadingTextStyle,
+                  ),
+                  style: outlinedButtonStyle,
+                  onPressed: () {
+                    transactionType = "ADD";
+                    showAddStationDialog(transactionType);
+                  },
+                ),
               ),
             ),
           ],
-          rows: va_circle_
+          rows: station_
               .map(
-                (vaShow) => DataRow(cells: [
+                (stationShow) => DataRow(cells: [
               DataCell(
                 SelectableText((++inc).toString()),
               ),
               DataCell(
-                SelectableText(vaShow.VACircleCode),
+                SelectableText(stationShow.station_code),
               ),
               DataCell(
-                SelectableText(vaShow.VACircleName),
+                SelectableText(stationShow.station_name_en),
               ),
                   DataCell(
-                    SelectableText(vaShow.VACircleName_ka),
+                    SelectableText(stationShow.station_name_ka),
                   ),
               DataCell(
-                SelectableText(vaShow.talukName),
-              ),
-              DataCell(
-                SelectableText(vaShow.hobliName),
+                SelectableText(stationShow.taluk_name),
               ),
               DataCell(
                 Responsive.isMobile(context)
@@ -268,8 +196,10 @@ class _VACircleTableState extends State<VACircleTable> {
                     onPressed: () {
                       inc=0;
                       transactionType = "UPDATE";
-                      _selectedVA = vaShow;
-                      _showVACircle(vaShow);
+                      _selectedStation = stationShow;
+                      stationTemp = stationShow;
+
+                      _showStation(stationShow);
                     },
                     icon: Icon(
                       Icons.edit,
@@ -282,8 +212,9 @@ class _VACircleTableState extends State<VACircleTable> {
                   onPressed: () {
                     inc=0;
                     transactionType = "UPDATE";
-                    _selectedVA = vaShow;
-                    _showVACircle(vaShow);
+                    _selectedStation = stationShow;
+                    stationTemp = stationShow;
+                    _showStation(stationShow);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: secondaryColorDark,
@@ -303,7 +234,9 @@ class _VACircleTableState extends State<VACircleTable> {
                   child: IconButton(
                     onPressed: () {
                       inc=0;
-                      _showDeleteDialog(vaShow);
+
+                      log('Stationdelete'+stationShow.station_code);
+                      _showDeleteDialog(stationShow);
                     },
                     icon: Icon(
                       Icons.delete,
@@ -315,7 +248,8 @@ class _VACircleTableState extends State<VACircleTable> {
                     : ElevatedButton(
                   onPressed: () {
                     inc=0;
-                    _showDeleteDialog(vaShow);
+                    log('Stationdelete '+stationShow.station_code);
+                    _showDeleteDialog(stationShow);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: deleteColor,
@@ -329,28 +263,47 @@ class _VACircleTableState extends State<VACircleTable> {
                 ),
               ),
             ]),
-          )
-              .toList(),
+          ).toList(),
         ),
       ),
     );
+
   }
 
-  void showAddVACircleDialog(String transactionType) {
-    //  String? value;
-    bp++;
-    log(bp.toString());
-    flag1=flag2=0;
+  _addStation()
+  {
+    StationServices.addStation(_selectedTalluk_, _stationCodeController.text,
+        _stationNameController_en.text,_stationNameController_ka.text)
+        .then(
+          (result) {
+        debugPrint('Debug report: $result');
+
+        log('HTTP result: $result');
+        if ('Success' == result) {
+          _getStation();
+          // _showSnackBar(context, result);
+        }
+        _clearValues();
+      },
+    );
+    //Navigator.pop(context, 'Add');
+  }
+
+  void showAddStationDialog(String transactionType)
+  {
+    flag=0;
     showDialog<String>(
       context: context,
+
+      barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
         title: transactionType == 'ADD'
             ? const Text(
-          'Add New VA Circle',
+          'Add New Station',
           style: tableHeadingTextStyle,
         )
             : const Text(
-          'Update VA Circle',
+          'Update Station',
           style: tableHeadingTextStyle,
         ),
         content: SizedBox(
@@ -375,13 +328,16 @@ class _VACircleTableState extends State<VACircleTable> {
                         builder:
                             (BuildContext context, StateSetter dropDownState) {
                           return DropdownButtonFormField<String>(
-                            elevation: 16,
-
-                            hint: transactionType == 'UPDATE'
-                                ? Text(_selectedVA.talukName)
-                                : Text('Select Taluk'),
                             decoration: InputDecoration(
                                 enabledBorder:InputBorder.none),
+                            hint: Padding(
+                              padding: leftRightPadding,
+                              child: transactionType == 'UPDATE'
+                                  ? Text(stationTemp.taluk_name)
+                                  : Text('Select Taluk'),
+                            ),
+
+                            items: taluk_.map(buildMenuItem).toList(),
                             validator: (_selectedTaluk) {
                               if (_selectedTaluk == null &&
                                   transactionType == 'ADD') {
@@ -391,21 +347,12 @@ class _VACircleTableState extends State<VACircleTable> {
                                 log('else Update - hint');
                               }
                             },
-                            items: taluk_.map(buildMenuItem).toList(),
+                            onChanged: (value_) => dropDownState(() {
 
-                            onChanged: (String? value_) => dropDownState(() {
-
-                              setState(() {
-                                this.selectedTaluk = value_;
-                                queryTaluk=selectedTaluk;
-
-                                selectedTaluk=_selectedTalluk_ = value_.toString();
-                                flag1=1;
-                                drop_flag=1;
-                                _getHobli(queryTaluk);
-
-                              });
-
+                              this.selectedTaluk = value_.toString();
+                              log('flag changed{$flag , $selectedTaluk}');
+                              _selectedTalluk_ = value_.toString();
+                              flag = 1;
                             }),
                             value: selectedTaluk,
                           );
@@ -415,64 +362,12 @@ class _VACircleTableState extends State<VACircleTable> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.0),
-                        border: Border.all(
-                          color: Colors.black45,
-                        ),
-                      ),
-                      //hei
-                      child: drop_flag==1?StatefulBuilder(
-                        builder:
-                            (BuildContext context, StateSetter dropDownState) {
-                              queryTaluk=selectedTaluk;
-                              _getHobli(queryTaluk);
-                          return
-                            DropdownButtonHideUnderline(
-                                  child: ButtonTheme(
-                                  alignedDropdown: true,
-                                  child:
-                            DropdownButtonFormField<String>(
-                            elevation: 16,
-                            decoration: InputDecoration(
-                                enabledBorder:InputBorder.none),
-                            hint: transactionType == 'UPDATE'
-                                ? Text(_selectedVA.hobliName)
-                                : Text('Select Hobli'),
-
-                            items: hobli_list,//hobli_.map(buildMenuItemHobli).toList(),
-                            validator: (_selectedHobli) {
-                              if (_selectedHobli == null &&
-                                  transactionType == 'ADD') {
-                                return '  Please Select Hobli  ';
-                              } else if (transactionType == 'UPDATE')
-                              {
-                                log('else Update - hint');
-                              }
-                            },
-                            onChanged: (String? value_) => dropDownState(()
-                            {
-
-                              this.selectedHobli = value_;
-                              _selectedHobli_ = value_.toString();
-                              log('hobli sss $_selectedHobli_--- $selectedHobli');
-                              flag2=1;
-                            } ),
-                            value: selectedHobli,
-                          ),),);
-                        },
-                      ):Container(child: Text('Dummy'),),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4.0),
-                    ),
                     new TextFormField(
-                      controller: _vaCircleCodeController,
+                      controller: _stationCodeController,
                       inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
                       ],
                       decoration: new InputDecoration(
-                        labelText: "VA Circle Code ",
+                        labelText: "Station Code ",
                         labelStyle: TextStyle(fontSize: 14),
                         fillColor: Colors.amber,
                         border: new OutlineInputBorder(
@@ -483,7 +378,7 @@ class _VACircleTableState extends State<VACircleTable> {
                       ),
                       validator: (val) {
                         if (val == null || val.isEmpty) {
-                          return "VA Circle Code cannot be empty";
+                          return "Station Code cannot be empty";
                         } else {
                           return null;
                         }
@@ -495,11 +390,11 @@ class _VACircleTableState extends State<VACircleTable> {
                       padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
                     new TextFormField(
-                      controller: _vaCircleNameController,
+                      controller: _stationNameController_en,
                       inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),
                       ],
                       decoration: new InputDecoration(
-                        labelText: "VA Circle Name ",
+                        labelText: "Station Name ",
                         labelStyle: TextStyle(fontSize: 14),
                         fillColor: Colors.amber,
                         border: new OutlineInputBorder(
@@ -510,9 +405,8 @@ class _VACircleTableState extends State<VACircleTable> {
                       ),
                       validator: (val) {
                         if (val == null || val.isEmpty) {
-                          return "VA Circle Name cannot be empty";
+                          return "Station Name cannot be empty";
                         } else {
-                          log('vac name$val');
                           return null;
                         }
                       },
@@ -523,11 +417,12 @@ class _VACircleTableState extends State<VACircleTable> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 4.0),
                     ),
+
                     new TextFormField(
-                      controller: _vaCircleNameController_ka,
+                      controller: _stationNameController_ka,
 
                       decoration: new InputDecoration(
-                        labelText: "VA ವೃತ್ತದ ಹೆಸರು",
+                        labelText: "ಠಾಣೆ ಹೆಸರು",
                         labelStyle: TextStyle(fontSize: 14),
                         fillColor: Colors.amber,
                         border: new OutlineInputBorder(
@@ -538,17 +433,14 @@ class _VACircleTableState extends State<VACircleTable> {
                       ),
                       validator: (val) {
                         if (val == null || val.isEmpty) {
-                          return "VA Circle Name cannot be empty";
+                          return "Station Name cannot be empty";
                         } else {
-                          log('vac name ka$val');
                           return null;
                         }
                       },
                       //keyboardType: TextInputType.multiline,
                       style: new TextStyle(),
                     ),
-
-
                   ],
                 ),
               ),
@@ -573,10 +465,10 @@ class _VACircleTableState extends State<VACircleTable> {
             onPressed: () {
               inc=0;
               if (_formKey.currentState!.validate()) {
-                _addVACircle();
+                _addStation();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("New VA Circle Added Succesfully"),
+                    content: Text("New Station Added Succesfully"),
                   ),
                 );
                 Navigator.of(context).pop();
@@ -593,21 +485,14 @@ class _VACircleTableState extends State<VACircleTable> {
               : TextButton(
             style: outlinedButtonStyle,
             onPressed: () {
-              inc=0;
-              log('flag value $flag1 , $flag2');
-
               if (_formKey.currentState!.validate()) {
-                if(flag1==0){
-                  selectedTaluk=_selectedVA.taluk_code;
+                if(flag==0){
+                  selectedTaluk=stationTemp.taluk_code;
                 }
-                if(flag2==0)
-                {
-                  selectedHobli=_selectedVA.hobli_code;
-                }
-                _updateVACircle(_selectedVA,selectedTaluk,selectedHobli);
+                _updateStation(_selectedStation, selectedTaluk,flag);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("VA Circle Updated Succesfully"),
+                    content: Text("Station Updated Succesfully"),
                   ),
                 );
                 Navigator.of(context).pop();
@@ -636,53 +521,56 @@ class _VACircleTableState extends State<VACircleTable> {
       ),
     ),
   );
-  DropdownMenuItem<String> buildMenuItemHobli(Hobli item) => DropdownMenuItem(
-    value: item.hobliCode,
-    child: Padding(
-      padding: leftRightPadding,
-      child: Text(
-        item.hobliName,
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-      ),
-    ),
-  );
 
   _clearValues() {
-    selectedHobli=null;
+    _stationCodeController.text = "";
+    _stationNameController_en.text = "";
+    _stationNameController_ka.text = "";
     selectedTaluk=null;
-    _vaCircleCodeController.text = "";
-    _vaCircleNameController.text = "";
-    _vaCircleNameController_ka.text = "";
+
   }
 
-  void _deleteVACircle(VACircle selected) {
-    VACircleServices.deleteVACircle(selected).then((result) {
-      debugPrint('Debug report: $result');
-
-      log('HTTP result: $result');
-      if ('Success' == result) {
-        Fluttertoast.showToast(
-            msg: "Deleted",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.TOP,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        _getVACircle();
-        // _showSnackBar(context, result);
+  _updateStation(Station selected, String? selectedTalluk,int flag)
+  {
+    if (_stationCodeController.text.isEmpty ||
+        _stationNameController_en.text.isEmpty ||_stationNameController_ka.text.isEmpty ||
+    selectedTalluk == null) {
+      print('Empty Field');
+    } else {
+      if (selectedTalluk.isEmpty) {
+        selectedTalluk = selected.taluk_name;
+        log('selected.talukname' + selected.taluk_name);
       }
 
-      Navigator.pop(context);
-    });
+      StationServices.updateStation(
+        selectedTalluk,
+        selected,
+        _stationCodeController.text,
+        _stationNameController_en.text,_stationNameController_ka.text,
+      ).then((result) {
+        debugPrint('Debug report: $result');
+
+        log('HTTP result: $result');
+        if ('Success' == result) {
+
+          _getStation();
+
+          _clearValues();
+          // _showSnackBar(context, result);
+        }
+        _getStation();
+        _clearValues();
+        //  Navigator.pop(context);
+      });
+    }
   }
 
-  void _showDeleteDialog(VACircle vaCircleObject) {
+  void _showDeleteDialog(Station stationObject) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(
-            "Are you sure want to delete the VA Circle ${vaCircleObject.VACircleName} ?"),
+            "Are you sure want to delete the Station ${stationObject.station_name_en} ?"),
         actions: <Widget>[
           TextButton(
             child: Text(
@@ -698,7 +586,30 @@ class _VACircleTableState extends State<VACircleTable> {
               style: tableHeadingTextStyle,
             ),
             style: redCircularButton,
-            onPressed: () => _deleteVACircle(vaCircleObject),
+            onPressed: () {
+              String st_name=stationObject.station_code;
+              StationServices.deleteStation(st_name).then((result) {
+                debugPrint('Debug report station: $result');
+
+                log('HTTP result: $result');
+                if ('Success' == result) {
+
+                  Fluttertoast.showToast(
+                      msg: "Deleted",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.TOP,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                  _getStation();
+                  // _showSnackBar(context, result);
+                }
+
+                Navigator.pop(context);
+              });
+              _getStation();
+            },
           ),
         ],
       ),

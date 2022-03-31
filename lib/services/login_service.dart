@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class LoginServices {
   static const ROOT =
-      "http://localhost/kodagu_gun_licence_exemption_website/login_data.php";
+      "http://localhost/kodagu_gun_licence_exemption_website/log.php";
 
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE_LOGIN';
   static const _GET_ADMIN = 'GET_ADMIN_LOGIN';

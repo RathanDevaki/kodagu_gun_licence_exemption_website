@@ -17,6 +17,7 @@ class TalukServices {
 
   static const _GET_HOBLI = 'GET_HOBLI';
 
+  static const _CREATE_TABLE_ACTION_ADMIN = 'CREATE_ADMIN_LOGIN';
   static Future<String> createTable() async {
     var map = Map<String, dynamic>();
     map['action'] = _CREATE_TABLE_ACTION;
@@ -131,6 +132,14 @@ class TalukServices {
       getTaluk();
       return "Something went wrong";
     }
+  }
+
+  static Future<String> createTableAdmin() async {
+    var map = Map<String, dynamic>();
+    map['action'] = _CREATE_TABLE_ACTION_ADMIN;
+    final response = await http.post(Uri.parse(ROOT), body: map);
+    print('Create table Admin Login: ${response.body}');
+    return response.body;
   }
 
   static Future<String> deleteTaluk(Taluk taluk_obj) async {

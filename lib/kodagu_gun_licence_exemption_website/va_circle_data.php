@@ -35,7 +35,8 @@ if("GET_TALUK" == $action){
 }
 if("GET_HOBLI" == $action){
     $db_data = array();
-    $sql = "SELECT * from Hobli";
+    $tal=$_POST["taluk_code_"];
+    $sql = "SELECT * from Hobli where taluk_code='".$tal."' ";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
@@ -51,7 +52,7 @@ if("GET_HOBLI" == $action){
 }
 
 if("CREATE_TABLE_VA_CIRCLE"==$action){
-    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, va_circle_code VARCHAR(10),va_circle_name CHAR(30),taluk_code varchar(20),hobli_code varchar(30),PRIMARY KEY(va_circle_code),FOREIGN KEY(taluk_code)REFERENCES Taluk(taluk_code),FOREIGN KEY(hobli_code)REFERENCES Hobli(hobli_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
+    $sql="CREATE TABLE IF NOT EXISTS $table(sl_no INT AUTO_INCREMENT UNIQUE KEY not null, va_circle_code VARCHAR(50),va_circle_name CHAR(100),va_circle_name_ka CHAR(100),taluk_code varchar(100),hobli_code varchar(100),PRIMARY KEY(va_circle_code),FOREIGN KEY(taluk_code)REFERENCES Taluk(taluk_code),FOREIGN KEY(hobli_code)REFERENCES Hobli(hobli_code)ON DELETE CASCADE ON UPDATE CASCADE)ENGINE=InnoDB";
 
     if($conn->query($sql)===TRUE)
     {
@@ -67,7 +68,7 @@ if("CREATE_TABLE_VA_CIRCLE"==$action){
 
 if("GET_VA_CIRCLE" == $action){
     $db_data = array();
-    $sql = "SELECT va.sl_no,va.va_circle_code,va.va_circle_name,va.va_circle_code,va.taluk_code,va.hobli_code,t.taluk_name,h.hobli_name from VACircle va INNER JOIN Taluk t ON va.taluk_code=t.taluk_code INNER JOIN Hobli h ON h.hobli_code=va.hobli_code";
+    $sql = "SELECT va.sl_no,va.va_circle_code,va.va_circle_name,va.va_circle_name_ka,va.va_circle_code,va.taluk_code,va.hobli_code,t.taluk_name,h.hobli_name from VACircle va INNER JOIN Taluk t ON va.taluk_code=t.taluk_code INNER JOIN Hobli h ON h.hobli_code=va.hobli_code";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
@@ -87,7 +88,8 @@ if("ADD_VA_CIRCLE"==$action)
     $va_circle_name=$_POST["va_circle_name"];
     $hobli_code =$_POST["hobli_code"];
     $taluk_code=$_POST["taluk_code"];
-    $sql="INSERT INTO $table(va_circle_code,va_circle_name,hobli_code,taluk_code)VALUES('".$va_circle_code."','".$va_circle_name."','".$hobli_code."','".$taluk_code."')";
+    $va_circle_name_ka=$_POST["va_circle_name_ka"];
+    $sql="INSERT INTO $table(va_circle_code,va_circle_name,va_circle_name_ka,hobli_code,taluk_code)VALUES('".$va_circle_code."','".$va_circle_name."','".$va_circle_name_ka."','".$hobli_code."','".$taluk_code."')";
     $result=$conn->query($sql);
     echo "Success";
     $conn->close();
@@ -98,12 +100,13 @@ if("UPDATE_VA_CIRCLE"==$action)
  
  $va_circle_code=$_POST["va_circle_code"];
  $va_circle_name=$_POST["va_circle_name"];
+ $va_circle_name_ka=$_POST["va_circle_name_ka"];
  $hobli_code =$_POST["hobli_code"];
  $taluk_code=$_POST["taluk_code"];
  $sl_no = $_POST["sl_no"];
  $constraints=$_POST["constraints"];
  
- $sql="UPDATE $table SET va_circle_code = '".$va_circle_code."', va_circle_name='".$va_circle_name."', taluk_code='".$taluk_code."' ,hobli_code = '".$hobli_code."' where va_circle_code = '".$constraints."' ";
+ $sql="UPDATE $table SET va_circle_code = '".$va_circle_code."', va_circle_name='".$va_circle_name."', va_circle_name_ka='".$va_circle_name_ka."',taluk_code='".$taluk_code."' ,hobli_code = '".$hobli_code."' where va_circle_code = '".$constraints."' ";
  $result=$conn->query($sql);
     echo "Success";
     $conn->close();

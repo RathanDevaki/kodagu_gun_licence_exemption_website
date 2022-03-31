@@ -4,6 +4,8 @@ import '../utilities/constants.dart';
 
 PreferredSizeWidget CommonAppBar() {
   return AppBar(
+    elevation: 12.0,
+    bottomOpacity: 50,
     backgroundColor: secondaryColor1,
     title: Align(
       alignment: Alignment.topLeft,

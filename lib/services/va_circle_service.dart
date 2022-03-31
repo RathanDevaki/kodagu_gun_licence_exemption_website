@@ -54,10 +54,12 @@ class VACircleServices {
     return parsed.map<Taluk>((json) => Taluk.fromJson(json)).toList();
   }
 
-  static Future<List<Hobli>> getHobliForDropdown() async {
+  static Future<List<Hobli>> getHobliForDropdown(var _queryTaluk) async {
     try {
+      log('talll  '+_queryTaluk);
       var map = Map<String, dynamic>();
       map['action'] = _GET_HOBLI;
+      map['taluk_code_']=_queryTaluk;
       log('in Hobli');
       final response = await http.post(Uri.parse(ROOT), body: map);
 

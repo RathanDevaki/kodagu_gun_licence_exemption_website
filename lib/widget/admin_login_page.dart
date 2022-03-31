@@ -1,14 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:admin/screens/home_screen.dart';
 import 'package:admin/utilities/responsive.dart';
-import 'package:admin/widget/bottom_bar.dart';
+
 import 'package:loading_animations/loading_animations.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:io';
 import 'footer.dart';
-//import http package manually
+
 class LoginPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -17,22 +19,22 @@ class LoginPage extends StatefulWidget{
 }
 
 class _LoginPage extends State<LoginPage>{
+  bool _visible = false;
   late String errormsg;
   late bool error, showprogress;
-  late String username, password;
+  late String user_id, password;
   final _formKey =GlobalKey<FormState>();
-  var _username = TextEditingController();
+  var _user_id = TextEditingController();
   var _password = TextEditingController();
-
+  var action = 'CREATE_ADMIN_LOGIN';
   startLogin() async {
     String apiurl =  "http://localhost/kodagu_gun_licence_exemption_website/log.php";
-    //dont use http://localhost , because emulator don't get that address
-    //insted use your local IP address or use live URL
-    //hit "ipconfig" in windows or "ip a" in linux to get you local IP
-    print(username);
+
+    print(user_id +'-'+password);
 
     var response = await http.post(Uri.parse(apiurl), body: {
-      'username': username, //get the username text
+      'sction' : action,
+      'user_id': user_id, //get the username text
       'password': password  //get password text
     });
 
@@ -49,12 +51,23 @@ class _LoginPage extends State<LoginPage>{
           setState(() {
             error = false;
             showprogress = true;
+            Future.delayed(const Duration(seconds: 2), () {
+// Here you can write your code
+
+              setState(() {
+                showprogress = false;
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(),));
+              });
+
+            });
+
+
           });
           //save the data returned from server
           //and navigate to home page
-          String uid = jsondata["uid"];
-          String fullname = jsondata["fullname"];
-          String address = jsondata["address"];
+          String uid = jsondata["user_id"];
+          String fullname = jsondata["full_name"];
+         // String address = jsondata["address"];
           print(fullname);
           //user shared preference to save data
         }else{
@@ -74,7 +87,7 @@ class _LoginPage extends State<LoginPage>{
 
   @override
   void initState() {
-    username = "";
+    user_id = "";
     password = "";
     errormsg = "";
     error = false;
@@ -87,7 +100,6 @@ class _LoginPage extends State<LoginPage>{
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent
       //color set to transperent or set your own color
@@ -95,13 +107,13 @@ class _LoginPage extends State<LoginPage>{
 
     return Scaffold(
       bottomSheet: Footer1(),
-      body: Form(key:_formKey, child:SingleChildScrollView(
-          child:Center(child:Container(
+      body: Center(child:Form(key:_formKey, child:SingleChildScrollView(
+          child:Container(
             constraints: BoxConstraints(
                 minHeight:MediaQuery.of(context).size.height
               //set minimum height equal to 100% of VH
             ),
-            width:Responsive.isDesktop(context)?400:300,
+            width:Responsive.isDesktop(context)?450:350,
 
             //make width of outer wrapper to 100%
             decoration:BoxDecoration(
@@ -131,20 +143,13 @@ class _LoginPage extends State<LoginPage>{
               //   ),), //subtitle text
               // ),
 
-              Container(
-                //show error message here
-                margin: EdgeInsets.only(top:30),
-                padding: EdgeInsets.all(10),
-                child:error? errmsg(errormsg):Container(),
-                //if error == true then show error message
-                //else set empty container as child
-              ),
+
 
               new TextFormField(
-                controller: _username,
+                controller: _user_id,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
                onChanged: (val){
-                  username=val;
+                  user_id=val;
                 },
                 decoration: new InputDecoration(
                   labelText: "Enter Login ID",
@@ -169,7 +174,7 @@ class _LoginPage extends State<LoginPage>{
                 //keyboardType: TextInputType.multiline,
                 style: new TextStyle(),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 20),
               new TextFormField(
                 controller: _password,
                 //inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9]')),],
@@ -202,36 +207,48 @@ class _LoginPage extends State<LoginPage>{
                 style: new TextStyle(),
               ),
 
-              SizedBox(height: 40),
-              Padding( padding:EdgeInsets.symmetric(horizontal: 8,vertical: 16,),child:Container(
+            Container(
+                //show error message here
+                padding: EdgeInsets.all(8.0),
+                child:error? errmsg(errormsg):null,
+                //if error == true then show error message
+                //else set empty container as child
+              ),
+
+              SizedBox(height: 12),
+              Padding( padding:EdgeInsets.symmetric(horizontal: 8,vertical: 8,),child:Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black45,
-                      spreadRadius: 8,
+                      spreadRadius: -8,
                       blurRadius: 16,
                       blurStyle: BlurStyle.normal,
                     ),
                   ],
                 ),
                 child:ElevatedButton(
+
                   child: Container(
                     width: double.infinity,
                     height: 50,
-
+                    
                     child: showprogress?
                     LoadingJumpingLine.circle(duration: Duration(milliseconds: 1000),
                       backgroundColor: Colors.grey,
-                    ):Center(child: Text("Sign In"),),),
+                    ):Center(child: Text("Login Now"),),),
                   onPressed: () async {
 
                     if(_formKey.currentState!.validate()){
                       setState(() {
                         //show progress indicator on click
                         showprogress = true;
+                        _visible=true;
                       });
+
+
                       startLogin();
 
                     }
@@ -282,14 +299,16 @@ class _LoginPage extends State<LoginPage>{
               // ),
 
               Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.only(top:20),
-                child: InkResponse(
+                padding: EdgeInsets.all(8.0),
+
+                child: InkWell(
+
+                  borderRadius: BorderRadius.circular(16.0),
                     onTap:(){
                       //action on tap
                     },
-                    child:Text("Forgot Password? ",
-                      style: TextStyle(color:Colors.white, fontSize:18),
+                    child:Text(" Forgot Password? ",
+                      style: TextStyle(color:Colors.blueGrey, fontSize:14),
                     )
                 ),
               )
@@ -329,23 +348,25 @@ class _LoginPage extends State<LoginPage>{
 
   Widget errmsg(String text){
     //error message widget.
+
     return Container(
-      padding: EdgeInsets.all(15.00),
-      margin: EdgeInsets.only(bottom: 10.00),
+      padding: EdgeInsets.all(8.0),
+
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(12),
           color: Colors.red,
           border: Border.all(color:Colors.red, width:2)
       ),
       child: Row(children: <Widget>[
         Container(
-          margin: EdgeInsets.only(right:6.00),
+          margin: EdgeInsets.only(right:4.00),
           child: Icon(Icons.info, color: Colors.white),
         ), // icon for error message
 
-        Text(text, style: TextStyle(color: Colors.white, fontSize: 18)),
+        Text(text, style: TextStyle(color: Colors.white, fontSize: 14)),
         //show error message text
       ]),
     );
+
   }
 }

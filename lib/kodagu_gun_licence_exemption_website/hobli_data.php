@@ -69,7 +69,9 @@ if("CREATE_TABLE_HOBLI"==$action){
 
 if("GET_HOBLI" == $action){
     $db_data = array();
-    $sql = "SELECT h.sl_no,h.hobli_code,h.hobli_name,h.hobli_name_ka,h.taluk_code,t.taluk_name from Hobli h LEFT JOIN Taluk t ON h.taluk_code=t.taluk_code ORDER BY h.sl_no";
+    $order=$_POST['order'];
+    
+    $sql = "SELECT h.sl_no,h.hobli_code,h.hobli_name,h.hobli_name_ka,h.taluk_code,t.taluk_name from Hobli h LEFT JOIN Taluk t ON h.taluk_code=t.taluk_code ORDER BY h.$order ";
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
